@@ -34,6 +34,7 @@ public class SzTechWebResponseBlueBean {
 	    private String g_unique_id;
 	    private String order_id;
 	    private int state;
+	    
 	    public void setG_unique_id(String g_unique_id) {
 	         this.g_unique_id = g_unique_id;
 	    }

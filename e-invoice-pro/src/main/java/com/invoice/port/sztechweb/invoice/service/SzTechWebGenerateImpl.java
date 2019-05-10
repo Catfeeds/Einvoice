@@ -1,6 +1,11 @@
 package com.invoice.port.sztechweb.invoice.service;
 
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+
 import javax.net.ssl.SSLContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +20,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
+
+import com.golden.Util;
+
+import net.sf.json.JSONObject;
 
 public class SzTechWebGenerateImpl {
     private Log log = LogFactory.getLog(SzTechWebGenerateImpl.class);
@@ -118,4 +127,50 @@ public class SzTechWebGenerateImpl {
 
 		return sslsf;
 	}
+	
+	public String genereateSign(JSONObject json, Long timestamp, String appkey, String appsecret)
+    {
+		try
+		{
+	        @SuppressWarnings("unchecked")
+			Iterator<String> it = json.keys();
+	        
+	        ArrayList<String> arrayList = new ArrayList<String>();
+	        
+	        while (it.hasNext()){
+	            String key = it .next();
+	            arrayList.add(key);
+	        }
+	        
+	        Collections.sort(arrayList);
+	        
+	        StringBuilder originStringBuilder = new StringBuilder();
+	        
+	        originStringBuilder.append(appkey);
+	        
+	        originStringBuilder.append(timestamp);
+	        
+	        StringBuilder postStringBuilder = new StringBuilder();
+	        
+	        for(int i=0; i < arrayList.size(); i++){
+	            String key = arrayList.get(i);
+	            Object value = json.get(key);
+	            postStringBuilder.append( key + "=" + value.toString() + "&" );
+	        }
+	        
+	        postStringBuilder.deleteCharAt(postStringBuilder.length() - 1);
+	        
+	        String postString = URLEncoder.encode(postStringBuilder.toString(), "utf-8").replace("*", "%2A").replace("+", "%20").replace("%7E", "~");
+	        
+	        String originStr = originStringBuilder.toString() + postString + appsecret;
+	        
+	        return Util.md5(originStr).toUpperCase();
+		}
+		catch (Exception ex)
+		{
+			log.error(ex.getMessage());
+			
+			return "";
+		}
+    }
 }

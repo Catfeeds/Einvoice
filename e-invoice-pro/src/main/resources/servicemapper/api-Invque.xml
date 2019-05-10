@@ -276,7 +276,7 @@
 	<!-- For 高灯回调接口 -->
 	<update id="updateForCallGD" parameterType="com.invoice.bean.db.Invque">
 		update invque 
-		set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqstatus=#{iqstatus}
+		set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqpdf=#{iqpdf},iqstatus=#{iqstatus}
 		where iqseqno = #{iqseqno} and iqstatus in (0,10,20,30,40)
 	</update>
 	

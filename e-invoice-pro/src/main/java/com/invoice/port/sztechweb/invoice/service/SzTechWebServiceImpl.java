@@ -22,6 +22,7 @@ import com.invoice.port.sztechweb.invoice.bean.SzTechWebQueryResponseBean;
 import com.invoice.port.sztechweb.invoice.bean.SzTechWebResponseRedBean;
 import com.invoice.rtn.data.RtnData;
 import com.invoice.util.NewHashMap;
+import com.alibaba.fastjson.JSON;
 import com.golden.Sdk;
 import com.golden.request.InvoiceBlue;
 import com.golden.request.InvoiceBlueGoodsInfo;
@@ -82,7 +83,8 @@ public class SzTechWebServiceImpl implements PortService {
 				dataList.add(detail);
 			}
 		}
-
+		
+		//生成Invoice_head和Invoice_detail数据
 		InvoiceHead invoiceHead = invoiceService.cookInvoiceHead(que, taxinfo, dataList);
 
 		invoiceHead.setFpskm(resInv.getSkm());
@@ -91,22 +93,28 @@ public class SzTechWebServiceImpl implements PortService {
 		invoiceHead.setFpdm(resInv.getFp_dm()==null?"":resInv.getFp_dm());
 		invoiceHead.setPdf(resInv.getPdf_url()==null?"":resInv.getPdf_url());
 		invoiceHead.setFpjym(resInv.getJym()==null?"":resInv.getJym());
+		
 		//保存到Invoice_head和Invoice_detail表
 		invoiceService.saveInvoice(invoiceHead);
 		
 		//针对深圳高灯特别作法：因为开具成功后，增加回调URL让高灯调用
+		que.setRtskm(resInv.getSkm());
+		que.setRtkprq(resInv.getKprq().replace("-","").replace(":","").replace(" ",""));
+		que.setRtfphm(resInv.getFp_hm()==null?"":resInv.getFp_hm());
+		que.setRtfpdm(resInv.getFp_dm()==null?"":resInv.getFp_dm());
+		que.setIqpdf(resInv.getPdf_url()==null?"":resInv.getPdf_url());
+		que.setRtjym(resInv.getJym()==null?"":resInv.getJym());
+		
+		//如果开票正确则更改状态
 		if (resInv.getReturncode().equals("2"))
 		{
-			que.setRtskm(resInv.getSkm());
-			que.setRtkprq(resInv.getKprq().replace("-","").replace(":","").replace(" ",""));
-			que.setRtfphm(resInv.getFp_hm()==null?"":resInv.getFp_hm());
-			que.setRtfpdm(resInv.getFp_dm()==null?"":resInv.getFp_dm());
-			que.setIqpdf(resInv.getPdf_url()==null?"":resInv.getPdf_url());
-			que.setRtjym(resInv.getJym()==null?"":resInv.getJym());
-			//如果开票正确则更改状态
 			que.setIqstatus(50);
 			inqueDao.updateForCallGD(que);
-			
+		}
+		else
+		{
+			que.setIqstatus(40);
+			inqueDao.updateTo40(que);
 		}
 	}
 
@@ -173,6 +181,9 @@ public class SzTechWebServiceImpl implements PortService {
 			RtInvoiceBean invoiceBean = new RtInvoiceBean();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
+			//调用HTTP/HTTPS
+			SzTechWebGenerateImpl mySend = new SzTechWebGenerateImpl();
+			
 			//设置请求参数
 			SzTechWebQueryRequestBean request = new SzTechWebQueryRequestBean();
 			
@@ -180,6 +191,8 @@ public class SzTechWebServiceImpl implements PortService {
 			request.setOrder_id(invque.getIqseqno());    //开票流水号
 			request.setTaxpayer_num(taxinfo.getTaxno()); //销方税号
 			
+			String jsonText = JSONObject.fromObject(request).toString();
+
 			String strUrl = taxinfo.getItfserviceUrl();
 			if (strUrl == null || strUrl.length() == 0) 
 			{
@@ -188,12 +201,16 @@ public class SzTechWebServiceImpl implements PortService {
 				rtn.setMessage("获取开票远程URL出错!");
 				return null;
 			}
+			
+			Long timestamp = System.currentTimeMillis() / 1000;
+			
+			String sign = mySend.genereateSign(JSONObject.fromObject(jsonText), timestamp, taxinfo.getItfskpbh(), taxinfo.getItfskpkl());
+			
 			strUrl = strUrl.trim() + "/invoice/status";
 			
-			//调用HTTP/HTTPS
-			SzTechWebGenerateImpl mySend = new SzTechWebGenerateImpl();
-			
-			String strResult = mySend.sendHttpRequest(strUrl, JSONObject.fromObject(request).toString());
+			strUrl = strUrl + "?signature=" + sign + "&appkey=" + taxinfo.getItfskpbh() + "&timestamp=" + timestamp;
+
+			String strResult = mySend.sendHttpRequest(strUrl, jsonText);
 			
 			if (strResult == null || strResult.length() == 0) 
 			{
@@ -222,7 +239,7 @@ public class SzTechWebServiceImpl implements PortService {
 			}
 			
 			//转成JAVA对象
-			SzTechWebQueryResponseBean queryReponse = (SzTechWebQueryResponseBean)JSONObject.toBean(jsonObj, SzTechWebQueryResponseBean.class);
+			SzTechWebQueryResponseBean queryReponse = (SzTechWebQueryResponseBean)JSON.parseObject(strResult, SzTechWebQueryResponseBean.class);
 			
 			invoiceBean.setSkm(queryReponse.getData().getG_unique_id()); //开票平台订单id
 			invoiceBean.setReturncode(String.valueOf(queryReponse.getData().getStatus())); //发票状态（0：待开票 1：开票中 2：开票成功 -2：开票失败）
@@ -255,9 +272,9 @@ public class SzTechWebServiceImpl implements PortService {
 		
 			//调用高灯SDK
 			Sdk sdk = new Sdk(taxinfo.getItfskpbh(), taxinfo.getItfskpkl(), taxinfo.getItfkeypwd());
-			
+
 			//蓝票
-			if (invque.getIqtype() == 0) 
+			if (invque.getIqtype() == 0)
 			{
 				InvoiceBlue invoice = new InvoiceBlue();
 				List<InvoiceBlueGoodsInfo> goodsInfos = new ArrayList<>();
@@ -287,13 +304,15 @@ public class SzTechWebServiceImpl implements PortService {
                        .setBuyerPhone(invque.getIqtel()) //购方电话
                        .setBuyerBankAccount("") //银行账号
                        .setBuyerBankName(invque.getIqgmfbank()) //开户银行
+                       .setSellerBankName(taxinfo.getTaxbank())
+                       .setSellerAddress(taxinfo.getTaxadd())
                        .setExtra(invque.getIqmemo()) //备注内容
                        .setCashier(invque.getIqpayee()) //收款人
                        .setChecker(invque.getIqchecker()) //复核人
                        .setInvoicer(invque.getIqadmin()) //开票人
                        .setTradeType(0) //1通信、2餐饮、3交通、4支付平台、5票务/旅游、0其他
                        .setCallbackUrl(taxinfo.getItfjrdm()) //回调URL
-                       .setInvoiceTypeCode("026") //004:增值税专用发票，007:增值税普通发票，026：增值税电子发票，025：增值税卷式发票, 032:区块链发票 默认为026
+                       .setInvoiceTypeCode("032") //004:增值税专用发票，007:增值税普通发票，026：增值税电子发票，025：增值税卷式发票, 032:区块链发票 默认为026
                        .setGoodsInfos(goodsInfos);
 				
 				JSONObject result = sdk.invoiceBlue(invoice);
@@ -317,7 +336,7 @@ public class SzTechWebServiceImpl implements PortService {
 				}
 				
 				//开具结果转对象
-				SzTechWebResponseBlueBean blue = (SzTechWebResponseBlueBean)JSONObject.toBean(result,SzTechWebResponseBlueBean.class);
+				SzTechWebResponseBlueBean blue = (SzTechWebResponseBlueBean)JSON.parseObject(result.toString(),SzTechWebResponseBlueBean.class);
 				
 				//先记录下高灯开票流水号
 				invque.setRtskm(blue.getData().getG_unique_id());
@@ -372,16 +391,16 @@ public class SzTechWebServiceImpl implements PortService {
 				}
 				
 				//红票结果转对象
-				SzTechWebResponseRedBean red = (SzTechWebResponseRedBean)JSONObject.toBean(result,SzTechWebResponseRedBean.class);
+				SzTechWebResponseRedBean red = (SzTechWebResponseRedBean)JSON.parseObject(result.toString(),SzTechWebResponseRedBean.class);
 				
 				//先记录下高灯开票流水号
 				invque.setRtskm(red.getData().get(0).getG_trade_no());
 			}
 			
 			//等待10秒后查询开具结果
-			Thread.sleep(10000);
+			//Thread.sleep(10000);
 			
-			invoiceBean = findInvoice(invque, taxinfo, rtn);
+			//invoiceBean = findInvoice(invque, taxinfo, rtn);
 			
 			return invoiceBean;
         }
