@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.InvqueDao">
+
+	<insert id="insertInvque" parameterType="com.invoice.bean.db.Invque">
+		INSERT INTO invque (iqseqno, iqentid, iqstatus, iqsource, iqtype, iqmode, iqchannel, iqshop, iqperson, iqtaxno, iqdate, iqtotje, iqtotse, iqgmftax, iqgmfname, iqgmfadd, iqgmfbank, iqadmin,iqpayee,iqchecker, iqtel, iqemail, iqpdf, rtfpdm, rtfphm, rtkprq, rtskm, rtjym, rtewm, iqyfpdm, iqyfphm, iqmemo, iqmsg, zsfs, iqfplxdm,iqtaxzdh) 
+		VALUES (#{iqseqno}, #{iqentid}, #{iqstatus}, #{iqsource}, #{iqtype}, #{iqmode}, #{iqchannel}, #{iqshop}, #{iqperson}, #{iqtaxno}, #{iqdate}, #{iqtotje}, #{iqtotse}, #{iqgmftax}, #{iqgmfname}, #{iqgmfadd}, #{iqgmfbank}, #{iqadmin}, #{iqpayee},#{iqchecker},#{iqtel}, #{iqemail}, #{iqpdf}, #{rtfpdm}, #{rtfphm}, #{rtkprq}, #{rtskm}, #{rtjym}, #{rtewm}, #{iqyfpdm}, #{iqyfphm}, #{iqmemo}, #{iqmsg}, #{zsfs}, #{iqfplxdm},#{iqtaxzdh})
+	</insert>
+	
+	<insert id="insertInvqueList" parameterType="com.invoice.bean.db.InvqueList">
+		INSERT INTO invque_list (iqseqno, serialid, sheetid, sheettype, shopid, syjid, billno, totalamount, invoiceamount, totaltaxfee) 
+		VALUES (#{iqseqno}, #{serialid}, #{sheetid}, #{sheettype}, #{shopid}, #{syjid}, #{billno}, #{totalamount}, #{invoiceamount}, #{totaltaxfee})
+	</insert>
+	
+	<insert id="insertInvqueListDetail" parameterType="java.util.List">
+		INSERT INTO invque_list_detail 
+		(iqseqno, serialid, sheetid, sheettype,rowno) 
+		VALUES 
+		<foreach collection ="list" item="detail" index= "index" separator =",">
+		(#{detail.iqseqno}, #{detail.serialid},#{detail.sheetid},#{detail.sheettype},#{detail.rowno})
+		</foreach >
+	</insert>
+	
+	<select id="getInvque" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select * from invque where 1=1
+		<if test="status != null">
+			and iqstatus = #{status}
+		</if>
+		<if test="entid != null">
+			and iqentid = #{entid}
+		</if>
+		<if test="channel != null">
+			and iqchannel = #{channel}
+		</if>
+		<if test="iqdate != null">
+			and iqdate = #{iqdate}
+		</if>
+		<if test="taxzdh != null">
+			and iqtaxzdh = #{taxzdh}
+		</if>
+		<if test="taxno != null">
+			and iqtaxno = #{taxno}
+		</if>
+		<if test="userid != null">
+			and iqperson = #{userid}
+		</if>
+		<if test="iqseqno != null">
+			and iqseqno = #{iqseqno}
+		</if>
+		<if test="rtfpdm != null">
+			and rtfpdm = #{rtfpdm}
+		</if>
+		<if test="rtfphm != null">
+			and rtfphm = #{rtfphm}
+		</if>
+		
+		order by iqseqno desc
+		
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+		
+		<if test="pagestart == null">
+			limit 10
+		</if>
+	</select>
+	<!-- 查询未返回DPF队列数据-->
+	<select id="getInvques" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select * from invque where iqstatus>=40 and iqfplxdm='026' and (LENGTH(iqpdf)=0 or iqpdf is null) and iqseqno in (
+			select iqseqno from invoice_head where status =100 and invoiceType=0
+			)
+			<if test="entid != null and entid !=''">
+			 and iqentid = #{entid}
+		</if>
+		  order by iqdate 
+	</select>
+
+	<!-- 查询未返回发票数据-->
+	<select id="getInvquesNoFphm" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select * from invque where   iqstatus in (30) and (rtfphm is null or rtfphm='') and iqfplxdm='026'  and iqseqno not in (
+			select iqseqno from invoice_head   
+		)
+			<if test="entid != null and entid !=''">
+			 and iqentid = #{entid}
+		</if>
+		  order by iqdate 
+	</select>
+	
+	<select id="getInvqueCount" resultType="int"  parameterType="NewHashMap">
+		select count(*) from invque where 1=1
+		<if test="status != null">
+			and iqstatus = #{status}
+		</if>
+		<if test="entid != null">
+			and iqentid = #{entid}
+		</if>
+		<if test="channel != null">
+			and iqchannel = #{channel}
+		</if>
+		<if test="iqdate != null">
+			and iqdate = #{iqdate}
+		</if>
+		<if test="taxzdh != null">
+			and iqtaxzdh = #{taxzdh}
+		</if>
+		<if test="taxno != null">
+			and iqtaxno = #{taxno}
+		</if>
+		<if test="userid != null">
+			and iqperson = #{userid}
+		</if>
+		<if test="iqseqno != null">
+			and iqseqno = #{iqseqno}
+		</if>
+		<if test="rtfpdm != null">
+			and rtfpdm = #{rtfpdm}
+		</if>
+		<if test="rtfphm != null">
+			and rtfphm = #{rtfphm}
+		</if>
+	</select>
+	
+	<select id="getInvqueList" resultType="com.invoice.bean.db.InvqueList"  parameterType="NewHashMap">
+		select * from invque_list where 1=1
+		<if test="iqseqno != null">
+			and iqseqno = #{iqseqno}
+		</if>
+		<if test="sheetid != null">
+			and sheetid = #{sheetid}
+		</if>
+		<if test="sheettype != null">
+			and sheettype = #{sheettype}
+		</if>
+		<if test="serialid != null">
+			and serialid = #{serialid}
+		</if>
+	</select>
+	
+		<select id="getInvquelistForSheetid" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select a.iqentid,a.iqstatus,a.iqseqno,c.sheetid,c.totalAmount,a.iqtotje,a.iqtotse,a.iqdate,
+       		a.iqtype,a.iqchannel,a.rtfpdm,a.rtfphm,
+       		a.iqgmftax,a.iqgmfname,a.iqgmfadd,a.iqgmfbank,a.iqemail,a.iqmsg
+		from invque a,invque_list b, invoice_sale_head c
+		where a.iqseqno=b.iqseqno and b.sheetid =c.sheetid and a.iqentid=c.entid 
+ 			and a.iqstatus in (30,99)
+		<if test="entid != null">
+			and a.iqentid = #{entid}
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.iqdate &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.iqdate &lt;= #{enddate} 
+		</if>
+		<if test="channel != null and channel !=''">
+			and a.iqchannel = #{channel}
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and c.sheetid = #{sheetid}
+		</if>
+		<if test="isauto != null and isauto !=''">
+			and c.isauto = #{isauto}
+		</if>
+		<if test="iqdate != null">
+			and a.iqdate = #{iqdate}
+		</if>
+		<if test="taxzdh != null">
+			and iqtaxzdh = #{taxzdh}
+		</if>
+		<if test="userid != null">
+			and iqperson = #{userid}
+		</if>
+		<if test="iqseqno != null">
+			and a.iqseqno = #{iqseqno}
+		</if>
+		
+		order by a.iqdate desc
+		
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+	</select>
+	
+	<select id="getInvquelistForSheetidcount" resultType="int"  parameterType="NewHashMap">
+		select   count(*)
+		from invque a,invque_list b, invoice_sale_head c
+		where a.iqseqno=b.iqseqno and b.sheetid =c.sheetid and a.iqentid=c.entid 
+		and a.iqstatus in (30,99)
+ 
+		<if test="entid != null">
+			and a.iqentid = #{entid}
+		</if>
+		<if test="channel != null and channel !=''">
+			and a.iqchannel = #{channel}
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and c.sheetid = #{sheetid}
+		</if>
+		<if test="isauto != null and isauto !=''">
+			and c.isauto = #{isauto}
+		</if>
+		<if test="iqdate != null">
+			and a.iqdate = #{iqdate}
+		</if>
+		<if test="taxzdh != null">
+			and iqtaxzdh = #{taxzdh}
+		</if>
+		<if test="userid != null">
+			and iqperson = #{userid}
+		</if>
+		<if test="iqseqno != null">
+			and a.iqseqno = #{iqseqno}
+		</if>
+ 
+	</select>
+	<!-- 查询是否已经自动开票-->
+	<select id="getInvqueForsheetid" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select a.iqentid,a.iqstatus,a.iqseqno,c.sheetid,c.totalAmount,a.iqtotje,a.iqtotse,a.iqdate,
+       		a.iqtype,a.iqchannel,a.rtfpdm,a.rtfphm,
+       		a.iqgmftax,a.iqgmfname,a.iqgmfadd,a.iqgmfbank,a.iqemail,a.iqmsg
+		from invque a,invque_list b, invoice_sale_head c
+		where a.iqseqno=b.iqseqno and b.sheetid =c.sheetid and a.iqentid=c.entid 
+ 			and a.iqstatus in (40,50) and a.iqentid = #{entid} and isauto =1 and iqtype=0
+			and c.sheetid = #{sheetid}
+
+	</select>
+	
+	<select id="gethcInvqueList" resultType="com.invoice.bean.db.InvqueList"  parameterType="NewHashMap">
+		select * from invque_list where 1=1 and  iqseqno = #{iqseqno}
+	</select>
+	
+	<update id="updateTo40" parameterType="com.invoice.bean.db.Invque">
+		update invque set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqstatus=40
+		where iqseqno = #{iqseqno} and iqstatus not in (40,50)
+	</update>
+	
+	<update id="updateTo30" parameterType="com.invoice.bean.db.Invque">
+		update invque set processMsg=#{processMsg},iqmsg=#{iqmsg},iqstatus=30
+		where iqseqno = #{iqseqno} and iqstatus not in (40,50)
+	</update>
+	
+	<update id="updateTo50" parameterType="com.invoice.bean.db.Invque">
+		update invque set iqpdf=#{iqpdf},iqstatus=50
+		where iqseqno = #{iqseqno} and iqstatus=40
+	</update>
+	<!-- 银座用-->
+	<update id="updateTo50ByFp" parameterType="com.invoice.bean.db.Invque">
+		update invque set iqpdf=#{iqpdf},rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},iqstatus=50
+		where iqseqno = #{iqseqno}  
+	</update>
+	
+	<update id="updateTo99" parameterType="com.invoice.bean.db.Invque">
+		update invque set iqstatus=99
+		where iqseqno = #{iqseqno} and iqstatus=30
+	</update>
+	
+	<update id="updateToFp" parameterType="com.invoice.bean.db.Invque">
+		update invque set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqstatus=40
+		where iqseqno = #{iqseqno} 
+	</update>
+	
+	<update id="updatepdf" parameterType="com.invoice.bean.db.Invque">
+		update invque set iqpdf=#{iqpdf},iqstatus=50
+		where iqseqno = #{iqseqno} and iqstatus in (40,50)
+	</update>
+	
+	<update id="updateinvoicetimes" parameterType="com.invoice.bean.db.Invque">
+		update invque set iqinvoicetimes = iqinvoicetimes+1
+		where iqseqno = #{iqseqno} 
+	</update>
+	
+	<!-- For 高灯回调接口 -->
+	<update id="updateForCallGD" parameterType="com.invoice.bean.db.Invque">
+		update invque 
+		set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqstatus=#{iqstatus}
+		where iqseqno = #{iqseqno} and iqstatus in (0,10,20,30,40)
+	</update>
+	
+</mapper>

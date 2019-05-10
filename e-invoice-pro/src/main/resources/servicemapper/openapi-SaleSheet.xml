@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.OpenapiDao">
+
+	<insert id="insertSaleHead" parameterType="com.invoice.bean.db.OpenapiSaleHead">
+		INSERT INTO openapi_sale_head 
+		(entid, sheetid, sheettype, shopid, syjid, billno, amt, zlamt, sfamt, sdate, remark, createtime,taxtitle,taxno,taxaddr,taxbank,recvemail,recvphone,isauto) 
+		VALUES 
+		(#{entid},#{sheetid},#{sheettype},#{shopid},#{syjid},#{billno},#{amt},#{zlamt},#{sfamt},#{sdate},#{remark},#{createtime},#{taxtitle},#{taxno},#{taxaddr},#{taxbank},#{recvemail},#{recvphone},#{isauto})
+	</insert>
+	
+	<insert id="insertSaleDetail" parameterType="com.invoice.bean.db.OpenapiSaleDetail">
+		INSERT INTO openapi_sale_detail 
+		(entid, sheetid, sheettype, rowno, itemid, itemname, qty, unit, spec, amt, taxRate, categoryid) 
+		VALUES 
+		(#{entid},#{sheetid},#{sheettype},#{rowno},#{itemid},#{itemname},#{qty},#{unit},#{spec},#{amt},#{taxrate},#{categoryid})
+	</insert>
+	
+	<insert id="insertSalePay" parameterType="com.invoice.bean.db.OpenapiSalePay">
+		INSERT INTO openapi_sale_pay
+		(entid, sheetid, sheettype, rowno, payid, payname, amt) 
+		VALUES 
+		(#{entid},#{sheetid},#{sheettype},#{rowno},#{payid},#{payname},#{amt})
+	</insert>
+	
+	<select id="getSaleHead" parameterType="com.invoice.bean.db.OpenapiSaleHead" resultType="com.invoice.bean.db.OpenapiSaleHead">
+		select * from openapi_sale_head 
+		 where entid=#{entid}
+		   and sheetid=#{sheetid}
+		   and sheettype=#{sheettype}
+	</select>
+	<update id="updateSaleHead" parameterType="com.invoice.bean.db.OpenapiSaleHead" >
+		update openapi_sale_head
+		  set flag=#{flag},flagmsg=#{flagmsg}
+		where entid=#{entid} and sheetid=#{sheetid} and sheettype=#{sheettype}
+	</update>
+	
+	<select id="searchInvoice" parameterType="com.invoice.bean.ui.RequestOpenApiSearch" resultType="com.invoice.bean.ui.ResponseOpenApiSearch">
+		select a.sheetid,a.sheettype,'N' operation,a.shopid, b.shopname,a.tradeDate sdate,
+		'' editor,a.totalAmount amt,d.gmfName gname,d.gmfTax gtaxno,d.gmfAddr gaddr,d.gmfBank gbank,
+		a.gmfno gno,d.xsfName mname,d.xsfTax mtaxno,d.xsfBank mbank,d.xsfAddr maddr,
+		d.fpDM invoicecode, d.fpHM invoiceno, c.iqdate invoicedate,d.pdf invoicepdf, a.remark,d.invoiceid
+		from invoice_sale_head a 
+		join shop b on b.shopid=a.shopid and b.entid=a.entid
+		join invque c on c.iqseqno=a.iqseqno
+		join invoice_head d on d.iqseqno=a.iqseqno
+		where a.flag=1
+		  and c.iqstatus=50
+		  and a.entid=#{entid}
+		  and a.shopid=#{shopid}
+		<if test="gno!=null">
+			and a.gmfno=#{gno}
+		</if>
+		<if test="startdate!=null">
+			and c.iqdate between #{startdate} and #{enddate}
+		</if>
+	</select>
+	
+	<select id="searchInvoiceItem" parameterType="String" resultType="Map">
+		select a.rowno,a.goodsid itemid,a.goodsName itemname,a.qty,a.taxRate taxrate,a.amt amt 
+		from invoice_detail a 
+		where invoiceid=#{inviceid}
+	</select>
+	
+</mapper>

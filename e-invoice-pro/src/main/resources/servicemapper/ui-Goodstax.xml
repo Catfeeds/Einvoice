@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.GoodstaxDao">	
+
+ <select id="queryGoodstax" resultType="NewHashMap">
+		select a.*,d.taxitemname,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 9 and a.TAXPRE =c.FIELDVALUE) as lookup,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 10 and a.ZEROTAX=c.FIELDVALUE) as lookup1
+        from goodstax a left join taxitem d on a.taxitemid=d.taxitemid
+        WHERE a.entid = #{entid}
+		<if test="goodsid != null and goodsid !=''">
+			and a.goodsid = #{goodsid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and a.goodsname like CONCAT('%',#{goodsname},'%') 
+		</if> 
+		 order by a.goodsid asc  
+		<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+	    </if>
+  	</select>
+	<select id="getBillsalereport" resultType="NewHashMap">
+		select a.goodsId,a.goodsName, SUM(a.qty) as qty,SUM(a.amt) as amt,SUM(a.usedAmt) as usedAmt from billsalereport a 
+        WHERE entid = #{entid} and shopid = #{shopid} 
+		<if test="goodsid != null and goodsid !=''">
+			and goodsId = #{goodsid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and goodsName like CONCAT('%',#{goodsname},'%') 
+		</if> 
+		<if test="startdate != null and startdate !=''">
+			and sdate &gt;= #{startdate}
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and sdate &lt;= #{enddate}
+		</if>
+		 GROUP BY a.goodsId, a.goodsName 
+		<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+	    </if>
+  	</select>
+  	
+	<select id="getBillsalereportCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from (select count(*) from billsalereport where entid= #{entid} and shopid = #{shopid} 
+       <if test="goodsid != null and goodsid !=''">
+			and goodsId = #{goodsid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and goodsName like CONCAT('%',#{goodsname},'%') 
+		</if> 
+		<if test="startdate != null and startdate !=''">
+			and sdate &gt;= #{startdate}
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and sdate &lt;= #{enddate}
+		</if>
+		GROUP BY goodsId,goodsName  ) a
+    </select>
+    
+	<select id="getGoodstaxCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Goodstax where entid= #{entid}
+        <if test="goodsid != null and goodsid !=''">
+			and goodsid = #{goodsid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and goodsname like CONCAT('%',#{goodsname},'%') 
+		</if> 
+    </select>
+	
+  <select id="getGoodstaxById" parameterType="com.invoice.bean.db.Goodstax" resultType="com.invoice.bean.db.Goodstax">
+        select * from Goodstax where entid =#{entid} and goodsid = #{goodsid}
+	</select>
+	
+	<insert id="insertGoodstax" parameterType="com.invoice.bean.db.Goodstax">
+		insert into Goodstax(entid,goodsid,goodsname,taxitemid,taxpre,taxprecon,zerotax)
+		values(#{entid},#{goodsid},#{goodsname},#{taxitemid},#{taxpre},#{taxprecon},#{zerotax})
+	</insert>
+	
+	<delete id="deleteGoodstax" parameterType="com.invoice.bean.db.Goodstax" >	
+		delete from Goodstax where entid= #{entid} and goodsid = #{goodsid}
+	</delete>	
+	
+	<update id="updateGoodstax" parameterType="com.invoice.bean.db.Goodstax">
+		update Goodstax set  entid =#{entid}, goodsid =#{goodsid},  goodsname =#{goodsname},  taxitemid =#{taxitemid},  taxpre =#{taxpre},  taxprecon =#{taxprecon},  zerotax =#{zerotax}  where entid =#{entid} and goodsid =#{goodsid}
+	</update>
+
+    <insert id="addGoodstaxList"  parameterType="com.invoice.bean.db.Goodstax">
+	    insert into Goodstax(entid,goodsid,goodsname,taxitemid,taxpre,taxprecon,zerotax)
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >
+	        (#{item.entid},#{item.goodsid},#{item.goodsname},#{item.taxitemid},#{item.taxpre},#{item.taxprecon},#{item.zerotax})
+	    </foreach>  
+	</insert>
+	
+    <select id="getGoodstaxByIds" parameterType="NewHashMap" resultType="NewHashMap">
+        select * from Goodstax where entid =#{entid} and goodsid in 
+		<foreach item="item" index="index" collection="goodsid" open="(" separator="," close=")">
+                        #{item}
+         </foreach>
+	</select>
+	
+	 <select id="queryGoodstaxlog" resultType="NewHashMap">
+		select a.*,d.taxitemname,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 9 and a.TAXPRE =c.FIELDVALUE) as lookup,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 10 and a.ZEROTAX=c.FIELDVALUE) as lookup1,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 14 and a.edittype=c.FIELDVALUE) as lookup2,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 15 and a.crud=c.FIELDVALUE) as lookup3
+        from goodstaxlog a left join taxitem d on a.taxitemid=d.taxitemid
+        WHERE a.entid = #{entid}
+		<if test="goodsid != null and goodsid !=''">
+			and a.goodsid = #{goodsid}
+		</if>
+		<if test="loginid != null and loginid !=''">
+			and a.loginid = #{loginid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and a.goodsname like CONCAT('%',#{goodsname},'%') 
+		</if> 
+		<if test="username != null and username !=''">
+			and a.username like CONCAT('%',#{username},'%') 
+		</if> 
+		<if test="startdate != null and startdate !=''">
+			and a.processTime &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.processTime &lt;= #{enddate} 
+		</if>
+		 order by a.processTime desc  
+		<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+	    </if>
+ 
+  	</select>
+  	
+ 	<select id="getGoodstaxCountlog" resultType="int" parameterType="NewHashMap">
+	select count(*) from goodstaxlog where entid= #{entid}
+	<if test="loginid != null and loginid !=''">
+			and loginid = #{loginid}
+	</if>
+    <if test="goodsid != null and goodsid !=''">
+		and goodsid = #{goodsid}
+	</if>
+	<if test="goodsname != null and goodsname !=''">
+		and goodsname like CONCAT('%',#{goodsname},'%') 
+	</if> 
+	<if test="startdate != null and startdate !=''">
+		and processTime &gt;= #{startdate} 
+	</if>
+	<if test="enddate != null and enddate !=''">
+		and processTime &lt;= #{enddate} 
+	</if>
+    </select>
+    
+    <insert id="insertGoodstaxlog" parameterType="com.invoice.bean.db.Goodstax">
+		insert into Goodstaxlog(entid,goodsid,goodsname,taxitemid,taxpre,taxprecon,zerotax,loginid,processTime,edittype,crud,username)
+		values(#{entid},#{goodsid},#{goodsname},#{taxitemid},#{taxpre},#{taxprecon},#{zerotax},#{loginid},#{processTime},#{edittype},#{crud},#{username})
+	</insert>
+	
+	<select id="getTaxitemById" parameterType="String" resultType="com.invoice.bean.db.Taxitem">
+        select * from taxitem where  taxitemid =  #{taxitemid} 
+	</select>
+	
+</mapper>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+		
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		
+		
+		<script type="text/javascript">
+		$(document).ready(function(){
+			var entid = $.getUrlParam("entid");
+			var openid = $.getUrlParam("openid");
+			var shopid = $.getUrlParam("shopid");
+			var sheettype = $.getUrlParam("sheettype");
+			var qr = $.getUrlParam("qr");
+			/*增加二维码中含有完整小票信息支持*/
+			var data = encodeURIComponent($.getUrlParam("data"));
+			var sign = encodeURIComponent($.getUrlParam("sign"));
+			var wxopen = "wxopen?entid="+entid+"&openid="+openid+"&shopid="+shopid+"&sheettype="+sheettype+"&qr="+qr+"&data="+data+"&sign="+sign;
+			$.myAjax({
+				url:$.getService("wx", wxopen),
+				data:null,
+				showModal:false,
+				contentType:"application/json;charset=UTF-8",
+				success: function (dataJson) {
+					if(dataJson.code!=0){
+						$.myAlert(dataJson.message);
+						return;
+					}
+					console.log(dataJson.data.url);
+					window.location.href = dataJson.data.url;
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					$.myAlert("访问后台失败! status:"+textStatus+" msg:"+jqXHR.responseText);
+				}
+			});
+		});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

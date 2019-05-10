@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.ChargeDao">
+
+	<select id="test" resultType="NewHashMap">
+		select * from invoice_head where 1=2
+	</select>
+	
+	<select id="getList" resultType="NewHashMap" parameterType="NewHashMap">
+		SELECT
+		  distinct a.sheetid
+		FROM
+		 invoice_head a
+		JOIN
+		 invoice_detail b on b.sheetid=a.sheetid
+		 where a.shopid=#{shopid} and b.flag=0
+	</select>
+	
+	<update id="callbackSheet" parameterType="NewHashMap">
+		update invoice_detail
+		   set flag=#{flag},
+		       invoiceCode=#{invoiceCode},
+		       invoiceNo=#{invoiceNo},
+		       invoiceDate=#{invoiceDate},
+		       invoiceType=#{invoiceType},
+		       updatetime=#{updatetime}
+		 where sheetid=#{sheetid}
+		 <if test="rowno != null">
+		   and rowno in (${rowno})
+		 </if>
+	</update>
+	
+	<select id="getHead" resultType="NewHashMap" parameterType="NewHashMap">
+		SELECT
+		  sheetid,
+		  shopid,
+		  100 AS STATUS,
+		  invoiceAmount AS amt,
+		  tradeDate AS sdate,
+		  remark AS remark,
+		  gmfname,
+		  gmftax,
+		  gmfadd,
+		  gmfbank
+		FROM
+		  invoice_head
+		  where sheetid = #{sheetid}
+	</select>
+	
+	<select id="getDetail" resultType="NewHashMap" parameterType="NewHashMap">
+		select 
+		  rowno AS rowno,
+		  0 AS categoryid,
+		  '项' AS unit,
+		  itemid AS itemid,
+		  itemName AS itemname,
+		  1 AS qty,
+		  taxamount AS amt
+		from invoice_detail a
+		where a.sheetid = #{sheetid}
+	</select>
+</mapper>

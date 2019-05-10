@@ -1,0 +1,437 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title></title>
+<link rel="stylesheet" href="../assets/css/core.css" />
+<link rel="stylesheet" href="../assets/css/menu.css" />
+<link rel="stylesheet" href="../assets/css/amazeui.css" />
+<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+<link rel="stylesheet" href="../assets/css/app.css" />
+
+<script src="../assets/js/jquery.min.2.2.2.js"></script>
+<script src="../assets/js/amazeui.min.js"></script>
+<script src="../assets/js/amazeui.switch.js"></script>
+<script src="../assets/js/amazeui.page.js"></script>
+<script src="../js/myJq.js"></script>
+<script src="../js/route.js"></script>
+<script src="js/weisgpiaotax.js"></script>
+<script src="../js/time.js"></script>
+
+<script src="../js/jquery-ui.js"></script>
+<script src="../js/date-zh-cn.js"></script>
+<link rel="stylesheet" href="../css/jquery-ui.css">
+<!-- 添加中文支持-->
+</head>
+<body>
+	<div class="am-panel am-panel-success am-margin-bottom-0">
+		<div class="am-panel-hd">
+			<div class="am-g am-padding-left-0">
+				<div class="am-u-sm-8 am-padding-left-0">
+					发票信息：
+					<button id="geren" type="button" class="am-btn am-btn-success am-radius" onclick="geren()">个人</button>
+					<button id="danwei" type="button" class="am-btn am-btn-success am-radius" onclick="danwei()">单位</button>
+				</div>
+
+				<div class="am-u-sm-4 am-text-center am-fr">
+					<select data-am-selected id="iqfplxdm">
+						<option value="025" selected>卷票</option>
+						<option value="007">普票</option>
+						<option value="004">专票</option>
+						<option value="026">电子票</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="am-panel-bd am-cf">
+			<form class="am-form am-form-horizontal">
+				<div class="am-g">
+					<div class="am-u-lg-6">
+						<div class="am-input-group">
+							<span class="am-input-group-label"> <i class="am-icon-bars am-icon-fw"></i>
+							</span> <input type="text" id="invoiceHeadEntText" class="am-form-field" placeholder="发票抬头" onkeyup="getCustomerInfo()">
+						</div>
+					</div>
+					<div class="am-u-lg-6">
+						<div class="am-input-group">
+							<span class="am-input-group-label"> <i class="am-icon-bars am-icon-fw"></i>
+							</span> <input id="invoiceHeadEntTaxno" type="text" class="am-form-field" placeholder="纳税人识别号">
+						</div>
+					</div>
+				</div>
+				<div class="am-g">
+					<div class="am-u-lg-6">
+						<div class="am-input-group">
+							<span class="am-input-group-label"> <i class="am-icon-bars am-icon-fw"></i>
+							</span> <input type="text" class="am-form-field" placeholder="地址、电话" id="invoiceHeadDzdh">
+						</div>
+					</div>
+					<div class="am-u-lg-6">
+						<div class="am-input-group">
+							<span class="am-input-group-label"> <i class="am-icon-bars am-icon-fw"></i>
+							</span> <input type="text" class="am-form-field" placeholder="开户行及账号" id="invoiceHeadYhzh">
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="am-panel am-panel-success am-margin-bottom-0">
+		<div class="am-panel-hd ">
+			<div class="am-g am-padding-left-0">
+				<div class="am-u-sm-8 am-padding-left-0">
+					发票列表:
+					&nbsp;&nbsp;
+					<button type="button" class="am-btn am-btn-primary am-radius" onclick="wkpiaotaxmo()">未开票税目</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<button type="button" class="am-btn am-btn-primary am-radius" onclick="kaipiao()">开票</button>
+				</div>
+				<div class="am-u-sm-4 am-padding-left-0">
+					<div class="am-input-group" id="mailflag">
+						<span class="am-input-group-label"> <i class="am-icon-bars am-icon-fw"></i>
+						</span> <input type="email" class="am-form-field" id="invRecvMail" placeholder="发票接收邮箱" value="">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="am-panel-bd"></div>
+		<table id="table1" class="am-table am-table-bordered am-table-centered  am-table-compact am-table-radius ">
+			<tr height="30">
+				<td width="5%"></td>
+				<td width="20%">税目</td>
+				<td width="30%">名称</td>
+				<td width="5%">税率</td>
+				<td width="10%">单位</td>
+				<td width="10%">含税金额</td>
+				<td width="8%">数量</td>
+				<td width="6%">单价</td>
+				<td width="6%">参考单价</td>
+			</tr>
+		</table>
+	</div>
+
+	<table style="display: none;">
+		<tr id="addnew">
+			<td><input type="hidden" name="goodsid"> <input type="hidden" name="unusedamt"> <input
+				type="hidden" name="unuseqty"> <input type="hidden" name="tradeDate"> 
+				<a onclick="del(this)" class="am-icon-arrows-h"></a></td>
+			<td><input type="text" name="taxitemid" readonly></td>
+			<td><select name="goodsname"></select></td>
+			<td><input type="text" name="taxrate" readonly></td>
+			<td><input type="text" name="unit"></td>
+			<td><input type="text" name="amt" onchange="jisuan(this,'amt')"></td>
+			<td><input type="text" name="qty" onchange="jisuan(this,'qty')"></td>
+			<td><input type="text" name="price" readonly></td>
+			<td><input type="text" name="hidprice" readonly></td>
+		</tr>
+	</table>
+
+	<div class="am-modal am-modal-no-btn" tabindex="-1" id="modal">
+		<div class="am-modal-dialog">
+			<div class="am-modal-hd">
+				税目查询 <a href="" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+			</div>
+			<div class="am-modal-bd">
+				<div class="am-g">
+					<div class="am-u-lg-7">
+						<button class="am-btn am-btn-default am-fl" type="button" onclick="instax()">确定</button>
+					</div>
+					<div class="am-u-lg-5">
+						<div class="am-input-group">
+							<input type="text" class="am-form-field" id="requestname"> <span class="am-input-group-btn">
+								<button class="am-btn am-btn-default" type="button" onclick="searchtax(0)">
+									<span class="am-icon-search"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+
+				</div>
+				<div class="am-scrollable-horizontal">
+					<table id="taxtable" class="am-table am-table-hover table-main am-table-bordered am-text-truncate am-table-compact">
+						<thead>
+							<tr>
+								<th width="5%"></th>
+								<th>税目代码</th>
+								<th>税目名称</th>
+								<th>税率</th>
+								<th>说明</th>
+							</tr>
+						</thead>
+						<tbody id="searchRows">
+
+						</tbody>
+					</table>
+				</div>
+				<div id="page" class="am-fr"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="am-modal am-modal-no-btn " tabindex="-1" id="wkpiao">
+		<div class="am-modal-dialog">
+			<div class="am-modal-hd">
+				未开票商品查询<a href="" class="am-close am-close-spin am-fr" data-am-modal-close>&times;</a>
+			</div>
+			<div class="am-modal-bd">
+				<div class="am-g">
+					<div id="shopname" class="am-u-lg-4"></div>
+					<div class="am-u-lg-3">
+						<input type="text" id="goodsname" class="am-form-field" placeholder="商品名称">
+					</div>
+					<div class="am-u-lg-2">
+						<input type="text" id="startdate" class="am-form-field" placeholder="开始日期" readonly>
+					</div>
+					<div class="am-u-lg-2">
+						<input type="text" id="enddate" class="am-form-field" placeholder="结束日期" readonly>
+					</div>
+					<div class="am-u-lg-1">
+						<div class="am-input-group">
+
+							<span class="am-input-group-btn"> <!-- <button class="am-btn am-btn-default" type="button" onclick="dangqianbtn()">今天</button>&nbsp; -->
+								<button class="am-btn am-btn-default" type="button" onclick="wkpiao(0)">
+									<span class="am-icon-search"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="am-scrollable-horizontal">
+				<table id="wkptable" class="am-table am-table-hover table-main am-table-bordered am-text-truncate am-table-compact">
+					<thead>
+						<tr>
+							<th width="5%"></th>
+							<th>商品编码</th>
+							<th>商品名称</th>
+							<th>未开数量</th>
+							<th>未开金额</th>
+							<th>已开数量</th>
+							<th>已开票金额</th>
+							<th>所属月份</th>
+						</tr>
+					</thead>
+					<tbody id="searchBillsalereport">
+
+					</tbody>
+				</table>
+			</div>
+			<div id="page1" class="am-fr"></div>
+			<button class="am-btn am-btn-default am-fl" type="button" onclick="wkpiaoins()">确定</button>
+
+		</div>
+	</div>
+
+
+	<div class="am-modal am-modal-no-btn " tabindex="-1" id="wkpiaotax">
+		<div class="am-modal-dialog">
+			<div class="am-modal-hd">
+				未开票税目查询<a href="" class="am-close am-close-spin am-fr" data-am-modal-close>&times;</a>
+			</div>
+			<div class="am-modal-bd">
+				<div class="am-g">
+					<div id="taxshopname" class="am-u-lg-4"></div>
+					<div class="am-u-lg-3">
+						<input type="text" id="taxgoodsname" class="am-form-field" placeholder="虚拟商品名称">
+					</div>
+					<div class="am-u-lg-2">
+						<input type="text" id="taxstartdate" class="am-form-field" placeholder="开始日期" readonly>
+					</div>
+					<div class="am-u-lg-2">
+						<input type="text" id="taxenddate" class="am-form-field" placeholder="结束日期" readonly>
+					</div>
+					<div class="am-u-lg-1">
+						<div class="am-input-group">
+							<span class="am-input-group-btn">
+								<button class="am-btn am-btn-default" type="button" onclick="wkpiaotax(0)">
+									<span class="am-icon-search"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="am-scrollable-horizontal">
+				<table id="wkptabletax"
+					class="am-table am-table-hover table-main am-table-bordered am-text-truncate am-table-compact">
+					<thead>
+						<tr>
+							<th width="5%"></th>
+							<th>税目编码</th>
+							<th>税目名称</th>
+							<th>税率</th>
+							<th>未开数量</th>
+							<th>未开金额</th>
+							<th>已开数量</th>
+							<th>已开票金额</th>
+						</tr>
+					</thead>
+					<tbody id="searchBillsalereporttax"></tbody>
+				</table>
+			</div>
+			<div id="page2" class="am-fr"></div>
+			<button class="am-btn am-btn-default am-fl" type="button" onclick="wkpiaoinstax()">确定</button>
+		</div>
+	</div>
+
+	<table style="display: none;">
+		<tbody id="rowmodel">
+			<tr>
+				<td><label class="am-checkbox am-margin-0"> <input type="checkbox" name="taxitems"
+						value="||taxitemid||,||taxrate||" data-am-ucheck>
+				</label></td>
+				<td>||taxitemid||</td>
+				<td>||taxitemname||</td>
+				<td>||taxrate||</td>
+				<td>||taxitemmemo||</td>
+			</tr>
+		</tbody>
+
+		<tbody id="Billsalereport">
+			<tr>
+				<td><label class="am-checkbox am-margin-0"> <input type="checkbox" name="taxitems"
+						value="||taxitemid||,||goodsid||,||goodsname||,||taxrate||,||amt||,||useamt||,||oldamt||,||qty||,||useqty||,||trademonth||,||price||,||price||"
+						data-am-ucheck>
+				</label></td>
+				<td>||goodsid||</td>
+				<td>||goodsname||</td>
+				<td>||unuseqty||</td>
+				<td>||unusedamt||</td>
+				<td>||useqty||</td>
+				<td>||useamt||</td>
+				<td>||trademonth||</td>
+			</tr>
+		</tbody>
+
+		<tbody id="Billsalereporttax">
+			<tr>
+				<td><label class="am-checkbox am-margin-0"> <input type="checkbox" name="taxitems"
+						value="||taxitemid||,||goodsid||,||taxitemname||,||taxrate||,||amt||,||useamt||,||oldamt||,||qty||,||useqty||,||trademonth||,||price||,||price||"
+						data-am-ucheck>
+				</label></td>
+				<td>||taxitemid||</td>
+				<td>||taxitemname||</td>
+				<td>||taxrate||</td>
+				<td>||unuseqty||</td>
+				<td>||unusedamt||</td>
+				<td>||useqty||</td>
+				<td>||useamt||</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="am-popup" id="my-yulan">
+		<div class="am-popup-inner">
+			<div class="am-popup-hd">
+				<div class="am-g">
+					<div class="am-u-sm-8 am-text-center">
+						<h4 class="am-popup-title">发票预览</h4>
+					</div>
+					<div class="am-u-sm-2 ">
+						<div class="am-btn-group">
+							<button type="button" id="btn_submit" class="am-btn  am-radius am-center">提交</button>
+						</div>
+					</div>
+					<div class="am-u-sm-2 ">
+						<span data-am-modal-close class="am-close am-close-alt am-close-spin am-icon-times"></span>
+					</div>
+				</div>
+			</div>
+			<div class="am-popup-bd">
+				<div class="am-panel am-margin-top-sm am-text-xs" id="preview"></div>
+				<table style="display: none;">
+					<tbody id="rowPreviewDetail">
+						<tr class="">
+							<td colspan="2" width="35%">||goodsName||</td>
+							<td width="25%" class="am-text-right">||amount||</td>
+							<td width="15%" class="am-text-right">||taxRate||%</td>
+							<td width="25%" class="am-text-right">||taxFee||</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div id="rowPreview" style="display: none;">
+		<div class="am-panel-hd">第||r||张发票</div>
+		<table class="am-table-bordered am-app-preview am-margin-bottom-sm">
+			<tbody>
+				<tr>
+					<td width="5%">购买方</td>
+					<td colspan="4" width="70%">
+						<div>
+							名 称：<span class="">||gmfMc||</span>
+						</div>
+						<div>纳税人识别号：||gmfNsrsbh||</div>
+						<div>地址、 电话：||gmfDzdh||</div>
+						<div>开户行及账号：||gmfYhzh||</div>
+					</td>
+				</tr>
+				<tr class="am-text-center">
+					<td colspan="2" width="35%">货物名称</td>
+					<td width="25%">金额</td>
+					<td width="15%">税率</td>
+					<td width="25%">税额</td>
+				</tr>
+				<tr id="previewDetail||index||"></tr>
+				<tr class="am-text-center">
+					<td colspan="2">价税合计（大写）</td>
+					<td colspan="3">||amountDX||（小写）||amount||</td>
+				</tr>
+				<tr>
+					<td>销售方</td>
+					<td colspan="4"><div>
+							名 称：<span class="">||xsfMc||</span>
+						</div>
+						<div>纳税人识别号：||xsfNsrsbh||</div>
+						<div>地址、 电话：||xsfDzdh||</div>
+						<div>开户行及账号：||xsfYhzh||</div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<style type="text/css">
+td input {
+	margin-top: -1px;
+	margin-bottom: -1px;
+	width: 100%;
+	border: none;
+}
+
+.am-app-piao {
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+
+.am-app-piao-can {
+	background-color: #afa;
+	color: #000;
+}
+
+.am-app-piao-uncan {
+	background-color: #faa;
+	color: #000;
+}
+
+.am-app-piao-amt {
+	font-size: 3rem;
+	color: red;
+}
+
+.am-app-preview {
+	border: 1px solid orange;
+	width: 100%;
+}
+
+.am-app-preview td {
+	border: 1px solid orange;
+	padding: 4px;
+}
+</style>
+</html>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.PaymodeDao">	
+
+ <select id="queryPaymode" resultType="NewHashMap">
+		select Paymode.*,lookupitem.lookup FROM Paymode
+        LEFT JOIN lookupitem
+        ON Paymode.paystatus=lookupitem.fieldvalue
+        where lookupitem.lookupid=5 and entid = #{entid}
+         <if test="payid != null and payid != ''">
+			and payid = #{payid}
+		</if>
+		<if test="payname != null and payname != ''">
+			and payname like CONCAT('%',#{payname},'%') 
+		</if>
+        order by entid desc  
+		<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+		 </if>
+  </select>
+  
+  <select id="getPaymodeCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Paymode where entid= #{entid}
+        <if test="payid != null and payid != ''">
+			and payid = #{payid}
+		</if>
+		<if test="payname != null and payname != ''">
+			and payname like CONCAT('%',#{payname},'%') 
+		</if>
+    </select>
+
+  <select id="getPaymodeById" parameterType="com.invoice.bean.db.Paymode" resultType="com.invoice.bean.db.Paymode">
+        select * from Paymode where payid = #{payid} and entid = #{entid}
+	</select>
+		
+	<insert id="insertPaymode" parameterType="com.invoice.bean.db.Paymode">
+		insert into Paymode(entid,payid,payname,paystatus)
+		values(#{entid},#{payid},#{payname},#{paystatus})
+	</insert>
+	
+	<delete id="deletePaymode" parameterType="com.invoice.bean.db.Paymode" >	
+		delete from Paymode where payid= #{payid} and entid = #{entid}
+	</delete>	
+	
+	<update id="updatePaymode" parameterType="com.invoice.bean.db.Paymode">
+		update Paymode set  entid =#{entid}, payid =#{payid},  payname =#{payname},  paystatus =#{paystatus}  where  payid =#{payid} and entid = #{entid} 
+	</update>
+	
+ 	<select id="queryPaymodelog" resultType="NewHashMap">
+		select a.*,
+		(select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 5 and a.paystatus=c.FIELDVALUE) as lookup,
+		(select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 15 and a.crud=c.FIELDVALUE) as lookup1
+  		FROM Paymodelog a where entid = #{entid}
+  		 <if test="loginid != null and loginid !=''">
+			and a.loginid = #{loginid}
+		 </if>
+         <if test="payid != null and payid != ''">
+			and payid = #{payid}
+		</if>
+		<if test="payname != null and payname != ''">
+			and payname like CONCAT('%',#{payname},'%') 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.processTime &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.processTime &lt;= #{enddate} 
+		</if>
+        order by entid desc  
+		<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+		 </if>
+  </select>
+  
+    <select id="getPaymodeCountlog" resultType="int" parameterType="NewHashMap">
+		select count(*) from Paymodelog where entid= #{entid}
+        <if test="payid != null and payid != ''">
+			and payid = #{payid}
+		</if>
+		 <if test="loginid != null and loginid !=''">
+			and loginid = #{loginid}
+		 </if>
+		 	<if test="startdate != null and startdate !=''">
+			and processTime &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and processTime &lt;= #{enddate} 
+		</if>
+		<if test="payname != null and payname != ''">
+			and payname like CONCAT('%',#{payname},'%') 
+		</if>
+    </select>
+    
+    	<insert id="insertPaymodelog" parameterType="com.invoice.bean.db.Paymode">
+		insert into Paymodelog(entid,payid,payname,paystatus,loginid,processTime,crud,username)
+		values(#{entid},#{payid},#{payname},#{paystatus},#{loginid},#{processTime},#{crud},#{username})
+	</insert>
+    
+</mapper>

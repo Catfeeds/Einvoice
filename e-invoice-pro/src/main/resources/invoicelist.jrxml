@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoicelist2" language="groovy" pageWidth="610" pageHeight="835" columnWidth="604" leftMargin="3" rightMargin="3" topMargin="10" bottomMargin="10" uuid="c7e83efe-f2a1-4d86-8fb0-07e496af9261">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fpRQ" class="java.lang.String">
+		<parameterDescription><![CDATA[开票日期]]></parameterDescription>
+		<defaultValueExpression><![CDATA["2018年8月10日"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gmfName" class="java.lang.String">
+		<parameterDescription><![CDATA[购买方]]></parameterDescription>
+		<defaultValueExpression><![CDATA["北京富基融通信息技术有限公司"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="xsfName" class="java.lang.String">
+		<parameterDescription><![CDATA[销售方]]></parameterDescription>
+		<defaultValueExpression><![CDATA["湖南万家丽集团国际购物广场有限公司"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fpDM" class="java.lang.String">
+		<parameterDescription><![CDATA[发票代码]]></parameterDescription>
+		<defaultValueExpression><![CDATA["043001600511"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fpHM" class="java.lang.String">
+		<parameterDescription><![CDATA[发票号码]]></parameterDescription>
+		<defaultValueExpression><![CDATA["79750454"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sumamount" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2000"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sumtaxfee" class="java.lang.String">
+		<defaultValueExpression><![CDATA["200"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="seqno" class="java.lang.String">
+		<fieldDescription><![CDATA[发票明细顺序号]]></fieldDescription>
+	</field>
+	<field name="goodsname" class="java.lang.String">
+		<fieldDescription><![CDATA[名称]]></fieldDescription>
+	</field>
+	<field name="spec" class="java.lang.String">
+		<fieldDescription><![CDATA[规格型号]]></fieldDescription>
+	</field>
+	<field name="unit" class="java.lang.String">
+		<fieldDescription><![CDATA[计量单位]]></fieldDescription>
+	</field>
+	<field name="qty" class="java.lang.String">
+		<fieldDescription><![CDATA[项目数量]]></fieldDescription>
+	</field>
+	<field name="price" class="java.lang.String">
+		<fieldDescription><![CDATA[项目单价]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.String">
+		<fieldDescription><![CDATA[金额(不含税)]]></fieldDescription>
+	</field>
+	<field name="taxrate" class="java.lang.String">
+		<fieldDescription><![CDATA[税率]]></fieldDescription>
+	</field>
+	<field name="taxfee" class="java.lang.String">
+		<fieldDescription><![CDATA[税额]]></fieldDescription>
+	</field>
+	<variable name="xamount" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[new Double(Double.valueOf($F{amount}))]]></variableExpression>
+	</variable>
+	<variable name="xtaxfee" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[new Double(Double.valueOf($F{taxfee}))]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="152" splitType="Stretch">
+			<textField>
+				<reportElement x="72" y="77" width="375" height="11" uuid="ec811ef2-0df9-4b3b-8f64-6cdd098d27ba"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{gmfName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="72" y="100" width="375" height="11" uuid="76a6fa74-ad34-409d-8e95-153ab8e14086"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{xsfName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="143" y="122" width="105" height="11" uuid="297a72c7-495d-48fa-a1ee-d0ce80b9343d"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpDM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="122" width="105" height="11" uuid="111b3cc2-0476-48e5-bd8a-51589ce0e5ae"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpHM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="540" y="123" width="21" height="11" uuid="d31ec8c8-c534-4a51-aba4-7b3156f36fc6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="486" y="123" width="21" height="11" uuid="e306c47b-d227-4a45-8e99-3278b282d134"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="19" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="18" y="0" width="26" height="21" uuid="01c87d41-d77a-45b0-9d51-6a9d680e488a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{seqno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="0" width="147" height="21" uuid="48709237-e99b-4fba-9ca7-21c9ea2c70bc"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{goodsname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="191" y="0" width="65" height="21" uuid="315fd4e5-7878-4837-97c5-3c86711b8c7b"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{spec}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="256" y="0" width="37" height="21" uuid="2e48a27b-0f7b-4631-977d-1a1a521248b2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#.##########">
+				<reportElement x="293" y="0" width="57" height="21" uuid="dee33965-983e-4156-9fcc-835faf924e62"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#.#########">
+				<reportElement x="350" y="0" width="57" height="21" uuid="eacbf080-c231-4c31-ad8b-0321558e7c65"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="0" width="70" height="21" uuid="8f80d9c6-de22-4fe5-bc64-488a56f186a6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0%">
+				<reportElement x="477" y="0" width="32" height="21" uuid="93269cec-04a2-4213-a260-96e0be186b91"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{taxrate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="509" y="0" width="70" height="21" uuid="4f242ebf-ee7e-4b0b-a5dd-547513ea9b31"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{taxfee}.equals("0")?"***":$F{taxfee}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="407" y="0" width="70" height="17" uuid="b52a0caf-f715-49b7-8f0d-8008c2fe1c8e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{xamount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="0" width="70" height="17" uuid="229818cb-4a01-4286-9d37-3535e02ca401"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{xtaxfee}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="100" splitType="Stretch">
+			<textField>
+				<reportElement x="407" y="0" width="70" height="17" uuid="13e6c0ce-8527-45ec-884b-a2a126160186"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sumamount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="0" width="70" height="17" uuid="3db5152b-2ed0-4117-917c-37cd48c479b9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sumtaxfee}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="486" y="42" width="87" height="12" uuid="23a95956-8c3f-435d-be8b-b03d7ff2790e"/>
+				<textElement verticalAlignment="Top" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpRQ}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

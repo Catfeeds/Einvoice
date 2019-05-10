@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/comm/myJq.js"></script>
+		<script src="../js/comm/route.js"></script>
+		<script src="../js/module/100001.js"></script>
+	</head>
+	<body>
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">企业信息</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span> 企业信息管理
+                    </div>
+                   <!--  <div class="am-portlet-input am-fz-ml">
+                        <div class="am-portlet-input input-small input-inline">
+                            <div class="input-icon right">
+                                <i class="am-icon-search"></i>
+                                <input type="text" class="am-app-form-control am-app-form-control-solid" placeholder="搜索..."> </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="am-app-block">
+                    <div class="am-g">
+                        <div class="am-u-sm-2">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <button type="button" class="am-btn am-btn-default am-btn-success" id="btnNew"><span class="am-icon-plus"></span> 新增</button>
+                                     <!-- <button type="button" class="am-btn am-btn-default am-btn-secondary" id="btnSave"><span class="am-icon-save"></span> 保存</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-warning" id="btnCheck"><span class="am-icon-archive"></span> 审核</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-danger" id="btnDelete"><span class="am-icon-trash-o"></span> 删除</button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-u-sm-10 am-fr">
+	                        <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4">
+	                        	<li>
+	                        			<label class="am-u-sm-6 am-u-lg-4 am-app-form-lable">企业名称</label>
+	                        			<div class="am-u-sm-6 am-u-lg-8"><input type="text" data-query="entName" class="am-form-field"></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">纳税号</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"><input type="text" data-query="entTaxNo" class="am-form-field" placeholder="模糊查询"></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">选择</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"  id="selectA"></div>
+	                        	</li>
+	                        	<li><span class="am-input-group-btn"><button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch"></button></span></li>
+	                        </ul>
+                        </div>
+                    </div>
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                            <form class="am-form">
+                                <table class="am-table am-table-striped am-table-hover table-main">
+                                    <thead>
+                                        <tr>
+                                            <th class=""><input type="checkbox" class="am-checkbox"></th>
+                                            <th class="">编码</th>
+                                            <th class="">企业名称</th>
+                                            <th class="">纳税号</th>
+                                            <th class="am-hide-sm-only">创建日期</th>
+                                            <th class="am-hide-sm-only">修改日期</th>
+                                            <th class="">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rowTraget">
+                                    	
+                                    </tbody>
+                                </table>
+                                <div class="am-cf">
+                                    <div class="am-fr">
+                                    	<div id="page"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <table  style="display:none;">
+        	<tbody id="rowSample">
+        	<tr>
+                <td><input type="checkbox" class="am-checkbox"></td>
+                <td>||entId||</td>
+                <td>||entName||</td>
+                <td>||phone||</td>
+                <!-- <td class="am-hide-sm-only">||editdate||</td>
+                <td class="am-hide-sm-only">||checkdate||</td> -->
+                <td>||address||</td>
+                <td>||taxid||</td>
+                <td>
+                    <div class="">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="dataEdit(||index||)"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="dataDelete(||index||)"><span class="am-icon-trash-o"></span> 删除</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+        <form id="editForm" style="display:none;">
+        	<ul class="am-avg-sm-1 am-avg-md-2">
+        		<li class="am-form-group">
+	           			<label class="am-u-sm-6 am-u-lg-4 ">企业编码</label>
+	           			<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field" data-edit="entId" required></div>
+	           	</li>
+	           	<li class="am-form-group">
+	           			<label class="am-u-sm-6 am-u-lg-4 ">企业名称</label>
+	           			<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field"  data-edit="entName" required></div>
+	           	</li>
+	           	<li class="am-form-group">
+	           		<label class="am-u-sm-6  am-u-lg-4 ">纳税号</label>
+	           		<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field"  data-edit="entTaxNo" required></div>
+	           	</li>
+           </ul>
+        </form>
+	</body>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+
+<mapper namespace="com.invoice.uiservice.dao.CompanyNameDao">
+
+	<select id="getEnterpriseByIdTile" parameterType="com.invoice.bean.db.Enterprise" resultType="com.invoice.bean.db.Enterprise">
+		select entname as entname from enterprise where entid = #{entid}
+	</select>
+	
+	<select id="getPurchaserListByName" parameterType="com.invoice.bean.db.PurchaserInfo" resultType="com.invoice.bean.db.PurchaserInfo">
+		select name,taxId,bankAndAccount,addressAndPhone
+		from purchaser
+		where flag = 1 and name like CONCAT('%',#{name},'%') limit 8
+	</select>
+	
+	<insert id="insertPurchaser" parameterType="com.invoice.bean.db.PurchaserInfo">
+		insert into purchaser(name,taxId,bankAndAccount,addressAndPhone,bank,bankAccount,location,mobilePhone,city,country,province,companyIndex,taxAuthorityCode,taxAuthorityName,frequency,score,flag,createTime)
+		values(#{name},#{taxId},#{bankAndAccount},#{addressAndPhone},#{bank},#{bankAccount},#{location},#{mobilePhone},#{city},#{country},#{province},#{companyIndex},#{taxAuthorityCode},#{taxAuthorityName},#{frequency},#{score},1,now())
+		ON DUPLICATE KEY 
+		update name = #{name},
+			   bankAndAccount = #{bankAndAccount},
+			   addressAndPhone = #{addressAndPhone},
+			   bank = #{bank},
+			   bankAccount = #{bankAccount},
+			   location = #{location},
+			   mobilePhone = #{mobilePhone},
+			   city = #{city},
+			   country = #{country},
+			   province = #{province},
+			   companyIndex = #{companyIndex},
+			   taxAuthorityCode = #{taxAuthorityCode},
+			   taxAuthorityName = #{taxAuthorityName},
+			   frequency = #{frequency},
+			   score = #{score},
+			   modifyTime = now()
+	</insert>
+	
+	<insert id="insertInvoiceInfo">
+		insert into purchaser(taxId,name,addressAndPhone,bankAndAccount,createTime)
+        select c.iqgmftax,c.iqgmfname,c.iqgmfadd,c.iqgmfbank,now()
+        from (select a.iqgmftax,max(a.iqgmfname) iqgmfname,max(a.iqgmfadd) iqgmfadd,max(a.iqgmfbank) iqgmfbank
+              From invque a
+              where a.iqstatus >= 40
+                and length(ifnull(trim(a.iqgmftax),'')) = 18
+                and a.iqdate >= date_add(now(), interval -7 day)
+              group by a.iqgmftax) c
+        where not EXISTS(select 1 from purchaser b where c.iqgmftax = b.taxId)
+	</insert>
+</mapper>
+  

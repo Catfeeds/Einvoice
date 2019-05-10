@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.efuture.portal.dao.db.one.LookupDao">	
+
+ <select id="getLookupSelect" resultType="com.efuture.portal.beans.Option" parameterType="java.lang.Integer">
+		select FIELDVALUE as value, LOOKUP as name from lookupitem where lookupid=#{lookupid}
+  </select>
+
+</mapper>

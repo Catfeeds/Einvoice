@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.NBBillDao">
+	<select id="test" resultType="NewHashMap">
+		select 1 from v_sellhead where 1=2
+	</select>
+
+	<select id="getInvoiceCount" resultType="java.lang.Integer" parameterType="NewHashMap">
+		select count(*) from invoice where iqseqno=#{iqseqno}
+	</select>
+	
+	<insert id="NBIcallbackSheet" parameterType="NewHashMap">
+        insert into invoice
+        values
+            (
+           	#{serialid},
+			#{iqseqno},
+			#{entid},
+			#{sheetid},
+			#{shopid},
+			#{syjid},
+			#{billno},
+			#{tradedate},
+			#{iqtype},
+			#{totalamount},
+			#{invoiceamount},
+			#{totaltaxfee},
+			#{rtfpdm},
+			#{rtfphm},
+			#{rtkprq},
+			#{iqyfpdm,jdbcType=VARCHAR},
+			#{iqyfphm,jdbcType=VARCHAR}
+        )
+     </insert>
+     
+     <update id="NBUcallbackSheet" parameterType="NewHashMap">
+		update invoice
+		   set 
+		   	   <if test="serialid!=null">
+		       serialid=#{serialid}
+		       </if>
+		       <if test="entid!=null">
+		       ,entid=#{entid}
+		       </if>
+		       <if test="sheetid!=null">
+		       ,sheetid=#{sheetid}
+		       </if>
+		       <if test="shopid!=null">
+		       ,shopid=#{shopid}
+		       </if>
+		       <if test="syjid!=null">
+		       ,syjid=#{syjid}
+		       </if>
+		       <if test="billno!=null">
+		       ,billno=#{billno}
+		       </if>
+		       <if test="tradedate !=null">
+		       ,tradedate=#{tradedate}
+		       </if>
+		       <if test="iqtype!=null">
+		       ,iqtype=#{iqtype}
+		       </if>
+		       <if test="totalAmount!=null">
+		       ,totalAmount=#{totalAmount}
+		       </if>
+		       <if test="invoiceAmount!=null">
+		       ,invoiceAmount=#{invoiceAmount}
+		       </if>
+		       <if test="totaltaxfee!=null">
+		       ,totaltaxfee=#{totaltaxfee}
+		       </if>
+		       <if test="rtfpdm!=null">
+		       ,rtfpdm=#{rtfpdm}
+		       </if>
+		       <if test="rtfphm!=null">
+		       ,rtfphm=#{rtfphm}
+		       </if>
+		       <if test="rtkprq !=null">
+		       ,rtkprq=#{rtkprq}
+		       </if>
+		       <if test="iqyfpdm!=null">
+		       ,iqyfpdm=#{iqyfpdm}
+		       </if>
+		       <if test="iqyfphm!=null">
+		       ,iqyfphm=#{iqyfphm}
+		       </if>
+		where iqseqno=#{iqseqno}
+	</update>
+
+</mapper>

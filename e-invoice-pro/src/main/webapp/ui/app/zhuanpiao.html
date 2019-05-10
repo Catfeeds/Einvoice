@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/zhuanpiao.js"></script>
+		<script src="../assets/js/qrcode.lib.min.js"></script>
+		<script src="../assets/js/qrcode.js"></script>
+
+	</head>
+	<body>
+		<div class="am-cf admin-main" id="div_info">
+		  <div class="am-panel am-panel-success am-margin-bottom-0">
+		  <div class="am-panel-hd ">
+		      <div class="am-panel-title" >
+		        小票信息
+		      </div>
+		  </div>
+	      <div class="am-panel-bd">
+				  <form class="am-form am-form-horizontal">
+					 <div class="am-g">
+						   <div class="am-u-lg-4">
+							   <div class="am-input-group">
+							      <span class="am-input-group-label">
+							       <i class="am-icon-bars am-icon-fw"></i>
+							      </span>
+							      <input type="hidden" class="am-form-field" id="requestShopid"  value="">
+							      <input type="text" class="am-form-field" id="requestbillno" placeholder="小票提取码" value="">
+							   </div>
+						  </div>
+						  <div class="am-u-lg-8 ">
+						    <div class="am-input-group am-fr">
+						      <button type="button" class="am-btn am-btn-primary am-round" onclick="search()">查询</button>
+						      <button type="button" class="am-btn am-btn-primary am-round" onclick="yikai()">标识已开专票</button>
+							  <button type="button" class="am-btn am-btn-primary am-round" onclick="ykpupiao()">标识已开普票</button>
+							  <button type="button" class="am-btn am-btn-primary am-round" onclick="ewmzuofei()">标识二维码作废</button>
+							  <button type="button" class="am-btn am-btn-primary am-round" onclick="weikai()">标识取消</button>
+							</div>
+						  </div>
+					</div>
+				</form>
+		  </div>
+		</div>
+		<div class="am-panel am-panel-success am-margin-bottom-0">
+		<div class="am-panel-hd ">
+			发票信息
+		  </div>
+		<div class="am-panel-bd">
+		<table class="am-table am-table-bordered am-table-striped am-table-compact" id="weilist">
+        	<thead>
+        	<tr>
+      		<td></td>
+                <td>小票号</td>
+                <td>总金额</td>
+                <td>可开票金额</td>
+                <td>总税额</td>
+                <td>是否已开票</td>
+                <td>票种</td>
+            </tr>
+            </thead>
+            <tbody id="row1">
+            </tbody>
+        </table>
+		</div>
+		</div>
+		
+		<table  style="display:none;">
+        	<tbody id="rowmo">
+        	<tr>
+        	<td><input type="checkbox" value="||sheetid||" checked="checked"></td>
+                <td>||sheetid||</td>
+                <td>||totalamount||</td>
+                <td>||invoiceamount||</td>
+                <td>||totaltaxfee||</td>
+                <td>||flag||</td>
+                <td>||iqfplxdm||</td>
+            </tr>
+            </tbody>
+        </table>
+        
+		</div>
+	</body>
+</html>

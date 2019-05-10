@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/comm/myJq.js"></script>
+		<script src="../js/comm/route.js"></script>
+		<script src="../js/module/Test3.js"></script>
+	</head>
+<body>
+  <table id="header" style="width: 95%; font-size: 14px; margin: 5px 20px;">
+   
+      <input type="button" value="按钮" id="but" onclick="show()">
+     
+  </table>   
+       
+         <div class="am-g">
+                        <div class="am-u-sm-12">
+                            <form class="am-form">
+                                <table class="am-table am-table-striped am-table-hover table-main">
+                                    <thead>
+                                        <tr>
+                                            <th class="">企业编码</th>
+                                            <th class="">企业名称</th>
+                                            <th class="">纳税号</th>
+                                            <th class="">联系电话</th>
+                                            <th class="">地址</th>
+                                            <th class="">操作</th>
+                                        </tr>
+                                    </thead>
+                                  <tbody id="tabledata">
+                                    	
+                                    </tbody>
+                                </table>
+                                <div class="am-cf">
+                                    <div class="am-fr">
+                                    	<div id="page"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+
+       <!-- grid -->
+	<table style="display: none;">
+		<!-- 这里就需要用table来取到tbody标签，否则tr td在转字符串时就被自动解析掉了 -->
+		<tbody id="rowsample">
+			<tr>
+			    <td><input type="checkbox" class="am-checkbox"></td>
+				<td width="50px">||entid||</td>
+				<td width="80px">||entname||</td>
+				<td width="60px">||taxid||</td>
+				<td width="60px">||phone||</td>
+				<td width="80px">||address||</td>
+                <td>
+                    <div class="">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="dataEdit(||index||)"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="dataDelete(||index||)"><span class="am-icon-trash-o"></span> 删除</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+         <form id="editForm" style="display:none;">
+        	<ul class="am-avg-sm-1 am-avg-md-2">
+        		<li class="am-form-group">
+	           			<label class="am-u-sm-6 am-u-lg-4 ">企业编码</label>
+	           			<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field" data-edit="entId" required></div>
+	           	</li>
+	           	<li class="am-form-group">
+	           			<label class="am-u-sm-6 am-u-lg-4 ">企业名称</label>
+	           			<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field"  data-edit="entName" required></div>
+	           	</li>
+	           	<li class="am-form-group">
+	           		<label class="am-u-sm-6  am-u-lg-4 ">纳税号</label>
+	           		<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field"  data-edit="taxId" required></div>
+	           	</li>
+	           	<li class="am-form-group">
+	           		<label class="am-u-sm-6  am-u-lg-4 ">联系电话</label>
+	           		<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field"  data-edit="phone" required></div>
+	           	</li>
+	           	<li class="am-form-group">
+	           		<label class="am-u-sm-6  am-u-lg-4 ">地址</label>
+	           		<div class="am-u-sm-6 am-u-lg-8"><input type="text" class="am-form-field"  data-edit="adress" required></div>
+	           	</li>
+           </ul>
+        </form>
+</body>
+
+</html>

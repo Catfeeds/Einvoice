@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>
+		CURD表配置
+	</title>
+	<script type="text/javascript" src="../jq/jquery/jquery-1.8.0.js"></script>
+	<script type="text/javascript" src="../scripts/boot.js"></script>
+	
+	<link href="../scripts/miniui/themes/blue/skin.css" rel="stylesheet" type="text/css" />
+		
+	<style type="text/css">
+    	body{
+        	margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
+    	}    
+    </style>  
+</head>
+<body>
+   
+    
+<div class="mini-splitter" style="width:100%;height:100%;">
+    <div size="300" showCollapseButton="true">
+        <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">                
+            <span style="padding-left:5px;">表名</span>
+            <input type="text" id="key"  />
+            <a class="mini-button" iconCls="icon-search" plain="true" onclick="addTable()">新增</a>                  
+        </div>
+        <div class="mini-fit">
+            <ul id="tree1" class="mini-tree" url="/efs-portal/rest/ui/module/getTableConfig.action?token=1234567890" style="width:100%;"
+                showTreeIcon="true" textField="name" idField="id" parentField="pid" resultAsTree="false"                
+            >        
+            </ul>
+        </div>
+    </div>
+    <div showCollapseButton="true">
+        <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;height:23px;">                           
+            <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveData()">重新从数据库中抽取列信息并保存</a>                  
+        </div>
+        <div class="mini-fit" >
+            <div id="grid1" class="mini-datagrid" style="width:100%;height:100%;" 
+                borderStyle="border:0;"
+                url="/efs-portal/rest/ui/module/getTableColumnConfig.action?token=1234567890"
+                allowCellSelect=""false"" allowCellEdit="false">
+                
+                <div property="columns">            
+                    <div field="columnname" width="80" headerAlign="center" allowSort="true">
+                    	列名                        
+                    </div>      
+                    <div field="columncomment" width="200" headerAlign="center" allowSort="true">
+                    	列含义                        
+                    </div>
+                    <div field="nullable" width="120" headerAlign="center" allowSort="true" renderer="onTrueFalseRenderer">
+                    	是否允许为空                        
+                    </div>  
+                    <div field="iskey" width="70" headerAlign="center" allowSort="true" renderer="onTrueFalseRenderer">
+                    	是否主键                        
+                    </div>
+                    <div field="datatype" width="70" headerAlign="center" allowSort="true">
+                   		 数据类型                        
+                    </div>                    
+                    <div field="columndefault" width="70" headerAlign="center" allowSort="true">
+                    	默认值                        
+                    </div>                                             
+                </div>
+            </div>  
+        </div>
+    </div>        
+</div>
+    
+    <script type="text/javascript">
+        mini.parse();
+
+        var currenttablename="";
+        var tree = mini.get("tree1");
+        var grid = mini.get("grid1");
+        
+        tree.on("nodeselect", function (e) {
+        
+            if (e.isLeaf) {
+                grid.load({ tablename: e.node.id });
+                currenttablename=e.node.id;
+            } else {
+                grid.setData([]);
+                grid.setTotalCount(0);
+            }
+        });
+        //////////////////////////////////////////////
+        var Genders = [{ id: 0, text: '否' }, { id: 1, text: '是'}];
+        function onTrueFalseRenderer(e) {
+            for (var i = 0, l = Genders.length; i < l; i++) {
+                var g = Genders[i];
+                if (g.id == e.value) return g.text;
+            }
+            return "";
+        }
+        
+        function saveData() {
+        	
+        	if (currenttablename=='') return;
+        	
+            var data = grid.getChanges();
+            var json = mini.encode(data);
+            grid.loading("保存中，请稍后......");
+            $.ajax({
+                url: "/efs-portal/rest/ui/module/insertTableColumnConfig.action?token=1234567890&tablename="+currenttablename,                
+                type: "post",
+                success: function (text) {   
+                	var getData=JSON.parse(text);
+                	if (getData.code==1)
+                	{
+                		grid.reload();
+                	} else {
+                		alert(getData.msg);
+                		grid.unmask();
+                	}
+                	
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+        
+        function addTable() {           
+        	        	
+            var node = tree.getSelectedNode();
+            
+            var newNode ={};
+            newNode.name=$("#key").val();
+            newNode.id=$("#key").val();
+            newNode.expanded=true;
+                               
+            currenttablename=$("#key").val();
+            
+            grid.loading("保存中，请稍后......");
+            $.ajax({
+                url: "/efs-portal/rest/ui/module/insertTableColumnConfig.action?token=1234567890&tablename="+newNode.id,                
+                type: "post",
+                success: function (text) {                      	                
+                	var getData=JSON.parse(text);
+                	if (getData.code==1)
+                	{
+                		tree.addNode(newNode, "after", node);    		
+                		tree.selectNode(newNode);
+                	} else {
+                		alert(getData.msg);
+                		grid.unmask();
+                	}           
+                	
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+        
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/connect.js"></script>
+		<script src="../assets/js/qrcode.lib.min.js"></script>
+		<script src="../assets/js/qrcode.js"></script>
+		<script src="../js/time.js"></script>
+		
+		<script src="../js/jquery-ui.js"></script>
+		<script src="../js/date-zh-cn.js"></script>
+  		<link rel="stylesheet" href="../css/jquery-ui.css">
+	</head>
+	<body >
+		<div class="am-g">
+		<div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+				<div class="card-box"  style="height:600px">
+					<!-- Row start -->
+					<div class="am-g">
+				        <div class="am-u-lg-9">
+				        </div>
+						<div class="am-u-lg-3">
+				          <div class="am-input-group am-input-group-sm">
+				            <input id="requestmo" type="text" class="am-form-field" placeholder="">
+				          <span class="am-input-group-btn">
+				            <button class="am-btn am-btn-default" type="button" onclick="search(0)">搜索</button>
+				          </span>
+				          </div>
+				        </div>
+				      </div>
+					  <!-- Row end -->
+					  
+					<!-- Row start -->
+					<div class="am-g">
+			        <div class="am-u-sm-12">
+			            <table class="am-table am-table-striped am-table-hover table-main">
+			              <thead>
+			              <tr>
+			                <td>客户端</td>
+			                <td>链接串</td>
+			                <td>用户名</td>
+			                <td>密码</td>
+			                <td>驱动</td>
+			                <td>字符集</td>
+			                <td>备注</td>
+			                <td>操作</td>
+			              </tr>
+			              </thead>
+			              <tbody id="row1">
+			              
+			              </tbody>
+			            </table>
+			        </div>
+			            	<div id="pagecount"  class="am-fl"></div>
+			           		 <div class="am-fr">
+			                    <div id="page"></div>
+			                 </div>
+			      </div>
+					  <!-- Row end -->
+					  <table  style="display:none;">
+				        	<tbody id="rowmo">
+				        	<tr>
+				        		<td>||clientname||</td>
+				                <td>||url||</td>
+				                <td>||username||</td>
+				                <td>||password||</td>
+				                <td>||driver||</td>
+				                <td>||dbcharcode||</td>
+				                <td>||memo||</td>
+				                 <td>
+				                  <div class="am-btn-toolbar">
+				                    <div class="am-btn-group am-btn-group-xs">
+			                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="dataEdit('||entid||','||connectid||')"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+			                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="datatest('||sellurl||','||connectid||')"> 测试</button>
+			                        </div>
+				                  </div>
+				                </td>
+				            </tr>
+				            </tbody>
+				        </table>
+					</div>
+				</div>
+			</div>
+			
+		<div class="am-popup" id="my-edit">
+          <div class="am-popup-inner">
+            <div class="am-popup-hd">
+              <h4 class="am-popup-title">编辑</h4>
+                <span data-am-modal-close class="am-close">&times;</span>
+             </div>
+             <div class="am-popup-bd">
+             	<div class="card-box">
+                  <form class="am-form am-form-horizontal" data-am-validator>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">链接串</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="url">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">用户名</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="username" >
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">密码</label>
+                          <div class="am-u-sm-10">
+                          <input type="text" id="password">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">驱动</label>
+                          <div class="am-u-sm-10">
+                          <input type="text" id="driver">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">字符集</label>
+                          <div class="am-u-sm-10">
+                          <input type="text" id="dbcharcode">
+                          </div>
+                       </div>
+                      <div class="am-modal-footer">
+	                       <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+	                       <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                       </div>
+                  </form>
+                  
+                  </div>
+             </div>
+          </div>
+          </div>
+          
+		</div>
+	</body>
+</html>

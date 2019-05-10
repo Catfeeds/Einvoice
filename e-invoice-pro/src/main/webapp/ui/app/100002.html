@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/100002.js"></script>
+	</head>
+	<body>
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">企业纳税号信息</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span> 企业纳税号信息管理
+                    </div>
+                   <!--  <div class="am-portlet-input am-fz-ml">
+                        <div class="am-portlet-input input-small input-inline">
+                            <div class="input-icon right">
+                                <i class="am-icon-search"></i>
+                                <input type="text" class="am-app-form-control am-app-form-control-solid" placeholder="搜索..."> </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="am-app-block">
+                    <div class="am-g">
+                        <div class="am-u-sm-2">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <button type="button" class="am-btn am-btn-default am-btn-success" id="btnNew"><span class="am-icon-plus"></span> 新增</button>
+                                     <!-- <button type="button" class="am-btn am-btn-default am-btn-secondary" id="btnSave"><span class="am-icon-save"></span> 保存</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-warning" id="btnCheck"><span class="am-icon-archive"></span> 审核</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-danger" id="btnDelete"><span class="am-icon-trash-o"></span> 删除</button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-u-sm-10 am-fr">
+	                        <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4">
+	                        	<li style="width:400px;">
+	                        			<label class="am-u-sm-6 am-u-lg-4 am-app-form-lable">纳税人识别号</label>
+	                        			<div class="am-u-sm-6 am-u-lg-8"><input type="text" id="TaxNo" class="am-form-field"></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">名称</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"><input type="text" id="TaxName" class="am-form-field"></div>
+	                        	</li>
+	                        	<!-- <li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">选择</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"  id="selectA"></div>
+	                        	</li> -->
+	                        	<li><span class="am-input-group-btn"><button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch"></button></span></li>
+	                        </ul>
+                        </div>
+                    </div>
+                    <div class="am-g  am-scrollable-horizontal">
+                        <div class="am-u-sm-12">
+                            <form class="am-form">
+                                <table class="am-table am-table-striped am-table-hover table-main" style="width: 3000px;">
+                                    <thead>
+                                        <tr>
+                                            <th>企业编码</th>
+                                            <th>纳税人识别号</th>
+                                            <th>名称</th>
+                                            <th>地址电话</th>
+                                            <th>银行帐号</th>
+                                            <th>法人</th>
+                                            <th>接口类型</th>
+                                            <th>开票点代码</th>
+                                            <th>设备类型</th>
+                                            <th>税控盘编号</th>
+                                            <th>税控盘口令</th>
+                                            <th>税务数字证书密码</th>
+                                            <th>商品编码版本号</th>
+                                            <th>请求路径</th>
+                                            <th>接入代码</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rowTraget">
+                                    	
+                                    </tbody>
+                                </table>
+                                <div class="am-cf">
+                                    <div class="am-fr">
+                                    	<div id="page"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <table  style="display:none;">
+        	<tbody id="rowSample">
+        	<tr>
+                <td>||entid||</td>
+                <td>||taxno||</td>
+                <td>||taxname||</td>
+                <td>||taxadd||</td>
+                <td>||taxbank||</td>
+                <td>||taxperson||</td>
+                <td>||lookup||</td>
+                <td>||itfkpd||</td>
+                <td>||lookup1||</td>
+                <td>||itfskpbh||</td>
+                <td>||itfskpkl||</td>
+                <td>||itfkeypwd||</td>
+                <td>||itfbbh||</td>
+                <td>||itfserviceurl||</td>
+                <td>||itfjrdm||</td>
+                <td>
+                    <div class="">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="dataEdit('||taxno||')"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="dataDelete('||taxno||')"><span class="am-icon-trash-o"></span> 删除</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+        <!--    弹出表单 -->
+        <div class="am-popup" id="my-add">
+          <div class="am-popup-inner">
+            <div class="am-popup-hd">
+              <h4 class="am-popup-title">新增</h4>
+                <span data-am-modal-close
+                  class="am-close">&times;</span>
+             </div>
+             <div class="am-popup-bd">
+                  <form class="am-form am-form-horizontal" data-am-validator>
+                       
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">纳税人识别号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxno" placeholder="输入纳税人识别号（必填）" required="required">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">名称</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxname" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">地址电话</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxadd" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">银行帐号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxbank" placeholder="">
+                          </div>
+                       </div>                       
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">法人</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxperson" placeholder="">
+                          </div>
+                       </div>                       
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">接口类型</label>
+                          <div class="am-u-sm-10" id="selectA">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">开票点代码</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfkpd" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">设备类型</label>
+                          <div class="am-u-sm-10" id="selectC">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">税控盘编号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfskpbh" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">税控盘口令</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfskpkl" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">税务数字证书密码</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfkeypwd" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">商品编码版本号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfbbh" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">请求路径</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfserviceurl" placeholder="">
+                          </div>
+                       </div> 
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">接入代码</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfjrdm" placeholder="" required="required">
+                          </div>
+                       </div>                                    
+                    <div class="am-modal-footer">
+                       <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                       <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                    </div>
+                  </form>
+             </div>
+          </div>
+      </div>
+      
+            <!-- 弹出编辑框 -->
+         <div class="am-popup" id="my-edit">
+          <div class="am-popup-inner">
+            <div class="am-popup-hd">
+              <h4 class="am-popup-title">编辑</h4>
+                <span data-am-modal-close
+                  class="am-close">&times;</span>
+             </div>
+             <div class="am-popup-bd">
+                  <form class="am-form am-form-horizontal">
+                       
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">纳税人识别号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxno2" placeholder="" disabled>
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">名称</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxname2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">地址电话</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxadd2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">银行帐号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxbank2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">法人</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="taxperson2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">接口类型</label>
+                          <div class="am-u-sm-10" id="selectB">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">开票点代码</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfkpd2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">设备类型</label>
+                          <div class="am-u-sm-10" id="selectD">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">税控盘编号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfskpbh2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">税控盘口令</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfskpkl2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">税务数字证书密码</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfkeypwd2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">商品编码版本号</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfbbh2" placeholder="">
+                          </div>
+                       </div>
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">请求路径</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfserviceurl2" placeholder="">
+                          </div>
+                       </div> 
+                       <div class="am-form-group">
+                          <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">接入代码</label>
+                          <div class="am-u-sm-10">
+                             <input type="text" id="itfjrdm2" placeholder="" required="required">
+                          </div>
+                       </div>                                         
+                    <div class="am-modal-footer">
+                       <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                       <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                    </div>
+                  </form>
+             </div>
+          </div>
+      </div>           
+            
+	</body>
+</html>

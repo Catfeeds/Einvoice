@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.CustomerDao">
+
+	<select id="getCustomer" resultType="com.invoice.bean.db.Customer" parameterType="com.invoice.bean.db.Customer">
+		select * from customer where 1=1
+			and loginid = #{loginid} limit 1
+	</select>
+	
+	<select id="getCustomerByName" resultType="com.invoice.bean.db.Customer" parameterType="com.invoice.bean.db.Customer">
+		select * from customer where 1=1 
+			and loginid = #{loginid} 
+			and taxname like CONCAT('%',#{taxname},'%') 
+	</select>
+	
+	<select id="getWebCustomerByName" resultType="com.invoice.bean.db.Customer" parameterType="com.invoice.bean.db.Customer">
+		select * from customer where 1=1 
+			and loginid = #{loginid} 
+			and taxname = #{taxname}
+	</select>
+	
+	<update id="setCustomer" parameterType="com.invoice.bean.db.Customer">
+		replace into customer(loginid,phone,email,taxno,taxname,taxaddr,taxbank) values(#{loginid},#{phone},#{email},#{taxno},#{taxname},#{taxaddr},#{taxbank})
+	</update>
+	
+	<update id="updateCustomer" parameterType="com.invoice.bean.db.Customer">
+		update customer set taxno =#{taxno},taxaddr=#{taxaddr},taxbank=#{taxbank},email=#{email} where loginid=#{loginid} and taxname = #{taxname}
+	</update>
+	
+	<insert id="insertCustomer" parameterType="com.invoice.bean.db.Customer">
+		INSERT INTO customer (loginid,phone,email,taxno,taxname,taxaddr,taxbank) 
+		values(#{loginid},#{phone},#{email},#{taxno},#{taxname},#{taxaddr},#{taxbank})
+	</insert>
+	
+	<update id="updateBzCustomer" parameterType="com.invoice.bean.db.Customer">
+		update customer set taxno =#{taxno},taxaddr=#{taxaddr},taxbank=#{taxbank},email=#{email} where entid=#{entid}  and taxname = #{taxname}
+	</update>
+	
+	<insert id="insertBzCustomer" parameterType="com.invoice.bean.db.Customer">
+		INSERT INTO customer (loginid,phone,email,taxno,taxname,taxaddr,taxbank,entid,shopid) 
+		values(#{loginid},#{phone},#{email},#{taxno},#{taxname},#{taxaddr},#{taxbank},#{entid},#{shopid})
+	</insert>
+	<select id="getWebBzCustomerByName" resultType="com.invoice.bean.db.Customer" parameterType="com.invoice.bean.db.Customer">
+		select * from customer where 1=1 
+			and taxname = #{taxname}
+			and entid=#{entid}
+	</select>
+	<select id="getBzCustomerByName" resultType="com.invoice.bean.db.Customer" parameterType="com.invoice.bean.db.Customer">
+		select * from customer where 1=1 
+			and entid= #{entid} 
+			and taxname like CONCAT('%',#{taxname},'%')   limit     0,10
+	</select>
+</mapper> 

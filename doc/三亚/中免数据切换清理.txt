@@ -1,0 +1,26 @@
+
+delete from invoice_sale_detail;
+delete from invoice_sale_head;
+delete from invoice_sale_pay;
+delete from invque;
+delete from invque_list;
+delete from invoice_head;
+delete from invoice_detail;
+delete from sheetlog;
+
+
+  location /order-pivot {
+            proxy_pass http://pickup_p;
+            proxy_set_header   X-Real-IP $remote_addr;
+
+            proxy_read_timeout 1500;
+            fastcgi_read_timeout 1500;
+    }
+
+  location /order-pivot/order/sendToSFLogistics {
+            proxy_pass http://pickup_p3;
+            proxy_set_header   X-Real-IP $remote_addr;
+
+            proxy_read_timeout 1500;
+            fastcgi_read_timeout 1500;
+    }

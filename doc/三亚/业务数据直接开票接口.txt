@@ -1,0 +1,73 @@
+--接口数据为直接开票数据，无需额外计算
+
+CREATE TABLE invoice_sheet_head (
+  entid varchar(20) NOT NULL COMMENT '企业id',
+  sheetid varchar(30) NOT NULL COMMENT '单据编码(小票唯一码或订单唯一码，不可重复)',
+  sheettype varchar(5) NOT NULL COMMENT '单据类型1小票、2批发、3储值卡售卡、4供应商费用',
+  invoicelx varhcar(3) NOT NULL COMMENT '发票种类编码 004:专票 007:普票 026:电子票',
+  shopid varchar(30) NOT NULL COMMENT '门店号',
+  totalAmount decimal(12,2) DEFAULT NULL COMMENT '小票总金额(含税)',
+  tradeDate date DEFAULT NULL COMMENT '交易日期',
+  remark varchar(50) DEFAULT NULL COMMENT '备注',
+  gmfno varchar(40) DEFAULT NULL COMMENT '证件号 ',
+  gmftax varchar(20) DEFAULT NULL COMMENT '购买方纳税人识别号 ',
+  gmfname varchar(100) DEFAULT NULL COMMENT '购买方名称 ',
+  gmfadd varchar(100) DEFAULT NULL COMMENT '购买方地址、电话 ',
+  gmfbank varchar(100) DEFAULT NULL COMMENT '购买方银行账号 ',
+  recvPhone varchar(20) DEFAULT NULL COMMENT '发票接收电话 ',
+  recvEmail varchar(20) DEFAULT NULL COMMENT '发票接收邮箱 ',
+  isAuto smallint(1) NOT NULL COMMENT '是否自动开票，0=否 1=自动开票（自动开票前提是gmfname必须有值）',
+  flag smallint(1) DEFAULT '0' COMMENT '是否已开票 0=未开票 10=已提取 100=已开票 99=开票失败(如果根据sheetid发现该单已开票，但是flag被标记为0，则会先红冲发票，再重新提取)',
+  flagmsg varchar(200) COMMENT '开票失败原因',
+  invoiceCode  varchar(16) DEFAULT NULL COMMENT '发票代码',
+  invoiceNo  varchar(16) DEFAULT NULL COMMENT '发票号码',
+  invoiceDate date DEFAULT NULL COMMENT '发票日期',
+  pdfurl	 varchar(1000) '发票pdf地址',
+  hzinvoiceCode  varchar(16) DEFAULT NULL COMMENT '红冲发票代码',
+  hzinvoiceNo  varchar(16) DEFAULT NULL COMMENT '红冲发票号码',
+  hzinvoiceDate date DEFAULT NULL COMMENT '红冲发票日期',
+  hzpdfurl	 varchar(1000) '红冲发票pdf地址',
+  extSheetid varchar(30) DEFAULT NULL COMMENT '扩展单号，商城订单号',
+  createtime datetime NOT NULL COMMENT '数据写入时间',
+  PRIMARY KEY (entid,sheetid,sheettype)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=' 申请开票单据信息';
+
+
+CREATE TABLE invoice_sheet_detail (
+  entid varchar(20) NOT NULL COMMENT '企业id',
+  sheetid varchar(30) NOT NULL COMMENT '单据编码',
+  sheettype varchar(5) NOT NULL COMMENT '单据类型1小票、2批发、3储值卡售卡、4供应商费用',
+  rowno int(3) NOT NULL COMMENT '原始单据的行号，排序用',
+  categoryid varchar(10) DEFAULT NULL COMMENT '类别编码',
+  goodsid varchar(30) NOT NULL COMMENT '商品编码',
+  goodsName varchar(80) NOT NULL COMMENT '商品名称',
+  taxitemid varchar(30) COMMENT '税收代码',
+  qty decimal(12,4) DEFAULT NULL COMMENT '数量',
+  unit varchar(20) DEFAULT NULL COMMENT '单位',
+  price decimal(16,6) DEFAULT NULL COMMENT '单价(不含税)',
+  amount decimal(12,2) COMMENT '金额(不含税) =单价*数量',
+  taxFee decimal(10,2) COMMENT '税额',
+  taxRate decimal(10,3) NOT NULL COMMENT '税率',
+  amt decimal(12,2) NOT NULL COMMENT '含税金额 = 金额(不含税)+税额',
+  oldAmt decimal(12,2) NOT NULL COMMENT '原始含税金额'
+  UNIQUE KEY idx_invoice_sale_detail (entid,sheetid,sheettype,rowno) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=' 申请开票单据明细';
+
+
+
+ALTER TABLE `invoice_sale_head`
+ADD COLUMN `gmfno`  varchar(30) NULL COMMENT '购买方证件号(身份证)' AFTER `gmfbank`,
+ADD COLUMN `recvemail`  varchar(30) NULL COMMENT '购买方证件号(身份证)' AFTER `gmfno`,
+ADD COLUMN `recvphone`  varchar(30) NULL COMMENT '购买方证件号(身份证)' AFTER `recvemail`,
+ADD COLUMN `invoicelx`  varchar(10) NULL COMMENT '业务系统指定的发票类型 004:专票 007:普票 026:电子票' AFTER `recvphone`,
+ADD COLUMN `isauto`  smallint(1) NULL DEFAULT 0 COMMENT '是否自动开票' AFTER `backflag`;
+
+ALTER TABLE invoice_sale_detail
+ ADD COLUMN `fphxz` varchar(1) DEFAULT NULL COMMENT '发票性质行',
+ADD COLUMN `zhdyhh` int(3) DEFAULT NULL COMMENT '折扣行和被折扣行对应的行号',
+ADD COLUMN spec varchar(20) DEFAULT NULL COMMENT '商品规格';
+
+ALTER TABLE `invoice_sale_head`
+ADD COLUMN `gmfno`  varchar(30) NULL COMMENT '购买方证件号(身份证)' AFTER `gmfbank`,
+ADD COLUMN `recvemail`  varchar(30) NULL COMMENT '购买方邮箱' AFTER `gmfno`,
+ADD COLUMN `recvphone`  varchar(30) NULL COMMENT '购买方电话' AFTER `recvemail`;

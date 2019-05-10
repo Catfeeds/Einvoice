@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.tree.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.upload.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../assets/js/amazeui.upload.js"></script>
+		<script src="../assets/js/amazeui.tree.js"></script>
+		<script src="../assets/js/amazeui.upload.template.js"></script>
+		<script src="../assets/js/amazeui.upload.event.js"></script>
+		
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/taxitemType.js"></script>
+		
+	</head>
+	<body >
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">税目信息</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span> 商品类别税目信息维护
+                    </div>
+                </div>
+                
+                    <div class="am-g">
+                    	<div class="am-u-sm-4">
+                    	<ul class="am-tree" id="firstTree">
+						  	<li class="am-tree-branch am-hide" data-template="treebranch" role="treeitem" aria-expanded="false">
+							    <div class="am-tree-branch-header">
+							    <button class="am-tree-icon am-tree-icon-caret am-icon-caret-right"><span class="am-sr-only">Open</span></button>
+							      <button class="am-tree-branch-name">
+							        <span class="am-tree-icon am-tree-icon-folder"></span>
+							        <span class="am-tree-label"></span>
+							      </button>
+							    </div>
+							    <ul class="am-tree-branch-children" role="group"></ul>
+							    <div class="am-tree-loader" role="alert">Loading...</div>
+							  </li>
+							  <li class="am-tree-item am-hide" data-template="treeitem" role="treeitem">
+							    <button class="am-tree-item-name">
+							      <span class="am-tree-icon am-tree-icon-item"></span>
+							      <span class="am-tree-label"></span>
+							    </button>
+						  </ul>
+					 </div>
+					 <div class="am-u-sm-8">
+					 <!-- <div class="am-g">
+							<div id="event"></div>
+					 </div> -->
+					 <div class="am-panel am-panel-success am-margin-bottom-0">
+					 <div class="am-panel-hd ">
+						      <div class="am-panel-title" >
+						    企业类目与税目关系
+						      </div>
+						  </div>
+                          <div class="am-panel-bd">
+					 	 <table id="taxitemtable" class="am-table am-table-hover table-main am-table-bordered am-text-truncate">
+                               <thead>
+                                   <tr>
+                                       <th >类别ID</th>
+                                       <th >类别名称</th>
+                                       <th >税目代码</th>
+                                       <th >操作</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="catetaxlist">
+                               	
+                               </tbody>
+                         </table>
+                         </div>
+                         </div>
+                         <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+                         
+                          <div class="am-panel am-panel-success am-margin-bottom-0">
+                          <div class="am-panel-hd ">
+						      <div class="am-panel-title" >
+						       税目查询
+						      </div>
+						  </div>
+                          <div class="am-panel-bd">
+							<div class="am-g am-margin-bottom-lg">
+								<div class="am-u-lg-2">
+									<input type="text" class="am-form-field" id="requestname"
+										placeholder="税目名称">
+								</div>
+								<div class="am-u-lg-10">
+									<button
+										class="am-btn  am-btn-default am-btn-success  am-icon-search"
+										type="button" id="btnSearch" onclick="searchAll(0)"></button>
+								</div>
+							</div>
+							<table id="taxitemtable" class="am-table  am-table-bordered ">
+                               <thead>
+                                   <tr>
+                                   	   <th width="5%"></th>
+                                       <th width="20%" class="">税目代码</th>
+                                       <th width="20%" class="">税目名称</th>
+                                       <th width="35%" class="">说明</th>
+                                       <th width="10%" class="">税率</th>
+                                       <th width="10%" class="">汇总项</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="searchRows">
+                               	
+                               </tbody>
+                         </table>
+						<div id="page" class="am-fr"></div>
+					 </div>
+					 </div>
+					 
+					 </div>
+                </div>
+                </div>
+                
+             <table  style="display:none;">
+        	<tbody id="rowmodel">
+        	<tr>
+        	<td>
+        	<label class="am-checkbox am-margin-0">
+        	<input type="checkbox" value="||taxitemid||,||taxrate||" data-am-ucheck onchange="addtaxitem(this)">
+        	</label>
+        	</td>
+                <td>||taxitemid||</td>
+                <td>||taxitemname||</td>
+                <td>||taxitemmemo||</td>
+                <td>||taxrate||</td>
+                <td>||lookup||</td>
+            </tr>
+            </tbody>
+            <tbody id="catetax">
+        	<tr>
+                <td>||cateid||</td>
+                <td>||catename||</td>
+                <td>||taxitemid||</td>
+                <td>
+                   <div class="am-btn-group am-btn-group-xs">
+                       <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="dataDelete(||cateid||)"><span class="am-icon-trash-o"></span> 删除</button>
+                   </div>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+</body>
+</html>

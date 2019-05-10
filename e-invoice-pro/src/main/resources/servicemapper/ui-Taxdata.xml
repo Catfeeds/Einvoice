@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.TaxdataDao">	
+
+    <select id="gettaxdata" parameterType="NewHashMap" resultType="NewHashMap">
+		 SELECT
+              *
+         FROM
+              invoice_head 
+         where 1=1 and status=100
+          <if test="taxno != null and taxno !=''">
+			and xsfTax = #{taxno}
+		</if> 
+        <if test="statDate != null  and  statDate!= ''">
+            and  fpRQ &gt;= #{statDate} 
+        </if>
+         <if test="endDate != null and endDate !=''">
+			and  fpRQ &lt;= #{endDate}
+		</if> 
+        order by invoiceid desc 
+        <if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+	</select>
+
+    <select id="getTaxdataCount" resultType="int" parameterType="NewHashMap">
+		 SELECT
+              count(*)
+         FROM
+              invoice_head
+         
+         where 1=1
+          <if test="taxno != null and taxno !=''">
+			and xsfTax = #{taxno}
+		</if> 
+        <if test="statDate != null  and  statDate!= ''">
+            and  fpRQ &gt;= #{statDate} 
+        </if>
+         <if test="endDate != null and endDate !=''">
+			and  fpRQ &lt;= #{endDate}
+		</if> 
+       
+	</select>
+</mapper>

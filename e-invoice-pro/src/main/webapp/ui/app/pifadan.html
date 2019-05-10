@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/pifadan.js"></script>
+		<script src="../assets/js/qrcode.lib.min.js"></script>
+		<script src="../assets/js/qrcode.js"></script>
+		<script src="../js/customer.js"></script>
+		<script src="../js/jquery-ui.js"></script>
+		<link rel="stylesheet" href="../css/jquery-ui.css">
+	</head>
+	<body >
+		<div class="am-cf admin-main" id="div_info">
+		<div class="am-panel am-panel-success am-margin-bottom-0">
+		  <div class="am-panel-hd">
+		  发票信息：
+		  <button id="geren" type="button" class="am-btn am-btn-success am-radius" onclick="geren()">个人</button>
+		  <button id="danwei" type="button" class="am-btn am-btn-success am-radius" onclick="danwei()">单位</button>
+		  </div>
+		  <div class="am-panel-bd am-cf">
+		  <form class="am-form am-form-horizontal ">
+				<div class="am-g">
+					<div class="am-u-lg-6">
+						<div class="am-input-group">
+							<span class="am-input-group-label"> <i
+								class="am-icon-bars am-icon-fw"></i>
+							</span> <input id="invoiceHeadEntText" type="text" class="am-form-field" placeholder="发票抬头" onkeyup="getCustomerInfo()"/>
+						</div>
+					</div>
+					<div class="am-u-lg-6">
+						<div class="am-input-group">
+							<span class="am-input-group-label"> <i
+								class="am-icon-bars am-icon-fw"></i>
+							</span> <input id="invoiceHeadEntTaxno" type="text" class="am-form-field" placeholder="纳税人识别号" >
+						</div>
+					</div>
+				</div>
+				<div class="am-g">
+				<div class="am-u-lg-6">
+					<div class="am-input-group">
+						<span class="am-input-group-label"> <i
+							class="am-icon-bars am-icon-fw"></i>
+						</span> <input id="invoiceHeadDzdh" type="text" class="am-form-field" placeholder="地址、电话" >
+					</div>
+				</div>
+				<div class="am-u-lg-6">
+					<div class="am-input-group">
+						<span class="am-input-group-label"> <i
+							class="am-icon-bars am-icon-fw"></i>
+						</span> <input id="invoiceHeadYhzh" type="text" class="am-form-field" placeholder="开户行及账号" >
+					</div>
+				</div>
+			</div>
+			</form>
+		  </div>
+		  </div>
+		  <div class="am-panel am-panel-success am-margin-bottom-0">
+		  <div class="am-panel-hd ">
+		      <div class="am-panel-title" >
+		        批发单信息
+		      </div>
+		  </div>
+	      <div class="am-panel-bd">
+				  <form class="am-form am-form-horizontal">
+				 <div class="am-g">
+					   <div class="am-u-lg-4">
+					    <div class="am-input-group">
+					      <span class="am-input-group-label">
+					       <i class="am-icon-bars am-icon-fw"></i>
+					      </span>
+					      <input type="text" class="am-form-field" id="requestbillno" placeholder="批发单号" value="">
+					    </div>
+					  </div>
+					  <div class="am-u-lg-2">
+					    <div class="am-input-group">
+					      <span class="am-input-group-label">
+					       <i class="am-icon-bars am-icon-fw"></i>
+					      </span>
+					      <input type="text" class="am-form-field" id="invRecvPhone" placeholder="发票接收电话" value="">
+					    </div>
+					  </div>
+					  <div class="am-u-lg-2">
+					    <div class="am-input-group">
+					      <span class="am-input-group-label">
+					       <i class="am-icon-bars am-icon-fw"></i>
+					      </span>
+					      <input type="email" class="am-form-field" id="invRecvMail" placeholder="发票接收邮箱" value="">
+					    </div>
+					  </div>
+					  <div class="am-u-lg-2 ">
+					    <div class="am-input-group am-fr">
+					      <button type="button" class="am-btn am-btn-primary am-round" onclick="search()">查询</button>
+					      <button id="btnkaipiao" type="button" class="am-btn am-btn-primary am-round"  onclick="kaipiao()">开票</button>
+					    </div>
+					  </div>
+					</div>
+					</form>
+		  </div>
+		</div>
+		<div class="am-panel am-panel-success am-margin-bottom-0">
+		<div class="am-panel-hd ">
+			<div class="am-g">
+			<div class="am-u-sm-6 am-text-center">未开发票</div>
+			<div class="am-u-sm-6 am-text-center">已开发票</div>
+			</div>
+		  </div>
+		   <div class="am-panel-bd">
+		<ul class="am-avg-sm-2 am-thumbnails am-scrollable-vertical">
+		<li>
+		<table class="am-table am-table-bordered am-table-striped am-table-compact" id="weilist">
+        	<thead>
+        	<tr>
+      		<td><input type="checkbox"></td>
+                <td>批发单号</td>
+                <td>总金额</td>
+                <td>可开票金额</td>
+                <td>总税额</td>
+            </tr>
+            </thead>
+            <tbody id="row1">
+            </tbody>
+        </table>
+        </li>
+		<li><table class="am-table am-table-bordered am-table-striped am-table-compact" id="yilist">
+        	<thead>
+        	<tr>
+        	<td><input type="checkbox"></td>
+                <td>批发单号</td>
+                <td>总金额</td>
+                <td>可开票金额</td>
+                <td>总税额</td>
+            </tr>
+            </thead>
+            <tbody id="row2">
+            </tbody>
+        </table>
+        </li>
+		</ul>
+		</div>
+		</div>
+		
+		<table  style="display:none;">
+        	<tbody id="rowmo">
+        	<tr>
+        	<td><input type="checkbox" value="||sheetid||" checked="checked"></td>
+                <td>||sheetid||</td>
+                <td>||totalamount||</td>
+                <td>||invoiceamount||</td>
+                <td>||totaltaxfee||</td>
+            </tr>
+            </tbody>
+        </table>
+        
+        <div  class="am-popup" id="my-yulan">
+		  <div class="am-popup-inner">
+		    <div class="am-popup-hd">
+		    <div class ="am-g">
+			    <div class="am-u-sm-10 am-text-center"> <h4 class="am-popup-title">发票预览</h4></div>
+			    <div class="am-u-sm-2 ">
+			     	<button type="button" id="btn_submit" class="am-btn  am-round am-center">提交</button>
+			     	<span data-am-modal-close class="am-close am-close-alt am-close-spin am-icon-times"></span>
+			    </div>
+		    </div>
+		    </div>
+			<div class="am-popup-bd">
+			<div class="am-panel am-panel-default">
+			    <div>请确认以下信息正确，提交后开具电子发票。</div>
+			    <div>发票接收电话：<span id="previewPhone"></span></div>
+			    <div>发票接收邮箱：<span id="previewMail"></span></div>
+			</div>
+				<div class="am-panel am-margin-top-sm am-text-xs" id="preview">
+				
+				</div>
+				<table style="display: none;">
+					<tbody  id="rowPreviewDetail">
+					<tr class="">
+						<td colspan="2" width="35%">||goodsName||</td>
+						<td width="25%" class="am-text-right">||amount||</td>
+						<td width="15%" class="am-text-right">||taxRate||%</td>
+						<td width="25%" class="am-text-right">||taxFee||</td>
+					</tr>
+					</tbody>
+				</table>		
+			</div>
+		</div>
+		</div>
+		</div>
+		<div id="rowPreview" style="display: none;">
+					<div class="am-panel-hd">第||serialid||张发票</div>
+					<table class="am-table-bordered am-app-preview am-margin-bottom-sm">
+						<tbody>
+							<tr>
+								<td width="5%">购买方</td>
+								<td colspan="4" width="95%"><div>
+										名 称：<span class="">||gmfMc||</span>
+									</div>
+									<div>纳税人识别号：||gmfNsrsbh||</div>
+									<div>地址、 电话：||gmfDzdh||</div>
+									<div>开户行及账号：||gmfYhzh||</div></td>
+							</tr>
+							<tr class="am-text-center">
+								<td colspan="2" width="35%">货物名称</td>
+								<td width="25%">金额</td>
+								<td width="15%">税率</td>
+								<td width="25%">税额</td>
+							</tr>
+							<tr id="previewDetail||index||"></tr>
+							<tr class="am-text-center">
+								<td colspan="2">价税合计（大写）</td>
+								<td colspan="3">||amountDX||（小写）||amount||</td>
+							</tr>
+							<tr>
+								<td>销售方</td>
+								<td colspan="4"><div>
+										名 称：<span class="">||xsfMc||</span>
+									</div>
+									<div>纳税人识别号：||xsfNsrsbh||</div>
+									<div>地址、 电话：||xsfDzdh||</div>
+									<div>开户行及账号：||xsfYhzh||</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+	</body>
+	<style type="text/css">
+		.am-app-piao{
+			border:1px solid #ccc;
+			background-color: #fff;
+		}
+		.am-app-piao-can{
+			background-color: #afa;
+			color: #000;
+		}
+		.am-app-piao-uncan{
+			background-color: #faa;
+			color: #000;
+		}
+		.am-app-piao-amt{
+			font-size: 3rem;
+			color: red;
+		}
+		.am-app-preview{
+			border:1px solid orange;
+			width: 100%;
+		}
+		.am-app-preview td{
+			border:1px solid orange;
+			padding: 4px;
+		}
+		</style>
+</html>

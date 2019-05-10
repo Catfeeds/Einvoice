@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="assets/css/core.css" />
+		<link rel="stylesheet" href="assets/css/menu.css" />
+		<link rel="stylesheet" href="assets/css/amazeui.css" />
+		<link rel="stylesheet" href="assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="assets/css/component.css" />
+		<link rel="stylesheet" href="assets/css/page/form.css" />
+		
+		<script src="assets/js/jquery.min.2.2.2.js"></script>
+		<script src="assets/js/amazeui.min.js"></script>
+		<script src="assets/js/amazeui.switch.js"></script>
+		<script src="js/comm/myJq.js"></script>
+		<script src="js/comm/route.js"></script>
+		<script src="js/comm/sha1.js"></script>
+		<script src="js/login.js"></script>
+	</head>
+	<body>
+		<div class="account-pages">
+			<div class="wrapper-page">
+				<div class="am-text-center">
+	                <a href="#" class="logo">增值税发票云平台</a>
+	            </div>
+	            
+	            <div class="m-t-40 card-box">
+	            	<div class="am-text-center">
+	                    <h4 class="font-bold m-b-0">登 录</h4>
+	                </div>
+	                <div class="panel-body">
+	                	<form class="am-form" id="form-vld">
+	                		<div class="am-g">
+	                			<div class="am-form-group am-input-group">
+	                			  <span class="am-input-group-label"><i class="am-icon-home am-icon-fw"></i></span>
+							      <input type="text" class="am-form-field"  placeholder="企业" id="inputCompanyID" disabled>
+							    </div>
+							    
+	                			<div class="am-form-group am-input-group">
+	                			  <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+							      <input type="text" class="am-radius am-form-field"  placeholder="用户名" id="inputLoginID" required data-foolish-msg="输入登录名">
+							    </div>
+							
+							    <div class="am-form-group am-input-group">
+							      <span class="am-input-group-label"><i class="am-icon-lock am-icon-fw"></i></span>
+							      <input type="password" class="am-radius"  placeholder="密码" id="inputPassWord" required data-foolish-msg="输入密码" onkeydown='if(event.keyCode==13){login();}'>
+							    </div>
+							    
+							     <div class="am-form-group am-input-group am-g-collapse" style="display:none;">
+								     <div class="am-u-sm-5">
+								      <input type="text" class="" placeholder="验证码"  id="inputVerifyCode" data-foolish-msg="输入右侧验证码">
+								    </div>
+								    <div class="am-u-sm-7">
+								      <img class="am-fr am-form-group am-margin-0" src="../VerifyCodeServlet" title="看不清，请点我" id="verifyCodeServlet"/>
+								    </div>
+							    </div>
+							      
+							    <div class="am-form-group am-input-group ">
+							         <input type="checkbox" id="inputRemberUserName" data-size="xs" data-am-switch/> <span class="am-text-sm am-link-muted am-padding-left-sm am-vertical-align-bottom">记住账号</span>
+		                        </div>
+		                        
+		                        <div class="am-form-group ">
+		                        	<button id="loginBtn" type="button" class="am-btn am-btn-primary am-radius" style="width: 100%;height: 100%;">登 录</button>
+		                        </div>
+		                        
+		                        <div class="am-form-group ">
+		                        <a href="#" class="text-muted" data-am-popover="{content: '暂时不提供自行找回密码，请联系系统管理员找回', trigger: 'hover',theme: 'primary'}">忘记密码?</a>
+		                        </div>
+	                		</div>
+
+	                	</form>
+							
+	                </div>
+	            </div>
+			</div>
+		</div>
+		<div class="am-vertical-align-bottom am-text-center am-g">版权所有 2017</div>
+
+	</body>
+</html>

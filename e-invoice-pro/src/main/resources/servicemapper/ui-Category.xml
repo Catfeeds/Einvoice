@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.CategoryDao">
+
+ <select id="getCategory" resultType="com.invoice.bean.db.CategoryAdd" parameterType="NewHashMap">
+	 select ENTID as entid,CATEGORYID as categoryid,CATEGORYNAME as categoryname,
+	 DEPTLEVELID as deptlevelid,HEADCATID as headcatid,CASE CATEGORYSTATUS when 0 then '正常状态' WHEN 1 then '淘汰状态' end as categorystatus from category
+	 WHERE entid = #{entid}
+		<if test="categoryid != null and categoryid != ''">
+			and categoryid  like CONCAT(#{categoryid},'%')
+		</if>
+		<if test="categoryname != null  and categoryname != ''">
+			and categoryname  like CONCAT('%',#{categoryname},'%')
+		</if>
+	    <if test="deptlevelid != null  and deptlevelid != ''">
+		    and deptlevelid = #{deptlevelid}
+	    </if>
+		order by entid desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+  </select>
+
+  	<select id="getCategoryCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from category where entid = #{entid}
+		<if test="categoryid != null and categoryid != ''">
+			and categoryid  like CONCAT(#{categoryid},'%')
+		</if>
+		<if test="categoryname != null  and categoryname != ''">
+			and categoryname  like CONCAT('%',#{categoryname},'%')
+		</if>
+		<if test="deptlevelid != null  and deptlevelid != ''">
+			and deptlevelid = #{deptlevelid}
+		</if>
+
+    </select>
+
+	<insert id="insertCategory" parameterType="com.invoice.bean.db.CategoryAdd">
+		insert into category(ENTID,CATEGORYID,CATEGORYNAME,DEPTLEVELID,HEADCATID,CATEGORYSTATUS)
+		values(#{entid},#{categoryid},#{categoryname},#{deptlevelid},#{headcatid},0)
+	</insert>
+	
+	<delete id="deleteCategory" parameterType="com.invoice.bean.db.CategoryAdd" >
+		delete from category where CATEGORYID= #{categoryid}
+	</delete>
+
+	<select id="getCategoryById" parameterType="com.invoice.bean.db.CategoryAdd" resultType="com.invoice.bean.db.CategoryAdd">
+		select * from category where CATEGORYID = #{categoryid} and entid = #{entid}
+	</select>
+
+	<update id="updateCategory" parameterType="com.invoice.bean.db.CategoryAdd">
+		update category set CATEGORYID =#{categoryid},  CATEGORYNAME =#{categoryname},  DEPTLEVELID =#{deptlevelid},
+		  HEADCATID =#{headcatid},  CATEGORYSTATUS =#{categorystatus}  where  CATEGORYID =#{categoryid}
+	</update>
+
+	<select id="getCategoryByDeptlevelid" resultType="int" parameterType="com.invoice.bean.db.CategoryAdd" >
+		select count(*) from category where DEPTLEVELID=#{deptlevelid}-1 and ENTID=#{entid} and CATEGORYID=#{headcatid}
+	</select>
+
+</mapper>
+  

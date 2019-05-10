@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--将taxitemid not in ('NaN','DISABLE') 转为price>0 做为查询可开票商品的查询条件 -->
+<mapper namespace="com.invoice.apiservice.dao.SheetStatDao">
+	<insert id="insert" parameterType="com.invoice.bean.db.SheetLog">
+		INSERT INTO sheetlog 
+		(logtime, entid, sheetid, sheettype, shopid, msg, processFlag) 
+		VALUES 
+		(#{logtime},#{entid},#{sheetid},#{sheettype},#{shopid},#{msg},#{processFlag})
+	</insert>
+	
+	
+	
+	<select id="querySheetLog" parameterType="Map" resultType="NewHashMap">
+		select * from sheetlog a where 1=1 and a.entid=#{entid}
+		<if test="shopid != null">
+		    and a.shopid=#{shopid} 
+		</if>
+		<if test="sheetid != null">
+		    and a.sheetid=#{sheetid} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.logtime &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.logtime &lt;= #{enddate} 
+		</if>
+		order by a.logid desc
+		<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+	</if>
+	</select>
+	<select id="querySheetLogCount" parameterType="Map" resultType="java.lang.Integer">
+	select count(1) count
+	from (
+		select * from sheetlog a where 1=1 and a.entid=#{entid}
+		<if test="shopid != null">
+		    and a.shopid=#{shopid} 
+		</if>
+		<if test="sheetid != null">
+		    and a.sheetid=#{sheetid} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.logtime &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.logtime &lt;= #{enddate} 
+		</if>
+		order by a.logid desc
+		) a 
+	</select>
+	
+	
+	<select id="querySheetCount" parameterType="Map" resultType="java.lang.Integer">
+	select count(1) count
+	from (
+		select goodsId,goodsName,cateid,taxitemid,taxRate,date_format(sdate,'%Y%m') trademonth,shopid,avg(price) price,sum(qty) qty,sum(amt) amt,sum(oldAmt) oldAmt
+		from billsalereport
+	   where taxitemid not in ('NaN','DISABLE')
+	   	   and sdate between #{sdate} and #{edate}
+		   <if test="shopid != null">
+		     and shopid=#{shopid}
+		   </if>
+		   <if test="goodsname != null">
+		     and goodsname like CONCAT('%',#{goodsname},'%')
+		   </if>
+		group by goodsId,goodsName,cateid,taxitemid,taxRate,date_format(sdate,'%Y%m'),shopid
+		) a 
+	</select>
+	
+	<select id="querySheetStat" parameterType="Map" resultType="NewHashMap">
+	select a.goodsId,a.goodsName,a.cateid,a.taxitemid,a.taxRate,a.trademonth,a.price,a.amt,a.oldAmt,a.qty,ifnull(b.useAmt,0) useAmt,ifnull(b.useqty,0) useqty
+	from (
+		select goodsId,goodsName,cateid,taxitemid,taxRate,date_format(sdate,'%Y%m') trademonth,shopid,avg(price) price,sum(qty) qty,sum(amt) amt,sum(oldAmt) oldAmt
+		from billsalereport
+	   where taxitemid not in ('NaN','DISABLE')
+	   	   and sdate between #{sdate} and #{edate}
+		   <if test="shopid != null">
+		     and shopid=#{shopid}
+		   </if>
+		   <if test="goodsname != null">
+		     and goodsname like CONCAT('%',#{goodsname},'%')
+		   </if>
+		group by goodsId,goodsName,cateid,taxitemid,date_format(sdate,'%Y%m'),taxRate,shopid
+		) a 
+	left join (
+		select a.goodsid,sum(amt) useAmt,sum(a.qty) useQty, date_format(a.tradeDate,'%Y%m') trademonth,b.shopid
+			from invoice_sale_detail a 
+			join invoice_sale_head b on b.serialid=a.serialid
+		 where b.flag=1 
+			 and b.iqseqno is not null
+			 and a.isinvoice='Y'
+			 and a.tradeDate between #{esdate} and #{eedate}
+			 <if test="shopid != null">
+		     and shopid=#{shopid}
+		   	 </if>
+		group by a.goodsid,date_format(a.tradeDate,'%Y%m'),b.shopid
+	) b on b.goodsid=a.goodsid and b.trademonth=a.trademonth and b.shopid=a.shopid
+	<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+	</if>
+	</select>
+	
+	
+	<select id="querySheetTaxitemCount" parameterType="Map" resultType="java.lang.Integer">
+	select count(1) count
+	from (
+		select 1
+		from billtaxreport a
+		join billtax b on b.entid=a.entid and b.taxitemid=a.taxitemid
+	   where a.sdate between #{sdate} and #{edate}
+		   <if test="shopid != null">
+		     and a.shopid=#{shopid}
+		   </if>
+		   <if test="goodsname != null">
+		     and b.taxitemname like CONCAT('%',#{goodsname},'%')
+		   </if>
+		   group by a.taxitemid,a.taxRate,a.shopid
+		) a 
+	</select>
+	
+    <select id="querySheetTaxitem" parameterType="Map" resultType="NewHashMap">
+	select a.taxitemid,a.taxitemid goodsid,a.taxitemname,a.taxRate,date_format(curdate(),'%Y%m') trademonth,a.price,a.amt,a.oldAmt,a.qty,ifnull(b.amt-b.oldAmt,0) useAmt,ifnull(b.useqty,0) useqty
+	from (
+		select a.taxitemid,b.taxitemname,b.taxRate,a.shopid,avg(price) price,sum(qty) qty,sum(amt) amt,sum(oldAmt) oldAmt
+		from billtaxreport a
+		join billtax b on b.entid=a.entid and b.taxitemid=a.taxitemid 
+	   where a.sdate between #{sdate} and #{edate} and a.sdate between #{esdate} and #{eedate}
+		     and a.shopid=#{shopid}
+		   <if test="goodsname != null">
+		     and b.taxitemname like CONCAT('%',#{goodsname},'%')
+		   </if>
+			group by a.taxitemid,b.taxitemname,b.taxRate,a.shopid
+		) a 
+	left join (
+	
+		select a.taxitemid,b.shopid,sum(a.qty) useQty,sum(case when a.isinvoice='Y' then amt else 0 end) amt ,
+   		sum(case when (a.isinvoice='N' and (a.taxitemid!='' or a.taxitemid is null )) then oldAmt else 0 end) oldAmt
+			from invoice_sale_detail a 
+			join invoice_sale_head b on b.serialid=a.serialid
+			join billtax c on c.entid=a.entid and c.taxitemid=a.taxitemid
+		 where b.flag=1 
+			 and b.iqseqno is not null
+			 and a.tradeDate between #{esdate} and #{eedate}
+		     and b.shopid=#{shopid}
+		group by a.taxitemid,b.shopid
+		
+	) b on b.taxitemid=a.taxitemid
+	<if test="pagestart != null">
+		 limit ${pagestart},${pagesize}
+	</if>
+	</select>
+	
+	<!--<select id="querySheetTaxitem" parameterType="Map" resultType="NewHashMap">
+        select a.taxitemid,a.taxitemid goodsid,a.taxitemname,a.taxRate,date_format(curdate(),'%Y%m') trademonth,a.price,a.amt,a.oldAmt,a.qty,ifnull(b.useAmt,0) useAmt,ifnull(b.useqty,0) useqty
+        from (
+                select a.taxitemid,b.taxitemname,b.taxRate,a.shopid,avg(price) price,sum(qty) qty,sum(amt) amt,sum(oldAmt) oldAmt
+                from billtaxreport a
+                join billtax b on b.entid=a.entid and b.taxitemid=a.taxitemid
+           where a.sdate between #{sdate} and #{edate} and a.sdate between #{esdate} and #{eedate}
+                     and a.shopid=#{shopid}
+                   <if test="goodsname != null">
+                     and b.taxitemname like CONCAT('%',#{goodsname},'%')
+                   </if>
+                        group by a.taxitemid,b.taxitemname,b.taxRate,a.shopid
+                ) a
+        left join (
+                select a.taxitemid,b.shopid,sum(amt) useAmt,sum(a.qty) useQty
+                        from invoice_sale_detail a
+                        join invoice_sale_head b on b.serialid=a.serialid
+                 where b.flag=1
+                         and b.iqseqno is not null
+                         and a.isinvoice='Y'
+                         and b.tradeDate between #{esdate} and #{eedate}
+                     and b.shopid=#{shopid}
+                group by a.taxitemid,b.shopid
+        ) b on b.taxitemid=a.taxitemid
+        <if test="pagestart != null">
+                 limit ${pagestart},${pagesize}
+        </if>
+        </select>-->
+	
+	<select id="queryBillTaxGoodsName" resultType="NewHashMap">
+		select taxitemid,taxRate,goodsName from billtaxgoodsname where taxitemid=#{taxitemid} and taxrate=#{taxrate}
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" printOrder="Horizontal" pageWidth="610" pageHeight="394" columnWidth="590" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="1ff4504e-98d4-47d1-bf41-747dae8e62ef">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="152"/>
+	<property name="ireport.y" value="0"/>
+	<import value="org.apache.commons.codec.binary.Base64"/>
+	<style name="style1" fontName="宋体" fontSize="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($P{xsfaddr}.length()>30)]]></conditionExpression>
+			<style fill="Solid" scaleImage="RetainShape" hAlign="Left" vAlign="Top" isBlankWhenNull="true" fontName="宋体" fontSize="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="style2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$P{gmfaddr}.length()>30]]></conditionExpression>
+			<style fontName="宋体" fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="sumamount" class="java.lang.String">
+		<parameterDescription><![CDATA[合计金额]]></parameterDescription>
+		<defaultValueExpression><![CDATA["82.06"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sumtaxfee" class="java.lang.String">
+		<parameterDescription><![CDATA[合计税额]]></parameterDescription>
+		<defaultValueExpression><![CDATA["13.14"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\zhang\\Desktop\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="xsfaddr" class="java.lang.String">
+		<parameterDescription><![CDATA[地址、电话]]></parameterDescription>
+		<defaultValueExpression><![CDATA["长沙市芙蓉区火星路68号第1栋（万家丽路一段99号）0731-85909688"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ewm" class="java.lang.String">
+		<parameterDescription><![CDATA[二维码]]></parameterDescription>
+		<defaultValueExpression><![CDATA["01,10,043001600511,79750454,82.06,20180807,10760759631996852833"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="itfskpbh" class="java.lang.String">
+		<parameterDescription><![CDATA[机器编号]]></parameterDescription>
+		<defaultValueExpression><![CDATA["889906977491"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fpdm" class="java.lang.String">
+		<parameterDescription><![CDATA[发票代码]]></parameterDescription>
+		<defaultValueExpression><![CDATA["043001600511"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fphm" class="java.lang.String">
+		<parameterDescription><![CDATA[发票号码]]></parameterDescription>
+		<defaultValueExpression><![CDATA["79750454"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fprq" class="java.lang.String">
+		<parameterDescription><![CDATA[开票日期]]></parameterDescription>
+		<defaultValueExpression><![CDATA["2018年08月07日"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fpjym" class="java.lang.String">
+		<parameterDescription><![CDATA[校验码]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10760 75963 19968 52833"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gmfname" class="java.lang.String">
+		<parameterDescription><![CDATA[名称]]></parameterDescription>
+		<defaultValueExpression><![CDATA["北京富基融通信息技术有限公司"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gmftax" class="java.lang.String">
+		<parameterDescription><![CDATA[纳税人识别号]]></parameterDescription>
+		<defaultValueExpression><![CDATA["91110108MA0189NH1D"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gmfaddr" class="java.lang.String">
+		<parameterDescription><![CDATA[地址、电话]]></parameterDescription>
+		<defaultValueExpression><![CDATA["北京市海淀区复兴路甲65号-A5号楼8层801室 51650998"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gmfbank" class="java.lang.String">
+		<parameterDescription><![CDATA[开户行及账号]]></parameterDescription>
+		<defaultValueExpression><![CDATA["招商银行北京分行东方广场支行 110931317510101"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fpskm" class="java.lang.String">
+		<parameterDescription><![CDATA[密码区]]></parameterDescription>
+		<defaultValueExpression><![CDATA["036--/*>5823-9++298-18>-+511924*1-5916+5/8+3750/875-/--27283+9229/9>*/178643-337<+7<//**65+2**018/46194<286+9<10"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amtdx" class="java.lang.String">
+		<parameterDescription><![CDATA[价税合计大写]]></parameterDescription>
+		<defaultValueExpression><![CDATA["玖拾伍元贰角"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amt" class="java.lang.String">
+		<parameterDescription><![CDATA[价税合计小写]]></parameterDescription>
+		<defaultValueExpression><![CDATA["95.20"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="xsfname" class="java.lang.String">
+		<parameterDescription><![CDATA[名称]]></parameterDescription>
+		<defaultValueExpression><![CDATA["湖南万家丽集团国际购物广场有限公司"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="xsftax" class="java.lang.String">
+		<parameterDescription><![CDATA[纳税人识别号]]></parameterDescription>
+		<defaultValueExpression><![CDATA["91430102553032598N"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="xsfbank" class="java.lang.String">
+		<parameterDescription><![CDATA[开户行及账号]]></parameterDescription>
+		<defaultValueExpression><![CDATA["交通银行长沙万家丽路支行  431631000018160141512"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="note" class="java.lang.String">
+		<parameterDescription><![CDATA[备注]]></parameterDescription>
+	</parameter>
+	<parameter name="weixinskr" class="java.lang.String">
+		<parameterDescription><![CDATA[收款人]]></parameterDescription>
+		<defaultValueExpression><![CDATA["杨洁"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="weixinfhr" class="java.lang.String">
+		<parameterDescription><![CDATA[复核]]></parameterDescription>
+		<defaultValueExpression><![CDATA["刘四喜"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="weixinkpr" class="java.lang.String">
+		<parameterDescription><![CDATA[开票人]]></parameterDescription>
+		<defaultValueExpression><![CDATA["张芳"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="goodsname" class="java.lang.String">
+		<fieldDescription><![CDATA[名称]]></fieldDescription>
+	</field>
+	<field name="spec" class="java.lang.String">
+		<fieldDescription><![CDATA[规格型号]]></fieldDescription>
+	</field>
+	<field name="unit" class="java.lang.String">
+		<fieldDescription><![CDATA[计量单位]]></fieldDescription>
+	</field>
+	<field name="qty" class="java.lang.String">
+		<fieldDescription><![CDATA[项目数量]]></fieldDescription>
+	</field>
+	<field name="price" class="java.lang.String">
+		<fieldDescription><![CDATA[项目单价]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.String">
+		<fieldDescription><![CDATA[金额(不含税)]]></fieldDescription>
+	</field>
+	<field name="taxrate" class="java.lang.String">
+		<fieldDescription><![CDATA[税率]]></fieldDescription>
+	</field>
+	<field name="taxfee" class="java.lang.String">
+		<fieldDescription><![CDATA[税额]]></fieldDescription>
+	</field>
+	<pageHeader>
+		<band height="141">
+			<textField>
+				<reportElement x="463" y="33" width="117" height="13" uuid="17c184e9-5f39-4101-95c1-56b11c91b968"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpdm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="463" y="46" width="117" height="13" uuid="da65d7d4-1c8a-4e7f-a699-d2f21ea07c0f"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fphm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="463" y="61" width="117" height="13" uuid="6957b7a9-c133-4eab-b32f-84670d643966"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fprq}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="57" width="117" height="13" uuid="8a78250a-a593-4a4a-9699-659c63e41ae6"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpjym}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="96" y="79" width="241" height="15" uuid="0edf148a-eba2-40aa-bb51-526e04bf876e"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{gmfname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="96" y="94" width="241" height="15" uuid="caf87ea0-9aa6-472f-9677-4325a74d9c89"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{gmftax}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="style2" stretchType="RelativeToTallestObject" x="96" y="109" width="241" height="15" uuid="d01f9691-3e17-45b6-a99e-739e257984f6"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{gmfaddr}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="96" y="124" width="241" height="15" uuid="0a71d440-b015-4c25-831d-cc5144fb8576"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{gmfbank}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="352" y="79" width="228" height="15" uuid="15ec05f8-642a-4a87-a9a5-76facd01a410"/>
+				<textElement markup="none">
+					<font fontName="Courier New" size="13" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpskm}.substring(0,28)]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="25" y="22" width="48" height="48" uuid="9f7e9ab6-28f9-4a6e-b069-a95d00fa5141"/>
+				<imageExpression><![CDATA[new ByteArrayInputStream(new Base64().decodeBase64(new StringBuffer($P{ewm}).toString().getBytes("UTF-8")))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="352" y="94" width="228" height="15" uuid="5d46ef1c-d38d-42ac-a1e7-65c613a8caeb"/>
+				<textElement markup="none">
+					<font fontName="Courier New" size="13" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpskm}.substring(28,56)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="352" y="109" width="228" height="15" uuid="9427148a-94be-4fff-9836-0055c22b7276"/>
+				<textElement markup="none">
+					<font fontName="Courier New" size="13" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpskm}.substring(56,84)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="352" y="124" width="228" height="15" uuid="1b21acbf-711f-446e-9c90-56454f254934"/>
+				<textElement markup="none">
+					<font fontName="Courier New" size="13" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fpskm}.substring(84,112)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="81" y="59" width="38" height="11" uuid="2a272f5c-8799-4627-be53-c7e0b32551a8"/>
+				<textElement>
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<text><![CDATA[校验码]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="11"/>
+	</columnHeader>
+	<detail>
+		<band height="12">
+			<textField isBlankWhenNull="true">
+				<reportElement x="16" y="0" width="144" height="12" uuid="0c5d7ef3-e2cd-4d78-95db-3f9df3dd488c"/>
+				<textElement>
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{goodsname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="0" width="71" height="12" uuid="9c4e94a7-9e04-40dc-86c1-1926dac9b17c"/>
+				<textElement>
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{spec}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="231" y="0" width="37" height="12" uuid="3989cc82-5d33-4ac3-94fd-20fac86f2d1e"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#.#########" isBlankWhenNull="true">
+				<reportElement x="268" y="0" width="52" height="12" uuid="b342949e-5fb5-4e5c-84e1-4e661d60fc79"/>
+				<textElement textAlignment="Right">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#.#########" isBlankWhenNull="true">
+				<reportElement x="320" y="0" width="61" height="12" uuid="1a82dfa0-6bf7-42e9-aecb-0d53504c2ceb"/>
+				<textElement textAlignment="Right">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="381" y="0" width="85" height="12" uuid="425eeaa7-062c-4c46-beee-55b9f96e4961"/>
+				<textElement textAlignment="Right">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="466" y="0" width="29" height="12" uuid="793c046d-4edf-414e-b162-f5c5d0fa0efd"/>
+				<textElement textAlignment="Right">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{taxrate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="495" y="0" width="80" height="12" uuid="ca97d2f1-c421-463a-a938-206e6c49c553"/>
+				<textElement textAlignment="Right">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{taxfee}.equals("0.00")?"***":$F{taxfee}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="14">
+			<textField>
+				<reportElement x="381" y="0" width="85" height="14" uuid="b207d550-9653-430f-8935-831026c0a518"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["￥"+$P{sumamount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="495" y="0" width="80" height="14" uuid="552c3176-1562-4194-99af-fc8dfe2b383c"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["￥"+$F{sumtaxfee}.equals("0.00")?"***":$F{sumtaxfee}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="112">
+			<textField>
+				<reportElement x="491" y="0" width="73" height="23" uuid="f955d55e-ac75-4bfb-b3a7-3b2cda8eea05"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["￥"+$P{amt}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="169" y="0" width="285" height="23" uuid="a95d6d14-e421-4868-8fc1-cab84affefcc"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{amtdx}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="98" y="31" width="241" height="14" uuid="bfa0a307-2e39-42c3-830e-e4d68fd095da"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{xsfname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="98" y="45" width="241" height="14" uuid="6e5f1b22-f413-46ee-849b-e5dff346e1b9"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{xsftax}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="98" y="73" width="241" height="14" uuid="7b87cb72-9cd6-4f8b-8fc7-1e0fb90c14f2"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{xsfbank}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="91" width="76" height="12" uuid="9c994ed3-13e0-48dd-a128-bbfca47f5f8f"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{weixinskr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="220" y="91" width="72" height="12" uuid="88ab74ce-4fb6-4bf1-85b2-734e515f1e07"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{weixinfhr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="352" y="91" width="86" height="12" uuid="1555e903-4cc3-4c9d-b4d7-9b7ff3ff43c5"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{weixinkpr}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="352" y="31" width="228" height="59" uuid="0d286620-f464-4685-8bc2-c8fa242e4819"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{note}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="98" y="59" width="241" height="14" uuid="b0fddc0c-c06b-463f-946e-bdae245dc2e4"/>
+				<textElement>
+					<font fontName="宋体" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{xsfaddr}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="160" y="8" width="9" height="9" uuid="2a86a693-bda0-4eaf-849a-275c3c784963"/>
+				<imageExpression><![CDATA[this.getClass().getResourceAsStream("jine.jpg")]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

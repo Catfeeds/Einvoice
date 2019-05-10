@@ -1,0 +1,256 @@
+﻿<!-- <!DOCTYPE html> -->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+  <meta charset="utf-8">
+  
+  <title>增值税发票云平台</title> 
+    
+  <!-- 固定引入jquery -->
+  <script src="jq/jquery/jquery-1.8.0.js"></script>  
+  <script src="js/comm/myApp.js"></script>      
+  <script src="js/comm/sha1.js"></script>      
+  <!-- <script src="scripts/boot.js" type="text/javascript">    </script> -->
+  <!-- <link href="scripts/miniui/themes/blue/skin.css" rel="stylesheet" type="text/css" /> -->
+    
+  <link href="style/bootstrap.css" rel="stylesheet">    
+  <link href="style/mainstyle.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
+  <link rel="Stylesheet" type="text/css" href="css/comm/base.css"/>	<!-- 基础CSS -->  
+  <link href="css/comm/main.css" rel="stylesheet"> 
+
+</head>
+<body>
+	<header class="am-topbar am-topbar-fixed-top">
+			
+		<div class="am-topbar-left am-topbar-brand">   			
+	      	<a href="#">增值税发票云平台</a>    		
+	    </div>
+	    
+	    <div class="am-topbar-right am-topbar-brand" style="margin-left:20px;margin-top:8px;">   	      						      			     	
+	     	<button class="am-btn am-btn-success" data-am-offcanvas="{target: '#modulepage'}" style="font-size:14px;">
+	     		<i class="am-menu-toggle-icon am-icon-bars" style="margin-right:10px;"></i> 模块	 
+	     	</button>    			    						      			      	
+	    </div> 	    
+	    	
+	    <div class="am-topbar-right am-collapse am-topbar-collapse" id="collapse-head">
+	    	<ul class="am-nav am-nav-pills am-topbar-nav">
+	        	<li class="am-dropdown" data-am-dropdown id="shop1" style="width: 250px">
+				    <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          				<span id="shopname" class="">门店</span> <span class="am-icon-caret-down"></span>
+        			</a>
+				    <div class="am-dropdown-content am-scrollable-vertical" id="shopcontent"></div>
+	        	
+	        	</li>
+	        	<li class="am-dropdown" data-am-dropdown>
+        			<a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          				<span id="username" class="">管理员 </span> <span class="am-icon-caret-down"></span>
+        			</a>
+        			<ul class="am-dropdown-content">
+         				<li><a href="javascript:resetLogin();"><span class="am-icon-power-off"></span> 退出</a></li>
+         				<li><a href="javascript:modifyPassword();"><span class="am-icon-power-off"></span> 修改密码</a></li>
+        			</ul>
+      			</li>  
+      			<li><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>     		       		 	       		      			        	
+	      	</ul>
+		</div>	      	
+  		   	 	      	    	 	
+	</header>			
+		
+	<div id="modulepage" class="am-offcanvas">		
+		<div class="am-offcanvas-bar am-offcanvas-bar-flip">  			
+	    	<div class="am-offcanvas-content" data-backend-compiled>        					
+	    		<div class="am-offcanvas-bar am-offcanvas-bar-overlay am-offcanvas-bar-active">
+	    			<div class="sidebar" style="width:100%">   
+						<ul id="nav" style="width:100%">				          				          
+				        </ul>
+					</div>	  
+				</div>
+			</div>
+		</div>
+	</div>	
+	
+	<table style="width:100%;height:100%"> 	    
+	    <tr> 
+	        <td style="padding:5px 10px 20px 10px;">
+				<table style="width:100%;height:100%"> 	   
+					<tr>
+						<td style="height:50px;">
+							<ul class="nav nav-tabs" id="pagetabs" style="font-size:14px;">
+								<li class="tab-title active" id="T000001"><a href="#P000001" data-toggle="tab" class="icon-home"><i class="am-icon-home"></i><span style="font:100% 微软雅黑,宋体,新宋体;margin-left:10px">首页</span></a></li>                                                                                                                   
+							</ul>  
+						</td>
+					</tr> 
+				    <tr> 
+				        <td>
+				        	<div style="height:100%;border-top:1px solid #38B0DE;border-bottom:1px solid #38B0DE;">				       			
+								<div style="height:100%;">																							 	                      
+									<div id="tabcontents" class="tab-content" style="width:100%;height:100%;">                      	                                                               
+										<div class="tab-pane active" id="P000001" style="height:100%">						
+										  <iframe id="homepage" class="moduleiframe" style="width:100%;height:100%;overflow:hidden"  frameborder='no' border='0' marginwidth='0' marginheight='0' scrolling='auto' allowtransparency='yes'></iframe>										
+										</div>
+									</div>
+								</div>								 
+			       			</div>			       		
+			       		</td>
+			       	</tr>
+				</table>
+	        </td> 
+	    </tr> 	     
+	</table> 	
+	
+  	<div class="navbar navbar-fixed-bottom bs-docs-nav" role="banner" style="min-height:10px;height:20px;">
+  		<div style="background-color:#666666;height:100%;padding-top:3px;">
+  			<div>
+					<center>
+						<p class="copy" style="margin-left:10px;font-size:12px;color:#ffffff;">Copyright &copy; 2015 | <span style="color:#38B0DE">Xavier</span></p>
+					</center>
+				</div>
+			</div>
+		</div>  
+  	
+  	
+  	
+		<iframe src="" name="attach" style="display:none"></iframe>
+	
+  			<div class="am-modal am-modal-prompt" tabindex="-1" id="editform6" style="z-index:990">
+		  		<div class="am-modal-dialog">
+		    		<div class="am-modal-hd">
+		    			<span id="edit-title" style="color:#3276b1"></span>
+		      			<a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close style="margin-right:10px;">&times;</a>
+		    		</div>
+		    		<hr style="width:100%;height:1px;margin:0;padding:0;" color="#3bb4f2"></hr>	
+		    		<div class="am-modal-bd" >
+		    			<div >
+		    			<form action="" enctype="" 
+								method="POST" target="attach" class="am-form" id="myform6" data-am-validator>
+							<fieldset>
+		    				<table width="100%">
+		    					<tr>
+		    						<td width="100px;">	    							
+		      							<label class="editlabel" for="oldpwd" style="font-size:18px; margin-top:-15px;">原密码</label>
+		      						</td>
+		      						<td>
+		      							<div class="am-form-group am-form-icon am-form-feedback" >
+		      								<input type="text" class="am-form-field editcontent am-radius" id="oldpwd" 
+		      									style="height:50px; font-size:50px;"
+		      									name="oldpwd" placeholder="" required>
+		      							</div>	    							
+		    						</td>	    						
+		    					</tr>
+		    					
+		    					<tr>
+		    						<td width="100px;">	    							
+		      							<label class="editlabel" for="newpwd1" style="font-size:18px; margin-top:-15px;">新密码</label>
+		      						</td>
+		      						<td>
+		      							<div class="am-form-group am-form-icon am-form-feedback">
+		      								<input type="text" class="am-form-field editcontent am-radius" id="newpwd1" 
+		      									style="height:50px; font-size:20px;"
+		      									name="newpwd1" placeholder="" required>
+		      							</div>	    							
+		    						</td>	    						
+		    					</tr>
+		    					
+		    					<tr>
+		    						<td width="100px;">	    							
+		      							<label class="editlabel" for="newpwd2" style="font-size:18px; margin-top:-15px;">新密码</label>
+		      						</td>
+		      						<td>
+		      							<div class="am-form-group am-form-icon am-form-feedback">
+		      								<input type="text" class="am-form-field editcontent am-radius" id="newpwd2" 
+		      									style="height:50px; font-size:20px;"
+		      									name="newpwd2" placeholder="" required>
+		      							</div>	    							
+		    						</td>	    						
+		    					</tr>
+		    				</table> 
+		    				  </fieldset>
+		  					</form>	   				    			 			 
+		    			</div>		    				    			
+		    		</div>   			    		 
+		    		<div class="am-modal-footer" style="height:40px;">
+		    			<span id="edit-save-btn" class="module-btn" data-am-modal-confirm>保存</span>	    			
+		      		<span id="point_sub_btn" class="am-modal-btn" data-am-modal-cancel>取消</span>	        		
+		    		</div>
+		  		</div>
+		  	
+		</div>		  			   	      						  			  			  			  			  				  
+
+
+<!-- ##################################################弹出页面####################################################### -->
+	<!-- 新增/编辑框 -->
+	<div class="am-modal am-modal-prompt" tabindex="-1" id="editform">
+		<form action="" class="am-form" id="my-form" data-am-validator>
+		<fieldset>
+	  		<div class="am-modal-dialog">
+	    		<div class="am-modal-hd">
+	    			<span id="edit-title" style="color:#3276b1"></span>
+	      			<a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close style="margin-right:10px;">&times;</a>
+	    		</div>
+	    		<hr style="width:100%;height:1px;margin:0;padding:0;" color="#3bb4f2"></hr>	
+	    		<div class="am-modal-bd" style="">
+	    			<div style="padding:0 50 0 50;overflow-y:scroll;height:250px;width:100%;">
+	    				<table width="100%">
+	    					<tr width="100%">
+	    						<td width="100px;">	    	    												
+	      							<label class="editlabel" for="loginid">3个月：</label>
+	      						</td>
+	      						<td width="100px;">					
+	      							<label class="editlabel" for="username">6个月：</label>
+	      						</td>
+	      						<td width="100px;">	    							
+	      							<label class="editlabel" for="contacttel">1年：</label>
+	      						</td>
+						     	   						
+	    					</tr> 
+	    					<tr>
+	    						<td style="width:40px;padding-top:6;">
+					   				<label class="am-radio am-secondary">
+									  <input type="radio" name="radio3" value="" data-am-ucheck> 
+									</label>
+					   			</td> 
+					   			<td style="width:40px;padding-top:6;">
+					   				<label class="am-radio am-secondary">
+									  <input type="radio" name="radio3" value="" data-am-ucheck> 
+									</label>
+					   			</td>     
+					   			<td style="width:40px;padding-top:6;">
+					   				<label class="am-radio am-secondary">
+									  <input type="radio" name="radio3" value="" data-am-ucheck>  
+									</label>
+					   			</td>           						
+	    					</tr>
+	    					 
+	    					<tr>
+	    						<td width="100px;">	    							
+	      							<label class="editlabel" for="kpd">金额：</label>
+	      						</td>
+	      						<td width="100px;">	    							
+	      							<label class="editlabel" for="kpd"></label>
+	      						</td>   
+	      						<td width="100px;">	    							
+	      							<label class="editlabel" for="kpd"></label>
+	      						</td>						
+	    					</tr> 					
+	    				</table>    				    			 			 
+	    			</div>		    				    			
+	    		</div>   			    		 
+	    		<div class="am-modal-footer" style="height:40px;">
+	    			<span id="edit-save-btn" class="module-btn" type="submit" data-am-modal-confirm>确认</span>	    			
+	      			<span class="am-modal-btn" data-am-modal-cancel>取消</span>	      		
+	    		</div>
+	  		</div>
+	  	</fieldset>
+	  	</form>	  
+	</div>		
+	 
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="bootstrapjs/bootstrap.js"></script>
+	<script src="assets/js/amazeui.min.js"></script>
+			
+	<script type="text/javascript" src="jq/jquery/jquery-form.js"></script>
+	  <script src="js/myJq.js"></script> 
+	<script src="js/main.js"></script>
+</body>
+</html>

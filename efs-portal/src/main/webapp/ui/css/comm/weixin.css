@@ -1,0 +1,46 @@
+body {
+	font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",FontAwesome,sans-serif;
+	font-weight: 400;
+	line-height: 1.6;
+	color: #333;
+	font-size: 1.6rem;	
+}
+table{width:100%;}
+tr{width:100%;}
+td{vertical-align:middle;}
+
+.wx-header
+{
+	font-size:20px;
+	background-color:#E65050; 	
+}  
+
+.wx-header-left
+{
+	
+}
+
+.wx-header-right
+{
+	padding-right:10px;	
+}
+
+
+.module-btn{
+	display: table-cell!important;
+	padding: 0 5px;
+	height: 44px;
+	-webkit-box-sizing: border-box!important;
+	box-sizing: border-box!important;
+	font-size: 1.6rem;
+	line-height: 44px;
+	text-align: center;
+	color: #0e90d2;
+	display: block;
+	word-wrap: normal;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	cursor: pointer;
+	border-right: 1px solid #dedede;
+}

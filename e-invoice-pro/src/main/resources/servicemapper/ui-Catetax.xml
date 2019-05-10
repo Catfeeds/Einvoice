@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.CatetaxDao">	
+
+ 	<select id="queryCategory" parameterType="com.invoice.bean.db.Category" resultType="com.invoice.bean.db.Category">
+		select a.*,a.categoryname as title,'folder'as type from Category a  where a.entid = #{entid} and a.headcatid = #{headcatid} and a.categorystatus = 0
+	</select>
+	
+  	<select id="getCatetaxById" resultType="com.invoice.bean.db.Catetax">
+        select * from Catetax where entid = #{entid} 
+        <if test="cateid != null">
+        and cateid = #{cateid}
+        </if>
+	</select>
+	
+	<select id="getCatetaxCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Catetax where entid= #{entid}
+    </select>
+    
+	<insert id="insertCatetax" parameterType="com.invoice.bean.db.Catetax">
+		insert into Catetax(entid,cateid,catename,taxrate,taxitemid)
+		values(#{entid},#{cateid},#{catename},#{taxrate},#{taxitemid})
+	</insert>
+	
+	<delete id="deleteCatetax" parameterType="com.invoice.bean.db.Catetax" >	
+		delete from Catetax where entid= #{entid} and cateid = #{cateid}
+	</delete>	
+	
+	<update id="updateCatetax" parameterType="com.invoice.bean.db.Catetax">
+		update Catetax set  entid =#{entid}, cateid =#{cateid},  catename =#{catename},  taxrate =#{taxrate},  taxitemid =#{taxitemid} where entid= #{entid} and cateid =#{cateid}
+	</update>
+	
+	<insert id="addCatetaxList"  parameterType="com.invoice.bean.db.Catetax">
+	    insert into Catetax(entid,cateid,catename,taxrate,taxitemid)
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >
+	        (#{item.entid},#{item.cateid},#{item.catename},#{item.taxrate},#{item.taxitemid})
+	    </foreach>  
+	</insert> 
+	
+	<insert id="addCategoryList"  parameterType="com.invoice.bean.db.Category">
+	    insert into Category(entid,categoryid,categoryname,deptlevelid,headcatid,categorystatus)
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >
+	        (#{item.entid},#{item.categoryid},#{item.categoryname},#{item.deptlevelid},#{item.headcatid},#{item.categorystatus})
+	    </foreach>  
+	</insert> 
+</mapper>

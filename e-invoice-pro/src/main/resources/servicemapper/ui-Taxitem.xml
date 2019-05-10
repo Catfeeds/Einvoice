@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.TaxitemDao">	
+
+ 	<select id="queryTaxitem" parameterType="NewHashMap" resultType="com.invoice.bean.db.Taxitem">
+		select Taxitem.*,lookupitem.lookup FROM Taxitem 
+        LEFT JOIN lookupitem 
+        ON Taxitem.taxitemmode=lookupitem.fieldvalue 
+        where lookupitem.lookupid=7
+        <if test="taxitemid != null and taxitemid !=''">
+			and taxitemid = #{taxitemid}
+		</if> 
+        <if test="taxitemname != null  and taxitemname != ''">
+        and taxitemname like CONCAT('%',#{taxitemname},'%') 
+        </if>
+	    <if test="taxrate != null  and taxrate != ''">
+		and taxrate like CONCAT('%',#{taxrate},'%')
+	    </if>
+        order by taxitemid desc 
+        <if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+  	</select>
+  	
+  	<select id="getTaxitemCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Taxitem where 1=1
+	  	<if test="taxitemid != null and taxitemid !=''">
+		  and taxitemid = #{taxitemid}
+	 	 </if>
+	 	 <if test="taxitemname != null  and taxitemname != ''">
+		  and taxitemname like CONCAT('%',#{taxitemname},'%')
+	  	</if>
+	    <if test="taxrate != null  and taxrate != ''">
+		  and taxrate like CONCAT('%',#{taxrate},'%')
+	  	</if>
+ 		order by taxitemid desc
+    </select>
+  	
+  	<select id="getTaxitemById" parameterType="com.invoice.bean.db.Taxitem" resultType="NewHashMap">
+        select * from Taxitem where taxitemid = #{taxitemid}
+	</select>
+	
+	<insert id="insertTaxitem" parameterType="com.invoice.bean.db.Taxitem">
+		insert into Taxitem(taxversion,taxitemid,taxitemname,taxrate,taxitemmemo,taxitemkey,taxitemmode)
+		values(#{taxversion},#{taxitemid},#{taxitemname},#{taxrate},#{taxitemmemo},#{taxitemkey},#{taxitemmode})
+	</insert>
+
+	<delete id="deleteTaxitem" parameterType="com.invoice.bean.db.Taxitem" >	
+		delete from Taxitem where taxitemid= #{taxitemid}
+	</delete>	
+	
+	<update id="updateTaxitem" parameterType="com.invoice.bean.db.Taxitem">
+		update Taxitem set taxversion =#{taxversion}, taxitemid =#{taxitemid}, taxitemname =#{taxitemname},  taxrate =#{taxrate},  taxitemmemo =#{taxitemmemo},  taxitemkey =#{taxitemkey},  taxitemmode =#{taxitemmode} where  taxitemid =#{taxitemid}
+	</update>
+	
+	<insert id="addTaxitemList"  parameterType="com.invoice.bean.db.Taxitem">
+	    insert into Taxitem(taxversion,taxitemid,taxitemname,taxrate,taxitemmemo,taxitemkey,taxitemmode)
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >
+	        (#{item.taxversion},#{item.taxitemid},#{item.taxitemname},#{item.taxrate},#{item.taxitemmemo},#{item.taxitemkey},#{item.taxitemmode})
+	    </foreach>  
+	</insert>
+
+	<select id="getTaxitemByTaxitemId" parameterType="com.invoice.bean.db.Taxitem" resultType="com.invoice.bean.db.Taxitem">
+		 select * from Taxitem where taxitemid = #{taxitemid}
+	</select>
+
+	<insert id="addTaxitemByExcel" parameterType="com.invoice.bean.db.Taxitem">
+		INSERT INTO Taxitem ( taxversion, taxitemid, taxitemname, taxrate,taxitemmode,taxpre, taxprecon,zerotax)
+		VALUES(#{taxversion},#{taxitemid},#{taxitemname},#{taxrate},#{taxitemmode},#{taxpre},#{taxprecon},#{zerotax})
+	</insert>
+
+</mapper>

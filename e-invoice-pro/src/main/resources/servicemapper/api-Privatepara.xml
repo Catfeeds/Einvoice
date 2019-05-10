@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.apiservice.dao.PrivateparaDao">	    
+	
+	<select id="getPrivatepara" parameterType="com.invoice.bean.db.Privatepara" resultType="com.invoice.bean.db.Privatepara">
+		select *
+		from Privatepara
+		where 1=1
+		<if test="entid != null">
+       		and  entid = #{entid} 
+   		</if>
+   		<if test="pparaid != null">
+       		and  pparaid = #{pparaid} 
+   		</if>
+   		order by entid
+	</select>
+	
+	<select id="updatePrivatepara" parameterType="com.invoice.bean.db.Privatepara">
+		upate Privatepara set pparavalue=#{pparavalue}
+		where entid=#{entid} and pparaid=#{pparaid}
+	</select>
+	
+	<select id="getShopConnectList" parameterType="NewHashMap" resultType="NewHashMap">
+		select a.entid,a.shopid,a.shoptype,a.clientid,a.memo,a.connectid,b.url,b.username,b.password,b.driver,b.dbcharcode
+		  from c_shopconnect a
+		  join c_connect b on b.connectid=a.connectid and b.entid=a.entid
+		 where 1=1
+       	   and a.entid=#{entid} 
+       	   and a.clientid=#{clientid} 
+	</select>
+	
+	<select id="getClientUrlByShopid" parameterType="NewHashMap" resultType="com.invoice.bean.db.CClient">
+		select b.*
+		  from c_shopconnect a
+		  join c_client b on b.clientid=a.clientid and b.entid=a.entid
+		 where 1=1
+       	   and a.entid=#{entid}
+       	   and a.shopid=#{shopid} 
+	</select>
+	<select id="getCConnectList" parameterType="NewHashMap" resultType="NewHashMap">
+	    SELECT a.clientid,b.clientname,b.url as sellurl,c.* from c_shopconnect a,c_client b,c_connect c where 1=1 
+		and a.entid=#{entid} 
+		<if test="connectid != null and connectid !=''">
+		and c.connectid = #{connectid} 
+		</if>
+		and a.clientid = b.clientid and a.connectid=c.connectid and a.entid = b.entid 
+		and a.entid = c.entid and b.entid = c.entid 
+		GROUP BY a.clientid,a.connectid 
+		order by a.clientid,a.connectid asc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	<select id="getCConnectCount" parameterType="NewHashMap" resultType="int">
+	    SELECT count(1) from(
+		SELECT c.* from c_shopconnect a,c_client b,c_connect c where 1=1 
+		and a.entid=#{entid} 
+		<if test="connectid != null and connectid !=''">
+		and c.connectid = #{connectid} 
+		</if>
+		and a.clientid = b.clientid and a.connectid=c.connectid and a.entid = b.entid 
+		and a.entid = c.entid and b.entid = c.entid 
+		GROUP BY a.clientid,a.connectid 
+		order by a.clientid,a.connectid asc) d 
+	</select>
+	<update id="updateCConnect" parameterType="com.invoice.bean.db.CConnect">
+		update c_connect set url =#{url},username =#{username},password =#{password},driver =#{driver},dbcharcode =#{dbcharcode},memo =#{memo} 
+		 where entid =#{entid} and connectid =#{connectid}
+	</update>
+</mapper>

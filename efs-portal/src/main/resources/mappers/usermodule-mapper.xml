@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.efuture.portal.dao.db.one.UsermoduleDao">
+ 	
+	
+	<select id="findCompany"  parameterType="NewHashMap" resultType="NewHashMap">
+		select companyid,companytype,entid,companyname,shortname,address,companytel,contacttel,email,fax,taxno,industries,legalperson,depositbank,bankno,intime,qzj_url,crmflag
+		from company where entid=#{entid}
+	</select>
+	
+	<select id="findLogin" parameterType="NewHashMap" resultType="NewHashMap">
+		select companyid,LoginID
+		from login where CompanyID=#{companyid} and LoginID=#{entid}
+	</select>
+
+	<select id="findShop" parameterType="NewHashMap" resultType="NewHashMap">
+		select CompanyID,ShopID,ShopName,ShopType from shop where ShopID=#{shopid} 
+		 and CompanyID in (select CompanyID from company where entid=#{entid} )
+	</select>
+
+	<insert id="insertCompany" parameterType="NewHashMap" useGeneratedKeys="true" keyProperty="companyid">
+		insert into company (CompanyType,entid,CompanyName,ShortName,Address,CompanyTel,ContactTel,Email)
+		values ('普通',#{entid},#{entname},#{entname},#{address},#{phone},'1','1');
+	</insert>
+	
+	<insert id="insertLoginDao" parameterType="NewHashMap">
+		insert into login (CompanyID,LoginID,PASSWORD,LoginType,UserName,IDCard,ContactTel,IsStop)
+		values (#{companyid},#{entid},#{password},'1',#{entname},'1','phone','0');
+	</insert>
+ 	
+ 	<insert id="insertRole" parameterType="NewHashMap">  <!-- 多行 -->
+ 	
+		insert into role (CompanyID,RoleName,flag)
+		select #{companyid},'企业管理员','1' from dual
+		UNION
+		select #{companyid},rolename ,'2' from user_module where usertype='2'
+		
+	</insert>
+	
+	 <insert id="insertLoginRole" parameterType="NewHashMap">
+		insert into login_nx_role (CompanyID,LoginID,RoleID)
+		select #{companyid},#{entid},roleid from role where companyid=#{companyid} and flag='1'
+	</insert>
+	
+ 	<insert id="insertRoleModule" parameterType="NewHashMap">  <!-- 多行 -->
+		insert into role_nx_module (RoleID,moduleid)
+		select a.RoleID,b.moduleid from role a,user_module b where a.flag =b.usertype and CompanyID=#{companyid} and flag='1' 
+		UNION
+	  	select a.RoleID,b.moduleid from role a,user_module b where a.flag =b.usertype and a.RoleName= b.rolename and CompanyID=#{companyid} and flag='2' 
+
+	</insert>
+	
+	<insert id="insertShop" parameterType="NewHashMap">
+		insert into shop (CompanyID,ShopID,ShopName,ShopType)
+		select CompanyID,#{shopid},#{shopname},#{shoptype} from company where entid= #{entid}
+	</insert>
+	
+ 	<insert id="deleteShop" parameterType="NewHashMap">
+		delete from shop where  shopid=#{shopid} and companyid in (select companyid from company where entid= #{entid})
+	</insert>
+ 	
+</mapper>

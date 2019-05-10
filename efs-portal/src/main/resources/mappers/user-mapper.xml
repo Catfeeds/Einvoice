@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.efuture.portal.dao.db.one.UserDao">
+
+	<sql id="allmenbers">
+		id,
+		token,
+		companyid,
+		operator
+	</sql>
+
+
+    <!-- parameterType 传入的参数是int类型 因为我传入的id是id类型  resultType 返回的结果是类型 是Sample实体-->
+	<select id="getSampleById" parameterType="string" resultType="User">
+        select * from user where token = #{token}
+	</select>
+	
+	<select id="queryCompany" parameterType="NewHashMap"
+		resultType="NewHashMap">
+		select * from company where companyid=#{companyid}
+	</select>
+	
+	<select id="queryPartner" parameterType="NewHashMap"
+		resultType="NewHashMap">
+		select * from eshopdb.CompanyPartner a 
+		join portal.company b on a.companyid=b.companyid
+		where a.companyid=#{companyid}
+		and a.PartnerLoginID=#{account}
+	</select>
+    
+	
+	<insert id="intoCompany" parameterType="NewHashMap">
+		insert into company
+			(companytype,companyname,shortname,address,companytel,contacttel,email,fax,taxno,industries,legalperson,depositbank,bankno,intime)
+		values(#{companytype},#{companyname},#{companyname},'暂无',#{register_phone},#{register_phone},#{register_email},'',
+		'','','','','',now())
+	</insert>
+	
+	<select id="getNewCompany" parameterType="Map" resultType="NewHashMap">
+		select max(companyid) as companyid from company
+	</select>
+	
+	<insert id="intoCompanyRole" parameterType="NewHashMap">		
+		insert into role
+			(companyid,rolename,note)
+		values(#{companyid},'企业管理员','默认生成')					
+	</insert>
+	
+	<!-- 注册公司时增加默认机构 -->
+	<insert id="newShop" parameterType="NewHashMap">		
+		insert into shop
+			(companyid,shopid,shopname,shoptype,area,note)
+		values(#{companyid},'XXXX','企业总部',2,'','默认生成')				
+	</insert>
+	
+	<insert id="newCompanyPrepay" parameterType="NewHashMap">
+		insert into eshopdb.CompanyPrepay(companyid,prepayvalue,totalrechargevalue,totalconsumevalue)
+		values(#{companyid},0,0,0);
+	</insert>
+	
+	<insert id="newCompanyPointExConfig" parameterType="NewHashMap">
+		insert into eshopdb.CompanyPointExConfig(CompanyID,LotteryExRate,DayQuota,DayTimesLimit,OneQuota,OneDayTimesLimit,SDMRate,UpdateTime)
+		values(#{companyid},-1,-1,-1,-1,-1,-1,now());
+	</insert>
+	
+	<insert id="newRoleModule" parameterType="NewHashMap">
+		<![CDATA[
+			insert into role_nx_module
+				(roleid,moduleid)
+			select distinct a.roleid,b.moduleid from role a,module b,menu c,companytypemenu d,company e where a.companyid=#{companyid} and rolename='企业管理员' and b.SystemModule=1 and b.MenuID<>9
+			and b.menuid=c.menuid and c.menuid=d.menuid and a.companyid=e.companyid and d.companytype=e.companytype
+		]]>
+	</insert>
+</mapper>

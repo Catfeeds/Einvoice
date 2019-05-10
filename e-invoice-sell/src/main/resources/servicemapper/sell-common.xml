@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.CommonSheetDao">
+
+	<select id="test" resultType="NewHashMap">
+		select * from invoice_sheet_head where 1=2
+	</select>
+	
+	<select id="getList" resultType="NewHashMap" parameterType="NewHashMap">
+		SELECT
+		  a.sheetid
+		FROM
+		 invoice_sheet_head a
+		 where sheettype=#{sheettype}
+		  and flag=#{flag} 
+		  and shopid=#{shopid} 
+		  and rownum &lt; 1000
+	</select>
+	
+	<update id="callbackSheet" parameterType="NewHashMap">
+		update invoice_sheet_head
+		   set 
+		   	   <if test="flagmsg!=null">
+		   	   flagmsg=#{flagmsg,jdbcType=VARCHAR},
+		   	   </if>
+		   	   <if test="invoiceCode!=null">
+		       invoiceCode=#{invoiceCode,jdbcType=VARCHAR},
+		       </if>
+		       <if test="invoiceno!=null">
+		       invoiceNo=#{invoiceNo,jdbcType=VARCHAR},
+		       </if>
+		       <if test="invoiceDate!=null">
+		       invoiceDate=#{invoiceDate,jdbcType=VARCHAR},
+		       </if>
+		       <if test="pdfurl!=null">
+		       pdfurl=#{pdfurl,jdbcType=VARCHAR},
+		       </if>
+		       <if test="recvemail !=null">
+		       recvemail=#{recvemail,jdbcType=VARCHAR},
+		       </if>
+		       <if test="recvphone !=null">
+		       recvphone=#{recvphone,jdbcType=VARCHAR},
+		       </if>
+		       flag=#{flag}
+		 where sheetid=#{sheetid}
+		   and sheettype=#{sheettype}
+	</update>
+	
+	<select id="getHead" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from invoice_sheet_head where sheetid=#{sheetid} and sheettype=#{sheettype} 
+	</select>
+	
+	<select id="getDetail" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from invoice_sheet_detail where sheetid=#{sheetid} and sheettype=#{sheettype} order by rowno
+	</select>
+	
+	<select id="getZH" resultType="NewHashMap">
+	   Select Gysid,--租户编号
+       Gysmc,--租户名称      
+       Gysjc,--店招
+       Gysec,--店招英文名
+       gysmkt(Gysmkt) Gysmkt,--所属门店
+       Commc,--公司名称
+       Comec,--公司英文名称
+       Legalman,--法定代表人
+       TZCAT(Tz) Tz,--租户类型
+       QYXZ(CHARACTER) CHARACTER,--企业性质
+       SSCODE(Ss) Ss,--省市
+       Linkman,--联系人
+       Tel,--电话
+       Mobiletel,--手机
+       e_Mail,--邮箱
+       HY(Jyhy) Jyhy,--经营行业
+       YT(Jyyt) Jyyt,--经营业态
+       XFDX(Xfdx) Xfdx,--消费对象
+       NXSE(Nxse) Nxse,--品牌信息
+       ZHZT(status) status --状态
+		From   dbusrpub.Mallsupplierbase
+	</select>
+	
+	<select id="getHT" parameterType="Map" resultType="NewHashMap">
+	   SELECT 
+         dbusrmall.AM_CNT.SUPID Gysid,--租户编码
+         dbusrmall.AM_CNT.HTH,--合同编号
+         dbusrmall.AM_CNT.startdate,--开始时间   
+         dbusrmall.AM_CNT.enddate,--结束时间  
+         JSZ(dbusrmall.AM_CNT.SETTLEGROUP) SETTLEGROUP,--结算组
+         dbusrmall.AM_CNT.JSRQ1,--月结日（31 月末）
+         dbusrmall.AM_CNT.JS,--结算方式（纯租金1,纯抽成2,租金加抽成8,租金与抽成取高3,多扣率差额4,租金与多扣率差额取高5，租金加多扣率差额9,多扣率6，租金与多扣率全额取高7，租金加多扣率全额10）
+         dbusrmall.AM_CNT.VIPFLBL,--租金管理费收取方式（提前收取0,提前一个月收取1，不提前收取-1）
+         dbusrmall.AM_CNT.YSZQ1,--租金每次收取月数
+         dbusrmall.AM_CNT.YSZQ2,--管理费每次收取月数
+         dbusrmall.CYCLICITYFEE.FCONTGETAMOUNTSUM(dbusrmall.AM_CNT.HTH,
+                                      '01',
+                                       dbusrmall.Am_Cntrent.SHOPID,
+                                      dbusrmall.Am_Cntrent.QSRQ,
+                                      dbusrmall.Am_Cntrent.JZRQ,
+                                      dbusrmall.Am_Cntrent.DESC1,
+                                      dbusrmall.Am_Cntrent.ZJDJ) ZJSUM,      --租金金额
+         dbusrmall.CYCLICITYFEE.FCONTGETAMOUNTSUM(dbusrmall.AM_CNT.HTH,
+                                      '02',
+                                      dbusrmall.Am_Cntrent.SHOPID,
+                                      dbusrmall.Am_Cntrent.QSRQ,
+                                      dbusrmall.Am_Cntrent.JZRQ,
+                                      dbusrmall.Am_Cntrent.DESC2,
+                                      dbusrmall.Am_Cntrent.GLFDJ) GLFSUM,    --管理费金额
+         ZHZT(dbusrmall.AM_CNT.STATUS) STATUS --状态
+    FROM dbusrmall.AM_CNT,dbusrmall.Am_Cntrent
+    WHERE AM_CNT.HTH = AM_CNTRENT.HTH(+)
+     <if test="gysid !=null">
+       AND dbusrmall.AM_CNT.SUPID=#{gysid}
+     </if>
+	</select>
+	
+</mapper>

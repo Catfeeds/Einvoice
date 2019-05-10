@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.InvoiceSaleHeadInvqueDao">
+
+ <select id="getAll" resultType="com.invoice.bean.db.InvoiceSaleHeadInvque" parameterType="NewHashMap">
+	 SELECT
+	 a.billno as billno,
+	 date_format(b.iqdate, '%Y-%c-%d %H:%i') as iqdate,
+	 a.totalAmount as totalAmount,
+	 a.invoiceAmount as invoiceAmount,
+	 a.totalTaxFee as totalTaxFee,
+	 c.SHOPNAME as shopName,
+	 CASE
+	 b.iqfplxdm
+	 WHEN '004' THEN
+	 '专票'
+	 WHEN '007' THEN
+	 '普票'
+	 WHEN '026' THEN
+	 '电子票'
+	 WHEN '100' THEN
+	 '二维码作废' ELSE ''
+	 END AS iqfplxdm
+	 FROM
+	 invoice_sale_head a
+	 LEFT JOIN invque b ON b.iqseqno = a.iqseqno
+	 AND b.iqentid = a.entid
+	 LEFT JOIN shop c on a.shopid=c.SHOPID and c.ENTID=a.entid
+	 WHERE
+	 a.entid = #{entid}
+	 and a.flag=1
+	 and b.iqstatus = 50
+	 <if test="startdate != null and startdate !=''">
+		  and b.iqdate &gt;= #{startdate}
+	    </if>
+	    <if test="enddate != null and enddate !=''">
+		  and b.iqdate &lt; (#{enddate}+1)
+	 	</if>
+	    <if test="billno != null  and billno != ''">
+		    and a.billno = #{billno}
+	    </if>
+	 	<if test="iqfplxdm != null  and iqfplxdm != ''">
+		 	and b.iqfplxdm = #{iqfplxdm}
+		</if>
+		order by b.iqdate desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+  </select>
+
+  	<select id="getCount" resultType="int" parameterType="NewHashMap">
+		SELECT	count(*) FROM
+		invoice_sale_head a
+		LEFT JOIN invque b ON b.iqseqno = a.iqseqno
+		AND b.iqentid = a.entid
+		WHERE
+		a.entid = #{entid}
+		and a.flag=1
+		and b.iqstatus = 50
+		<if test="startdate != null and startdate !=''">
+			and b.iqdate &gt;= #{startdate}
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and b.iqdate &lt; (#{enddate}+1)
+		</if>
+		<if test="billno != null  and billno != ''">
+			and a.billno = #{billno}
+		</if>
+		<if test="iqfplxdm != null  and iqfplxdm != ''">
+			and b.iqfplxdm = #{iqfplxdm}
+		</if>
+
+    </select>
+
+</mapper>
+  

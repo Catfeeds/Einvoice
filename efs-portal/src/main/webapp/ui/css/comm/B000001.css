@@ -1,0 +1,89 @@
+.sys-curd-button {		
+	margin-left:7px;
+	margin-right:7px;
+	height:28px;
+}
+
+.sys-curd-button span{
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:14px;
+}
+
+.sys-curd-button i{	
+	font-size:14px;
+	margin-left:2px;
+	margin-right:8px;
+}
+
+.sys-curd-text{
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:14px;
+	padding-top:8px;	
+	height: 28px;
+}
+
+.sys-curd-select{
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:14px;
+	height: 32px;
+}
+
+.sys-curd-edit-label{
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:16px;	
+	margin-top:7px;
+	font-weight:bold;
+	min-width:80px;
+	max-width:120px;
+}
+
+.sys-curd-edit-text{	
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:16px;		
+	font-weight:bold;	
+	padding-top:9px;	
+	min-width:120px;
+	height: 32px;
+}
+
+.sys-curd-edit-select{	
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:16px;		
+	font-weight:bold;
+	min-width:120px;
+	padding-top:5px;
+	height: 32px;	
+}
+
+#datagrid1{
+	width: 100%;
+	font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+	font-size:14px;	
+	line-height:28px;
+	margin-bottom:0px;		
+}
+
+/* ÐÞ¸Äµôjquerymini²»ºÃ¿´µÄÑùÊ½ */
+.mini-grid-cell-inner
+{	
+    font-size:16px;
+    font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;   
+    height:20px;   
+    line-height:20px; 
+    vertical-align: middle;     
+    padding-left:2px; 
+}
+
+.mini-grid-headerCell-inner
+{	
+	font-size:14px;
+    font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;     
+}
+
+.mini-pager-right
+{
+	margin-top:7px;
+	font-size:14px;
+    font: 100% Helvetica, Tahoma, Arial, STXihei, "Microsoft YaHei", "Î¢ÈíÑÅºÚ", sans-serif;
+}
+/* jquerymini end*/

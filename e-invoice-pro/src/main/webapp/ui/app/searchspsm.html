@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.upload.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/searchspsm.js"></script>
+		<script src="../assets/js/amazeui.upload.js"></script>
+		<script src="../assets/js/amazeui.upload.event.js"></script>
+		<script src="../assets/js/amazeui.upload.template.js"></script>
+	</head>
+	<body>
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">商品与税目关系</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span> 商品与税目关系定义
+                    </div>
+                </div>
+               
+                <div class="am-app-block">
+                    <div class="am-g">
+                        <div class="am-u-sm-2">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                     <!-- <button type="button" class="am-btn am-btn-default am-btn-secondary" id="btnSave"><span class="am-icon-save"></span> 保存</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-warning" id="btnCheck"><span class="am-icon-archive"></span> 审核</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-danger" id="btnDelete"><span class="am-icon-trash-o"></span> 删除</button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-u-sm-10 am-fr">
+	                        <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4">
+	                        	<li>
+	                        			<label class="am-u-sm-6 am-u-lg-4 am-app-form-lable">商品编码</label>
+	                        			<div class="am-u-sm-6 am-u-lg-8"><input type="text" id="goodsId" class="am-form-field"></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">商品名称</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"><input type="text" id="goodsName" class="am-form-field"></div>
+	                        	</li>
+	                        	<li><span class="am-input-group-btn"><button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch" ></button></span></li>
+	                        </ul>
+                        </div>
+                    </div>
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                            <form class="am-form">
+                                <table class="am-table am-table-striped am-table-hover table-main">
+                                    <thead>
+                                        <tr>
+                                            <th>企业编码</th>
+                                            <th>商品代码</th>
+                                            <th>商品名称</th>
+                                            <th>税目代码</th>
+                                            <th>税目名称</th>
+                                            <th>是否享受税收优惠政策</th>
+                                            <th>优惠政策类型</th>
+                                            <th>零税率标识</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rowTraget">
+                                    	
+                                    </tbody>
+                                </table>
+                                <div class="am-cf">
+                                    <div class="am-fr">
+                                    	<div id="page"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <table  style="display:none;">
+        	<tbody id="rowSample">
+        	<tr>
+                <td>||entid||</td>
+                <td>||goodsid||</td>
+                <td>||goodsname||</td>
+                <td>||taxitemid||</td>
+                <td>||taxitemname||</td>
+                <td>||lookup||</td>
+                <td>||taxprecon||</td>
+                <td>||lookup1||</td>
+            </tr>
+            </tbody>
+        </table>
+        
+	</body>
+</html>

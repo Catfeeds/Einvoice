@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration   
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.invoice.util.NewHashMap" alias="NewHashMap" />
+	</typeAliases>
+	
+	<!-- ORACLE WE8ISO8859P1字符集转换 <typeHandlers> <typeHandler javaType="java.lang.String" 
+		jdbcType="VARCHAR" handler="com.efuture.portal.esb.util.ISO8859String"/> 
+		<typeHandler javaType="java.lang.String" jdbcType="CHAR" handler="com.efuture.portal.esb.util.ISO8859String"/> 
+		</typeHandlers> -->
+
+	<!-- 基于方言的数据库级分页 -->
+	<!-- plugins>
+		<plugin
+			interceptor="com.efuture.congou.dal.util.DiclectStatementHandlerInterceptor" />
+		<plugin
+			interceptor="com.efuture.congou.dal.util.DiclectResultSetHandlerInterceptor" />
+	</plugins-->
+
+</configuration>

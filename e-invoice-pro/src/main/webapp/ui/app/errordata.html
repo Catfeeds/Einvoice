@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/errordata.js"></script>
+		<script src="../assets/js/qrcode.lib.min.js"></script>
+		<script src="../assets/js/qrcode.js"></script>
+		<script src="../js/time.js"></script>
+		
+		<script src="../js/jquery-ui.js"></script>
+		<script src="../js/date-zh-cn.js"></script>
+  		<link rel="stylesheet" href="../css/jquery-ui.css">
+	</head>
+	<body >
+		<div class="am-g">
+		<div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+				<div class="card-box"  style="height:600px">
+					<!-- Row start -->
+					<div class="am-g">
+						<div id="shopname" class="am-u-lg-3"></div>
+						<div class="am-u-lg-2">
+						<input type="text" id="sheetid" class="am-form-field" placeholder="小票提取码">
+						</div>
+						<div class="am-u-lg-2">
+						<input type="text" id="startdate" class="am-form-field" placeholder="开始日期" readonly>
+						</div>
+						<div class="am-u-lg-2">
+						<input type="text" id="enddate" class="am-form-field" placeholder="结束日期" readonly>
+						</div>
+				        
+						<div class="am-u-lg-3">
+				          <div class="am-input-group am-input-group-sm">
+				          <span class="am-input-group-btn">
+				            <button class="am-btn am-btn-default" type="button" onclick="search(0)">搜索</button>
+				          </span>
+				          </div>
+				        </div>
+				      </div>
+					  <!-- Row end -->
+					  
+					<!-- Row start -->
+					<div class="am-g">
+			        <div class="am-u-sm-12">
+			            <table class="am-table am-table-striped am-table-hover table-main">
+			              <thead>
+			              <tr>
+			                <td>小票号码</td>
+			                <td>日志信息</td>
+			                <td>处理信息</td>
+			                <td>处理状态</td>
+			                <td>记录时间</td>
+			              </tr>
+			              </thead>
+			              <tbody id="row1">
+			              
+			              </tbody>
+			            </table>
+			        </div>
+			            	<div id="pagecount"  class="am-fl"></div>
+			           		 <div class="am-fr">
+			                    <div id="page"></div>
+			                 </div>
+			      </div>
+					  <!-- Row end -->
+					  <table  style="display:none;">
+				        	<tbody id="rowmo">
+				        	<tr>
+				        		<td>||sheetid||</td>
+				                <td>||msg||</td>
+				                <td>||processMsg||</td>
+				                <td>||processFlag||</td>
+				                <td>||logtime||</td>
+				            </tr>
+				            </tbody>
+				        </table>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

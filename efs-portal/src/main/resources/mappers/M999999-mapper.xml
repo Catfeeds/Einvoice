@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<!-- 命名规范 1、ID命名以 select_、insert_、update_、delete_ 为前缀，表示节点SQL操作,后面跟表名（首字母大写） 
+	2、SQL参数变量列命名统一使用小写，在JAVA代码中请使用NewHashMap对象进行传值，NewHashMap类可忽略Map的KEY大小写 3、SQL返回字段列命名统一返回大写，返回类型统一使用NewHashMap或MyCachedRowSet，在JAVA代码中请使用小写访问MAP的KEY 
+	4、单表的delete和update语句的WHERE关键字不允许根据条件动态生成，避免不带条件误执行 5、单表的select和insert语句根据传入参数动态生成 
+	6、业务处理相关SQL命名以表达意义的多个单词(首字母大写)拼写，不带前缀,和单表SQLID区分开 -->
+<mapper namespace="com.efuture.portal.dao.db.one.M999999Dao">
+
+	<!-- 从MySQL系统中获取系统表列信息 -->
+	<select id="getTableData" parameterType="NewHashMap" resultType="NewHashMap">
+		select lower(table_name) as tablename,lower(column_name) as columnname,column_comment as columncomment,
+		case when is_nullable='YES' then 1 else 0 end as nullable,
+		case when column_key='PRI' then 1 else 0 end as iskey,
+		column_default as columndefault,
+		data_type as datatype,
+		case when extra='auto_increment' then 1 else 0 end as isauto
+		from information_schema.columns where table_schema ='portal' and table_name = #{tablename};
+	</select>	
+	
+	<!-- 获取配置表信息 -->
+	<select id="getTableConfig" parameterType="NewHashMap" resultType="NewHashMap">
+		select tablename,createtime from tableconfig
+	</select>
+	
+	<!-- 获取配置表配置列信息 -->
+	<select id="getTableColumnConfig" parameterType="NewHashMap" resultType="NewHashMap">
+		select tablename,columnname,columncomment,nullable,iskey,datatype,columndefault,isauto from tablecolumnconfig where tablename=#{tablename} 
+		order by iskey desc,nullable asc,columndefault desc,columnname
+	</select>
+	
+	<!-- 删除配置信息 -->
+	<delete id="deleteTableConfig" parameterType="NewHashMap" >
+		delete from tableconfig where tablename=#{tablename}
+	</delete>
+	
+	<!-- 写入配置表信息 -->
+	<insert id="insertTableConfig" parameterType="NewHashMap">
+		insert into tableconfig (tablename,createtime,isupdate)
+		values(#{tablename},now(),1)
+	</insert>
+	
+	<!-- 删除配置信息 -->
+	<delete id="deleteTableColumnConfig" parameterType="NewHashMap" >
+		delete from tablecolumnconfig where tablename=#{tablename}
+	</delete>		
+	
+	<!-- 写入配置表列信息 -->
+	<insert id="insertTableColumnConfig" parameterType="NewHashMap" >
+		insert into tablecolumnconfig (tablename,columnname,columncomment,nullable,iskey,columndefault,datatype,isauto)
+		select lower(table_name) as tablename,lower(column_name) as columnname,column_comment as columncomment,
+		case when is_nullable='YES' then 1 else 0 end as nullable,
+		case when column_key='PRI' then 1 else 0 end as iskey,
+		column_default as columndefault,
+		data_type as datatype,
+		case when extra='auto_increment' then 1 else 0 end as isauto
+		from information_schema.columns where table_schema ='portal' and table_name = #{tablename};		
+	</insert>
+
+	<!-- 标准化插入语句 -->
+	<insert id="insertStandardTable" parameterType="NewHashMap" >
+		insert into ${tablename} (${columns})
+		values(${columnvalues})				
+	</insert>		
+	
+	<!-- 标准化删除语句 -->
+	<delete id="deleteStandardTable" parameterType="NewHashMap" >
+		delete from ${tablename} where ${wherecolumns}  		
+	</delete>
+	
+	<!-- 标准化更新语句 -->
+	<update id="updateStandardTable" parameterType="NewHashMap" >
+		update ${tablename} set ${setcolumns} where ${wherecolumns}  		
+	</update>
+	
+</mapper>	

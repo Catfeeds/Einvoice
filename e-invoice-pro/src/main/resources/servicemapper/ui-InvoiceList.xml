@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.InvoiceListDao">	
+
+ <select id="queryInvoiceList" parameterType="NewHashMap" resultType="com.invoice.bean.ui.InvoiceListView">
+		select * from invoice_list a LEFT JOIN invoice_head b on a.fpqqlsh = b.fpqqlsh where 1= 1 
+        <if test="fphm != null and fphm !=''">
+			and fphm = #{fphm}
+		</if> 
+        <if test="fpdm != null  and fpdm != ''">
+        	and fpdm like CONCAT('%',#{fpdm},'%') 
+        </if>
+        <if test="gmf_Nsrsbh != null  and gmf_Nsrsbh != ''">
+        	and gmf_Nsrsbh like CONCAT('%',#{gmf_Nsrsbh},'%') 
+        </if>
+        <if test="gmf_Mc != null  and gmf_Mc != ''">
+        	and gmf_Mc like CONCAT('%',#{gmf_Mc},'%') 
+        </if>
+        order by a.invoiceid desc 
+        <if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+  </select>
+  <select id="getInvoiceListCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from invoice_list where 1=1 
+		<if test="fphm != null and fphm !=''">
+			and fphm = #{fphm}
+		</if> 
+        <if test="fpdm != null  and fpdm != ''">
+        and fpdm like CONCAT('%',#{fpdm},'%') 
+        </if>
+ 		order by invoiceid desc 
+    </select>
+  <select id="getInvoiceHeadById" parameterType="com.invoice.bean.db.InvoiceHead" resultType="com.invoice.bean.db.InvoiceHead">
+        select * from invoice_head where invoiceid = #{invoiceid}
+	</select>
+</mapper>

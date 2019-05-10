@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.EnterpriseDao">	
+
+ <select id="getEnterprise" resultType="NewHashMap">
+		select a.*,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 100 and a.ARITHMETIC=c.FIELDVALUE) as lookup
+        from enterprise a 
+        WHERE 1=1
+		<if test="entid != null and entid != ''">
+			and entid = #{entid}
+		</if>
+		<if test="entname != null  and entname != ''">
+			and entname  like CONCAT('%',#{entname},'%') 
+		</if> 
+		order by entid desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+  </select>
+
+  	<select id="getEnterpriseCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from enterprise where 1=1
+		<if test="entid != null and entid != ''">
+			and entid = #{entid}
+		</if>
+		<if test="entname != null and entname != ''">
+			and entname  like CONCAT('%',#{entname},'%')
+		</if> 
+
+    </select>
+
+
+  <select id="getEnterpriseById" parameterType="com.invoice.bean.db.Enterprise" resultType="com.invoice.bean.db.Enterprise">
+        select * from enterprise where entid = #{entid}
+    
+	</select>
+	
+	
+	<insert id="insertEnterprise" parameterType="com.invoice.bean.db.Enterprise">
+		insert into enterprise(entid,entname,taxid,phone,address,arithmetic)
+		values(#{entid},#{entname},#{taxid},#{phone},#{address},#{arithmetic})
+	</insert>
+	
+	<delete id="deleteEnterprise" parameterType="com.invoice.bean.db.Enterprise" >	
+		delete from enterprise where entid= #{entid}
+	</delete>	
+	
+	<update id="updateEnterprise" parameterType="com.invoice.bean.db.Enterprise">
+		update enterprise set  entid =#{entid}, entname =#{entname},  taxid =#{taxid},  phone =#{phone},  address =#{address},  arithmetic =#{arithmetic}  where  entid =#{entid}
+	</update>
+
+</mapper>
+  

@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>efs-parent</groupId>
+		<artifactId>efs-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>efs-portal</artifactId>
+	<packaging>war</packaging>
+	<name>efs-portal Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>efs-common</groupId>
+			<artifactId>efs-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.1.2</version>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<!-- compiler插件, 设定JDK版本 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- eclipse插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+					<additionalProjectnatures>
+						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+					</additionalProjectnatures>
+				</configuration>
+			</plugin>
+			<!-- 替换部署环境配置文件 -->
+			<plugin>
+				<groupId>com.juvenxu.portable-config-maven-plugin</groupId>
+				<artifactId>portable-config-maven-plugin</artifactId>
+				<version>1.1.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>replace-package</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<portableConfig>${portableConfigFile}</portableConfig>
+				</configuration>
+			</plugin>
+			<!--将本地包打包到war的配置 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<!-- <configuration> <webResources> <resource> <directory>${order.lib}/congou</directory> 
+					<targetPath>WEB-INF/lib</targetPath> <filtering>false</filtering> <includes> 
+					<include>**/*.jar</include> </includes> </resource> <resource> <directory>${order.lib}/others</directory> 
+					<targetPath>WEB-INF/lib</targetPath> <filtering>false</filtering> <includes> 
+					<include>**/*.jar</include> </includes> </resource> <resource> <directory>${order.lib}/print</directory> 
+					<targetPath>WEB-INF/lib</targetPath> <filtering>false</filtering> <includes> 
+					<include>**/*.jar</include> </includes> </resource> </webResources> </configuration> -->
+			</plugin>
+			<!-- 打包资源复制 -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/maven/WEB-INF/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resource</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- 自动部署到tomcat -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://localhost:8082/manager/text</url>
+					<path>/${project.build.finalName}</path>
+					<update>true</update>
+					<username>tomcat</username>
+					<password>tomcat</password>
+					<uriEncoding>UTF-8</uriEncoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

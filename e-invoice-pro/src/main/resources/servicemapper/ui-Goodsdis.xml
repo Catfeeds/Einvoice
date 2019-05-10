@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.GoodsdisDao">	
+
+ <select id="queryGoodsdis" resultType="NewHashMap">
+		select * from Goodsdis where entid = #{entid}
+		<if test="goodsid != null and goodsid !=''">
+			and goodsid = #{goodsid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and goodsname like CONCAT('%',#{goodsname},'%') 
+		</if> 
+		order by entid desc 
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+	    </if> 
+  </select>
+	
+	<select id="getGoodsdisCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Goodsdis where entid= #{entid}
+		<if test="goodsid != null and goodsid !=''">
+			and goodsid = #{goodsid}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and goodsname like CONCAT('%',#{goodsname},'%') 
+		</if>
+
+    </select>
+	
+  <select id="getGoodsdisById" parameterType="com.invoice.bean.db.Goodsdis" resultType="com.invoice.bean.db.Goodsdis">
+        select * from Goodsdis where entid = #{entid} and goodsid = #{goodsid}
+	</select>
+	
+	<insert id="insertGoodsdis" parameterType="com.invoice.bean.db.Goodsdis">
+		insert into Goodsdis(entid,goodsid,goodsname,pkname)
+		values(#{entid},#{goodsid},#{goodsname},#{pkname})
+	</insert>
+	
+	<delete id="deleteGoodsdis" parameterType="com.invoice.bean.db.Goodsdis" >	
+		delete from Goodsdis where entid= #{entid} and goodsid = #{goodsid}
+	</delete>	
+	
+	<update id="updateGoodsdis" parameterType="com.invoice.bean.db.Goodsdis">
+		update Goodsdis set  entid =#{entid}, goodsid =#{goodsid},  goodsname =#{goodsname},  pkname =#{pkname} where entid =#{entid} and goodsid =#{goodsid}
+	</update>
+
+    <insert id="addGoodsdisList"  parameterType="com.invoice.bean.db.Goodsdis">
+	    insert into Goodsdis(entid,goodsid,goodsname,pkname)
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >
+	        (#{item.entid},#{item.goodsid},#{item.goodsname},#{item.pkname})
+	    </foreach>  
+	</insert> 
+</mapper>

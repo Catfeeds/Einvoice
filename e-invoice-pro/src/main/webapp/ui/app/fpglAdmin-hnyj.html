@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title></title>
+<link rel="stylesheet" href="../assets/css/core.css" />
+<link rel="stylesheet" href="../assets/css/menu.css" />
+<link rel="stylesheet" href="../assets/css/amazeui.css" />
+<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+<link rel="stylesheet" href="../assets/css/app.css" />
+
+<script src="../assets/js/jquery.min.2.2.2.js"></script>
+<script src="../assets/js/amazeui.min.js"></script>
+<script src="../assets/js/amazeui.switch.js"></script>
+<script src="../assets/js/amazeui.page.js"></script>
+<script src="../js/myJq.js"></script>
+<script src="../js/route.js"></script>
+<script src="js/fpglHNYJ.js"></script>
+<script src="../js/time.js"></script>
+<style type="text/css">
+.am-selected {
+	width: 100px;
+}
+</style>
+</head>
+<body>
+	<div class="am-g">
+		<div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+
+				<div class="card-box am-scrollable-horizontal" style="height:600px">
+					<!-- Row start -->
+					<div class="am-g">
+						<div class="am-u-sm-2">
+							<input type="text" id="startdate" class="am-form-field"
+								placeholder="开具开始日期" readonly>
+						</div>
+						<div class="am-u-sm-2">
+							<input type="text" id="enddate" class="am-form-field"
+								placeholder="开具结束日期" readonly>
+						</div>
+						<div class="am-u-sm-2">
+							<input id="requestsheetid" type="text" class="am-form-field"
+								placeholder="富基收款单据号">
+						</div>
+						<div class="am-u-sm-2">
+							<input id="iqgmfname" type="text" class="am-form-field"
+								placeholder="购买方名称 ">
+						</div>
+						<div class="am-u-sm-2">
+						<select data-am-selected id="iqtaxno">
+								<option value="9" selected>全部</option>
+								<option value="91410100060000627X">阿米巴</option>
+								<option value="9141010066342826XR">丹尼尔</option>
+							</select>
+						</div>
+						<div class="am-u-sm-1">
+						<select data-am-selected id="iqstatus">
+								<option value="9" selected>开票成功</option>
+								<option value="30">开票失败</option>
+							</select>
+						</div>
+						<div class="am-u-sm-1">
+								<button class="am-btn am-btn-default" type="button"
+										onclick="search(0)">搜索</button>
+										<!-- <button class="am-btn am-btn-default" type="button"
+										onclick="excel(0)">导出</button> -->
+						</div>
+					</div>
+
+
+					<!-- Row start -->
+					<div class="am-g">
+						<div class="am-u-sm-12">
+							<table id="fptable"
+								class="am-table am-table-striped am-table-hover table-main am-text-nowrap">
+								<thead>
+									<tr>
+										<td></td>
+										<td>收款单据号</td>
+										<td>企业税号</td>
+										<td>购买方名称</td>
+										<td>购买方纳税识别号</td>
+										<td>购买方开户行及帐号</td>
+										<td>购买方邮箱</td>
+										<td>金额</td>
+										<td>发票号码</td>
+										<td>开不出票原因</td>
+										<td>开票日期</td>
+									</tr>
+								</thead>
+								<tbody id="row1">
+
+								</tbody>
+							</table>
+						</div>
+						<div id="pagecount" class="am-fl"></div>
+						<div class="am-fr">
+							<div id="page"></div>
+						</div>
+					</div>
+					<!-- Row end -->
+					<table style="display: none;">
+						<tbody id="rowmo">
+							<tr>
+								<td><input type="checkbox"
+									value="||iqseqno||,||fpdm||,||fphm||,||lxdm||"></td>
+								<td>||sheetid||</td>
+								<td>||iqtaxno||</td>
+								<td>||iqgmfname||</td>
+								<td>||iqgmftax||</td>
+								<td>||iqgmfbank||</td>
+								<td>||xfzemail||</td>
+								<td>||totalamt||</td>
+								<td>||fphm||</td>
+								<td>||iqmsg||</td>
+								<td>||fprq||</td>
+							</tr>
+						</tbody>
+						<tbody id="rowmo2">
+							<tr>
+								<td>||goodsid||</td>
+								<td>||goodsname||</td>
+								<td>||taxitemid||</td>
+								<td>||price||</td>
+								<td>||qty||</td>
+								<td>||amt||</td>
+								<td>||taxrate||</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="taxmodal">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">
+					商品明细 <a href="" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd">
+					<div class="content">
+						<div class="card-box">
+
+							<div class="am-scrollable-horizontal">
+								<table id="taxtable"
+									class="am-table am-table-hover table-main am-table-bordered am-text-truncate am-table-compact">
+									<thead>
+										<tr>
+											<th>商品编码</th>
+											<th>商品名称</th>
+											<th>税目代码</th>
+											<th>单价</th>
+											<th>数量</th>
+											<th>金额</th>
+											<th>税率</th>
+										</tr>
+									</thead>
+									<tbody id="searchRows">
+
+									</tbody>
+								</table>
+								<div id="page1" class="am-fr"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="" name="form1" method="post" >
+		<input type = "hidden" name = "templetName">
+		<input type = "hidden" name = "printerName">
+		<input type = "hidden" name = "data">
+	</form>
+	<div style="height:300px;"></div>
+</body>
+</html>

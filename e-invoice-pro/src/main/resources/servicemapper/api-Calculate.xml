@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.CalculateDao">
+
+	<select id="getGoodstaxById" resultType="com.invoice.bean.db.Goodstax" parameterType="com.invoice.bean.db.Goodstax">
+		select * from goodstax where 1=1
+			and entid = #{entid}
+			and goodsid = #{goodsid}
+	</select>
+
+	<select id="getCatetaxById" resultType="com.invoice.bean.db.Catetax" parameterType="com.invoice.bean.db.Catetax">
+		select * from Catetax where 1=1
+			and entid = #{entid}
+			and cateid = #{cateid}
+	</select>
+	
+	<select id="getPaymodeById" resultType="com.invoice.bean.db.Paymode" parameterType="com.invoice.bean.db.Paymode">
+		select * from Paymode where 1=1
+			and entid = #{entid}
+			and payid = #{payid}
+	</select>
+	
+	<select id="getGoodsDis" resultType="com.invoice.bean.db.Goodsdis" parameterType="com.invoice.bean.db.Goodsdis">
+		select * from GoodsDis where 1=1
+			and entid = #{entid}
+			and goodsid = #{goodsid}
+	</select>
+	
+	<select id="getCateDis" resultType="com.invoice.bean.db.Catedis" parameterType="com.invoice.bean.db.Catedis">
+		select * from catedis where 1=1
+			and entid = #{entid}
+			and cateid = #{cateid}
+	</select>
+	
+	<select id="getCategoryById" resultType="com.invoice.bean.db.Category" parameterType="com.invoice.bean.db.Category">
+		select * from Category where 1=1
+			and entid = #{entid}
+			and categoryid = #{categoryid}
+	</select>
+	
+</mapper>

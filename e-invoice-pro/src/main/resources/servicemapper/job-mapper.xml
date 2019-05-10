@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.invoice.job.dao.JobDao">	    
+
+	<select id="getJobs" parameterType="NewHashMap" resultType="NewHashMap">
+		select * from jobconfig 
+		 where 1=1
+    </select>  
+    
+    <update id="update" parameterType="NewHashMap">
+		update jobconfig
+		set jobid=jobid		
+		<if test="jobName!=null and jobName!=''">		
+			,jobName=#{jobName}
+		</if>	
+		<if test="jobClass!=null">
+			,jobClass=#{jobClass}
+		</if>	
+		<if test="cronExpression!=null">
+			,cronExpression=#{cronExpression}
+		</if>	
+		<if test="enable!=null">
+			,enable=#{enable}
+		</if>	
+		<if test="nextTime!=null">
+			,nextTime=#{nextTime}
+		</if>	
+		<if test="heartTime!=null">
+			,heartTime=#{heartTime}
+		</if>	
+		<if test="jobError!=null">
+			,jobError=#{jobError}
+		</if>
+		<if test="runCount!=null">
+			,runCount=ifnull(runCount,0) + #{runCount,jdbcType=DECIMAL}
+		</if>
+		where jobid=#{jobid}
+    </update>
+    
+    <insert id="initBillSale">
+    	insert into billsalelog(entid,shopid,sdate,flag,createtime) 
+    	select entid,shopid,CURDATE()-1,0,now() from c_shopconnect a where not exists(select 1 from billsalelog b where b.shopid=a.shopid and b.sdate=CURDATE()-1)
+    </insert>
+    
+    <select id="getBillSaleLog" resultType="com.invoice.bean.db.BillSaleLog">
+    	select * from billsalelog where flag=0
+    </select>
+    
+    <update id="setBillSaleLog" parameterType="com.invoice.bean.db.BillSaleLog">
+    	update billsalelog set flag=#{flag}, processmsg=#{processmsg},processTime=#{processtime} where logid=#{logid}
+    </update>
+    
+    <insert id="replaceBillSale" parameterType="Map">
+	    replace INTO billsalereport (entid, shopid, sdate, goodsId, goodsName, cateid, taxitemid, taxRate, qty, amt, price, oldamt, sumpayamt, createtime) 
+	    VALUES (#{entid}, #{shopid}, #{sdate}, #{itemid}, #{itemname}, #{categoryid}, 'NaN', #{taxrate}, #{qty}, #{amt}, #{price}, #{oldamt}, #{sumpayamt}, now())
+    </insert>
+    
+    <insert id="replaceBillSalePay" parameterType="Map">
+	    replace INTO billsalereportpay (entid, shopid, sdate, payid, payname, amt, isinvoice) 
+	    VALUES (#{entid}, #{shopid}, #{sdate}, #{payid}, #{payname}, #{amt}, #{isinvoice})
+    </insert>
+    
+    <update id="setDisTaxItemidByGoods" parameterType="com.invoice.bean.db.BillSaleLog">
+    	update billsalereport a join goodsdis b on b.entid=a.entid and b.goodsid=a.goodsid
+   		   set a.taxitemid='DISABLE'
+		 where a.taxitemid='NaN' and a.shopid=#{shopid} and a.sdate=#{sdate}
+    </update>
+    
+    <update id="setDisTaxItemidByCate" parameterType="com.invoice.bean.db.BillSaleLog">
+    	update billsalereport a join catedis b on b.entid=a.entid and b.cateid=a.cateid
+   		   set a.taxitemid='DISABLE'
+		 where a.taxitemid='NaN' and a.shopid=#{shopid} and a.sdate=#{sdate}
+    </update>
+    
+    <update id="setTaxItemidByGoods" parameterType="com.invoice.bean.db.BillSaleLog">
+    	update billsalereport a join goodstax b on b.entid=a.entid and b.goodsid=a.goodsid
+		   set a.taxitemid=b.taxitemid
+		 where a.taxitemid='NaN' and a.shopid=#{shopid} and a.sdate=#{sdate}
+    </update>
+    <update id="setTaxItemidByCate" parameterType="com.invoice.bean.db.BillSaleLog">
+    	update billsalereport a join catetax b on b.entid=a.entid and b.cateid=a.cateid
+   		   set a.taxitemid=b.taxitemid
+		 where a.taxitemid='NaN' and a.shopid=#{shopid} and a.sdate=#{sdate}
+    </update>
+    
+    <select id="getSumOldAmt" resultType="java.lang.Double">
+    	select ifnull(sum(a.oldamt),0) from billsalereport a
+    	where a.taxitemid not in ('NaN','DISABLE') and a.shopid=#{shopid} and a.sdate=#{sdate}
+    </select>
+    
+    <update id="setAmt" parameterType="Map">
+    	update billsalereport set amt = ROUND(oldamt/#{sumoldamt}*#{sumamt},2)
+		 where taxitemid not in ('NaN','DISABLE') and shopid=#{shopid} and sdate=#{sdate}
+    </update>
+    
+    <insert id="insertBillTaxReport" parameterType="Map">
+    	replace into billtaxreport(entid, shopid, sdate, taxitemid, taxRate, qty, amt, price, oldamt, sumpayamt, createtime)
+    	select entid, shopid, sdate, taxitemid, taxRate, sum(qty), sum(amt), avg(price), sum(oldamt), sum(sumpayamt),now()
+    	from billsalereport a
+    	where a.shopid=#{shopid} and a.sdate=#{sdate} and a.taxitemid not in ('NaN','DISABLE')
+    	group by entid, shopid, sdate, taxitemid, taxRate
+    </insert>
+           	                               
+</mapper>

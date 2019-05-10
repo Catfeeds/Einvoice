@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>
+			企业管理
+		</title>
+					
+		
+		<link rel="Stylesheet" type="text/css" href="../css/comm/dialog.css"/>				 		
+		<link rel="stylesheet" type="text/css" href="../scripts/miniui/themes/bootstrap/skin.css" />									
+		<link rel="stylesheet" type="text/css" href="../style/mybootstrap.css">		  			
+		<link rel="stylesheet" type="text/css" href="../style/font-awesome.css"  >		
+		<link rel="Stylesheet" type="text/css" href="../css/comm/base.css"/>	 <!-- 基础CSS -->
+		<link rel="Stylesheet" type="text/css" href="../css/comm/B000002.css"/>
+						
+		<link rel="stylesheet" href="../assets/css/amazeui.min.css"/>	 
+		<script type="text/javascript" src="../jq/jquery/jquery-1.8.0.js"></script>
+		<script src="../js/comm/myApp.js"></script>		
+		<script type="text/javascript" src="../scripts/boot.js" ></script>										 			
+					
+	</head>
+	<body>					
+		<div class="sys-curd-div" style="width:100%;height:28px;margin-top:10px;">		
+			<div style="float:left;">
+				<button id="btn-add" class="btn btn-xs btn-info sys-curd-button" data-toggle="modal" data-target="#editform" onclick="sys_add()">
+					<i class="icon-plus"></i><span>新增</span>
+				</button>
+			</div>						
+			
+			<div style="float:left;">
+				<button id="btn-outfile" class="btn btn-xs btn-warning sys-curd-button" onclick="outfile()">
+					<i class="icon-file"></i><span>导出</span>
+				</button>
+			</div>
+		
+			<div style="float:right;">
+				<button id="btn-search" class="btn btn-xs btn-primary sys-curd-button">
+					<i class="icon-search-awesome"></i><span>查询</span>
+				</button>
+			</div>
+			
+			<div style="float:right;">
+				<input type="text" id="edt-search" class="form-control sys-curd-text" />
+			</div>										
+		</div>
+		
+		<hr style="width:100%;height:0px;margin-top:5px;margin-bottom:0px;" color="#D0D0D0" ></hr>
+		
+		<div style="position:absolute;left:0px;top:44px;bottom:10px;right:0px;margin-top:5px;padding-left:5px;padding-right:5px;">
+			<!-- 必须在这里指定height,否则无法显示分页栏 -->
+			<div id="datagrid1" class="mini-datagrid" style="height:100%;"		 
+				url="/efs-portal/rest/ui/module/getCompanyInfo.action?token=111"
+				allowRowSelect="true" idField="companyid" pageSize="100"	
+        		>
+        		<!-- 全部的width加起来为1000，indexcolumn和checkcolumn加起来50，自动缩放后均为平均1/10的宽度 -->
+				<div property="columns">
+					<div header="#">
+            			<div property="columns">								
+							<div type="indexcolumn" width="30" headeralign="center" align="left">						
+							</div>					
+							<div type="checkcolumn" width="30">
+							</div>
+							<div name="action" width="90" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">#</div>
+						</div>
+					</div>
+					<div field="companyid" width="80" headeralign="left" align="left" >
+						企业编码		
+					</div>
+					<div field="companytype" width="80" headeralign="left" align="left" >
+						企业类型				
+					</div>
+					<div field="companyname" width="300" headeralign="left" align="left">
+						企业名称
+					</div>
+					<div field="shortname" width="150" headeralign="left" align="left" >						
+						企业简称
+					</div>
+					<div field="address" width="300" headeralign="left" align="left">
+						企业地址						
+					</div>
+					<div field="companytel" width="120" headeralign="left" align="left">
+						企业电话					
+					</div>					
+					<div field="contacttel" width="120" headeralign="left" align="left">
+						联系电话					
+					</div>
+					<div field="email" width="180" headeralign="left" align="left">
+						企业邮箱						
+					</div>
+					<div field="fax" width="120" headeralign="left" align="left">
+						传真		
+					</div>
+					<div field="taxno" width="120" headeralign="left" align="left">
+						纳税号	
+					</div>					
+					<div field="industries" width="160" headeralign="left" align="left">
+						主营行业	
+					</div>
+					<div field="legalperson" width="160" headeralign="left" align="left">
+						企业法人
+					</div>
+					<div field="depositbank" width="160" headeralign="left" align="left">
+						开户银行
+					</div>
+					<div field="bankno" width="160" headeralign="left" align="left">
+						银行帐号
+					</div>
+					<div field="intime" width="160" headeralign="left" align="left">
+						入驻时间
+					</div>
+				</div>
+			</div>			
+		</div>
+		
+		<hr style="width:100%;position:absolute;left:0px;bottom:5px;right:0px;height:0px;margin-bottom:0px;" color="#D0D0D0" ></hr>
+		
+		<!-- 新增数据的弹出窗体,自行调整长宽 -->
+		<div style="display:none;width:960px;height:360px;" class="mini-window" title="新增企业" id="newWindow" 			
+			showModal="true" allowResize="true" allowDrag="true">
+			<!-- 如果没有自己画新增ui,则绑定useedit类,则会直接使用editform的表单 -->
+			<div id="newform" width="100%" style="float:left;padding-left:10px;" class="useedit">
+			</div>				
+		</div>								
+		<div style="display:none;width:1100px;height:300px;">										
+			<div id="editform" width="100%" style="float:left;padding-left:10px;">	
+				<div width="100%" style="float:left;">	    		
+		   			<table width="900px" border="0" cellspacing="0" cellpadding="0" style="float:left;">
+		   				<tr style="height:45px;">	   					
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									企业编码
+								</div>	
+								<div style="float:left;width:150px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="companyid" name="companyid" />
+								</div>									
+		   					</td>
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									企业类型
+								</div>	
+								<div style="float:left;width:150px">															
+									<select class="form-control sys-curd-select sys-curd-edit-select"  id="companytype" name="companytype">		                        		
+		                            	<option value="零售">零售</option>
+		                            	<option value="普通">普通</option>		                                                                               
+		                   	 		</select>
+								</div>									
+		   					</td>
+		   					<td width="300px">		 																							
+		   					</td>
+		   				</tr>
+		   				<tr style="height:45px;">	
+		   					<td width="300px" colspan="2">		 							
+								<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									企业名称
+								</div>	
+								<div style="float:left;width:450px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="companyname" name="companyname" />
+								</div>									
+		   					</td>		   					
+		   					<td width="300px" >		 							
+								<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									企业简称
+								</div>	
+								<div style="float:left;width:150px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="shortname" name="shortname" />
+								</div>									
+		   					</td>	   				
+		   				</tr>
+		   				<tr style="height:45px;">					
+		   					<td colspan="2">		   					
+		   						<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									企业地址
+								</div>	
+								<div style="float:left;width:450px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="address" name="address" />
+								</div>												   																									
+		   					</td>	
+		   					<td>		   					
+		   						<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									企业电话
+								</div>	
+								<div style="float:left;width:150px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="companytel" name="companytel" />
+								</div>												   																									
+		   					</td>
+		   				</tr>
+		   				<tr style="height:45px;">	
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									联系电话
+								</div>	
+								<div style="float:left;width:150px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="contacttel" name="contacttel" />
+								</div>								
+		   					</td>
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label text-primary" style="float:left;width:80px;">
+									联系邮箱
+								</div>	
+								<div style="float:left;width:150px;">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="email" name="email" />
+								</div>									
+		   					</td>	
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									传真
+								</div>	
+								<div style="float:left;width:150px;">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="fax" name="fax" />
+								</div>									
+		   					</td>		   					
+		   				</tr>
+		   				<tr style="height:45px;">	
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									纳税号
+								</div>	
+								<div style="float:left;width:150px">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="taxno" name="taxno" />
+								</div>								
+		   					</td>
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									主营行业
+								</div>	
+								<div style="float:left;width:150px;">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="industries" name="industries" />
+								</div>									
+		   					</td>	
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									法人代表
+								</div>	
+								<div style="float:left;width:150px;">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="legalperson" name="legalperson" />
+								</div>									
+		   					</td>		   					
+		   				</tr>		   						   				
+		   				<tr style="height:45px;">	
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									开户银行
+								</div>	
+								<div style="float:left;width:150px">																																	
+		                        	<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="depositbank" name="depositbank" />
+								</div>									
+		   					</td>
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									银行帐号
+								</div>	
+								<div style="float:left;width:150px;">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="bankno" name="bankno" />
+								</div>									
+		   					</td>	
+		   					<td width="300px">		 							
+								<div class="sys-curd-edit-label" style="float:left;width:80px;">
+									入驻时间
+								</div>	
+								<div style="float:left;width:150px;">															
+									<input type="text" class="form-control sys-curd-text sys-curd-edit-text" id="intime" name="intime" />
+								</div>									
+		   					</td>		   					
+		   				</tr>		   					   			
+		   			</table>
+		   		</div>
+		   		
+		   		<hr align="left" style="width:100%;height:1px;margin-bottom:10px;" color="#D0D0D0" ></hr>
+		   		
+		   		<!-- 操作面板 -->
+				<div id="savediv" style="width:100%;height:20px;">	
+					<div style="float:left;">
+						<button id="btn-save" class="btn btn-xs btn-success sys-curd-button">
+							<i class="icon-save-awesome" style="margin-right:10px" ></i><span>保存</span>
+						</button>
+					</div>
+					<div style="float:left;margin-left:10px;">
+						<button id="btn-cancel" class="btn btn-xs btn-warning sys-curd-button">
+							<i class="icon-trash" style="margin-right:10px"></i><span>取消</span>	
+						</button>
+					</div>	
+				</div>	
+			</div>
+		</div>							
+								
+		<!-- JS -->  	
+				  		
+  		<script src="../scripts/miniui/miniui.js"></script>		
+		<script src="../bootstrapjs/bootstrap.min.js"></script>
+		<script src="../bootstrapjs/bootstrap-modal.js"></script>			
+		<script src="../assets/js/amazeui.min.js"></script>					  	  		
+  		<script type="text/javascript" src="../js/comm/B000002.js"></script>	<!-- 引入基类JS文件 -->	
+		<script type="text/javascript" src="../js/module/J900001.js"></script>	<!-- 引入模块JS文件 -->						
+								
+		<script type="text/javascript">
+			function onActionRenderer(e) {
+	            var grid = e.sender;
+	            var record = e.record;	            
+	            var rowIndex = e.rowIndex;
+				  
+	            var s = '<button id="btn-edit" class="btn btn-xs btn-success sys-curd-table-button" onclick="sys_edit('+rowIndex+')"><i class="icon-pencil"></i></button>'
+	                  + '<button id="btn-delete" class="btn btn-xs btn-danger sys-curd-table-button" onclick="sys_delete('+rowIndex+')"><i class="icon-remove-sign"></i></button>'
+	                      
+	            return s;
+	        }											
+		</script>									
+						
+	</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.datetimepicker.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../assets/js/amazeui.datetimepicker.min.js"></script>
+		<script src="../js/comm/myJq.js"></script>
+		<script src="../js/comm/route.js"></script>
+		<script src="../js/module/register.js"></script>
+	</head>
+	<body>
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">企业注册信息</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span> 企业注册信息管理
+                    </div>
+                   <!--  <div class="am-portlet-input am-fz-ml">
+                        <div class="am-portlet-input input-small input-inline">
+                            <div class="input-icon right">
+                                <i class="am-icon-search"></i>
+                                <input type="text" class="am-app-form-control am-app-form-control-solid" placeholder="搜索..."> </div>
+                        </div>
+                    </div> -->
+                </div>
+				  <form class="am-form" id="editForm" data-am-validator >
+                      <div class="am-u-sm-10">
+	                        <ul class="am-avg-sm-1 am-avg-md-1 am-avg-lg-1">
+	                        	<li>
+	                        			<label class="am-u-sm-6 am-u-lg-4 am-app-form-lable">企业ID号</label>
+	                        			<div class="am-u-sm-6 am-u-lg-8"><input type="text" id="entid" data-query="entid" class="am-form-field"></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">规则&nbsp;&nbsp;&nbsp;  </label>
+
+									<div class="am-u-sm-6 am-u-lg-8">
+										<select id="inputFlag" data-am-selected="{maxHeight: 120}">
+										<option value="000">无：无：无</option>
+										<option value="001">无：无：时间</option>
+										<option value="010">无：门店：无</option>
+										<option value="011">无：门店：时间</option>
+										<option value="100">税号：无：无</option>
+										<option value="101">税号：无：时间</option>
+										<option value="110">税号：门店：无</option>
+										<option value="111">税号：门店：时间</option>
+										</select>
+									</div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">税号数量</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"><input type="number" id="taxnonum" data-query="taxnonum" class="am-form-field" ></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">门店数量</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"><input type="number" id="shopnum" data-query="shopnum" class="am-form-field" ></div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">有效截止时间</label>
+	                        		<div class="am-u-sm-6 am-u-lg-8"><input type="text" id="enddate" data-query="enddate" data-am-datepicker readonly id="datetimepicker" class="am-form-field" placeholder="格式：YYYY-MM-DD" ></div>
+	                        	</li>
+	     
+	                        	<li><span class="am-input-group-btn"><button class="am-btn  am-btn-default am-btn-success  " type="button" id="btnSave">保存</button></span></li>
+	                        	 
+	                        </ul>
+                        </div>
+                    
+                    </form>
+                 </div>  
+                </div>
+
+	</body>
+</html>

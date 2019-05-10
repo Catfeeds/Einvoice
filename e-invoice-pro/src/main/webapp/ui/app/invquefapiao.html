@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/invquefapiao.js"></script>
+		<script src="../js/jquery-ui.js"></script>
+		<script src="../js/date-zh-cn.js"></script>
+		<script src="../js/time.js"></script>
+		<link rel="stylesheet" href="../css/jquery-ui.css">
+	</head>
+	<body >
+		<div class="am-g">
+            <div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+				<div class="card-box">
+                    <div class="am-g am-margin-bottom-lg">
+                    	<div class="am-u-lg-2">
+					      		<select data-am-selected id="isauto">
+								  <option value="0" selected>人工开票</option>
+								  <option value="1">自动开票</option>
+								</select>
+						</div>
+                   		<div class="am-u-lg-2">
+					      		<input type="text" class="am-form-field" id="sheetid" placeholder="小票提取码" >
+						</div>
+						<div class="am-u-lg-2">
+					      		<input type="text" id="startdate" class="am-form-field" placeholder="开始日期" readonly>
+						</div>
+						<div class="am-u-lg-2">
+					      		<input type="text" id="enddate" class="am-form-field" placeholder="结束日期" readonly>
+						</div>
+						<div class="am-u-lg-4">
+					      	<button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch" onclick="search(0)"></button>
+						</div>
+                    </div>
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                                <table id="invtable" class="am-table am-table-hover table-main am-table-bordered am-text-truncate">
+                                    <thead>
+                                        <tr>
+                                        	<th class="">小票提取码</th>
+                                            <th class="">购买方名称</th>
+                                            <th class="">生成发票号码</th> 
+                                            <th class="">开票状态</th>
+                                            <th class="">合计金额</th>
+                                            <th class="">合计税额</th>
+                                           <!--  <th class="">开票数据来源</th> -->
+                                            <th class="">收票方邮箱</th>
+                                            <th class="">返回信息</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchRows">
+                                    	
+                                    </tbody>
+                                </table>
+                        </div>
+							<div class="am-fr">
+								<div id="page"></div>
+							</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <table  style="display:none;">
+        	<tbody id="modelrows">
+        	<tr ondblclick="detail('||iqseqno||')">
+        		<td>||sheetid||</td>
+                <td>||iqgmfname||</td>
+                <td>||rtfphm||</td>
+                <td>||iqstatus||</td>
+                <td>||iqtotje||</td>
+                <td>||iqtotse||</td>
+              <!--   <td>||iqsource||</td> -->
+                <td>||iqemail||</td>
+                <td>||iqmsg||</td>
+            </tr>
+            </tbody>
+            
+            <tbody id="modeldetailrows">
+        	<tr>
+                <td>||sheetid||</td>
+                <td>||sheettype||</td>
+                <td>||shopid||</td>
+                <td>||syjid||</td>
+                <td>||billno||</td>
+                <td>||totalamount||</td>
+                <td>||invoiceamount||</td>
+                <td>||totaltaxfee||</td>
+            </tr>
+            </tbody>
+        </table>
+
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="detailmodal">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">
+					开票队列明细
+					<a href="" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd">
+					<table id="invdetailtable"
+						class="am-table am-table-hover table-main am-table-bordered am-text-truncate am-table-compact">
+						<thead>
+							<tr>
+								<th>业务单据号</th>
+								<th>开票渠道</th>
+								<th>门店编码</th>
+								<th>收银机编码</th>
+								<th>小票流水号</th>
+								<th>单据总金额</th>
+								<th>可开票金额</th>
+								<th>总税额</th>
+							</tr>
+						</thead>
+						<tbody id="detailRows">
+	
+						</tbody>
+					</table>
+			   </div>
+			</div>
+		</div>
+</body>
+</html>

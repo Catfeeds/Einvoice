@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<!-- 命名规范 1、ID命名以 select_、insert_、update_、delete_ 为前缀，表示节点SQL操作,后面跟表名（首字母大写） 
+	2、SQL参数变量列命名统一使用小写，在JAVA代码中请使用NewHashMap对象进行传值，NewHashMap类可忽略Map的KEY大小写 3、SQL返回字段列命名统一返回大写，返回类型统一使用NewHashMap或MyCachedRowSet，在JAVA代码中请使用小写访问MAP的KEY 
+	4、单表的delete和update语句的WHERE关键字不允许根据条件动态生成，避免不带条件误执行 5、单表的select和insert语句根据传入参数动态生成 
+	6、业务处理相关SQL命名以表达意义的多个单词(首字母大写)拼写，不带前缀,和单表SQLID区分开 -->
+<mapper namespace="com.efuture.portal.dao.db.one.MainDao">
+
+	<select id="queryHomeUrl" parameterType="NewHashMap" resultType="NewHashMap">
+		select url
+		from company_module a join company b 
+		on a.companytype=b.companytype
+		and b.companyid=#{companyid}
+	</select>
+	
+	<select id="getRoleFlag" parameterType="NewHashMap" resultType="NewHashMap">
+		select a.flag from role a,login_nx_role b where a.RoleID = b.RoleID and b.CompanyID=#{companyid} and b.LoginID= #{loginid}
+	</select>	
+	
+	<select id="replaceUserToken" parameterType="NewHashMap" resultType="NewHashMap">
+		replace into usertoken
+		(CompanyID,LoginID,partnerid,UserName,companyname,token,shopid,lasttime,Note,area,entid,kpd,jpzz)
+		values
+		(#{companyid},#{loginid},#{partnerid},#{username},#{companyname},#{token},#{shopid},#{lasttime},#{note},#{area},#{entid},#{kpd},#{jpzz})
+	</select>
+
+	<select id="queryUserTokenByToken" parameterType="NewHashMap" resultType="NewHashMap">
+		select * from usertoken
+		where token = #{token}
+	</select>
+
+	<select id="update_Lasttime_4Usertoken" parameterType="NewHashMap" resultType="NewHashMap">
+		update usertoken
+		set lasttime=now()
+		where token = #{token}
+	</select>
+
+	<select id="updateShopId_Usertoken" parameterType="NewHashMap" resultType="NewHashMap">
+		update usertoken
+		set shopid=#{shopid}
+		where token = #{token}
+	</select>
+
+	<select id="queryHomeUrlWithRole" parameterType="NewHashMap" resultType="NewHashMap">
+		select * 
+		from role a
+		join login_nx_role b
+		on a.RoleID=b.RoleID
+		and a.homeurl is not null
+		and b.LoginID=#{loginid}
+	</select>
+	
+	<select id="checkLogin" parameterType="Map" resultType="HashMap">
+		select a.password,a.username,a.kpd,a.jpzz,b.companyname,b.entid from login a,company b where a.loginid=#{loginid} and a.companyid=b.companyid
+		and a.companyid=#{companyid}
+	</select>
+	
+	<select id="getMySheet" parameterType="Map" resultType="HashMap">
+		select * from JBPMSheet where companyid=#{companyid} and loginid=#{loginid}
+		limit #{pageindex,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
+	</select>
+	
+	<select id="getMySheet_Total" parameterType="Map" resultType="HashMap">
+		select count(*) as total from JBPMSheet	where companyid=#{companyid} and loginid=#{loginid}	
+	</select>	
+	
+	<select id="getMonthSaleInfo" parameterType="Map" resultType="NewHashMap">
+		select * from SaleMonth	where companyid=#{companyid} and monthid between #{startmonth} and #{endmonth}
+		order by monthid
+	</select>
+	
+	<select id="getDaySaleInfo" parameterType="Map" resultType="HashMap">
+		select * from SaleDay where companyid=#{companyid} and SaleDay between #{startday} and #{endday}
+		order by SaleDay
+	</select>
+	
+	<select id="getMenuGroup" parameterType="Map" resultType="HashMap">				
+		select distinct x.menuid,x.menuname,x.note from Menu x,role_nx_module a,module b,role c,login d,login_nx_role e,company f,CompanyTypeMenu g
+		where a.ModuleID=b.ModuleID and a.roleid=c.roleid and d.companyid=e.companyid and d.loginid=e.loginid and a.roleid=e.roleid
+		and x.menuid=b.menuid and d.companyid=f.companyid and f.companytype=g.companytype and x.menuid=g.menuid
+		and d.loginid=#{loginid} and d.companyid=#{companyid} 		
+	</select>
+	
+	<select id="getMenuModule" parameterType="Map" resultType="HashMap">		
+		select distinct b.menuid,a.moduleid,b.modulename,b.note,b.url from role_nx_module a,module b,role c,login d,login_nx_role e
+		where a.ModuleID=b.ModuleID and a.roleid=c.roleid and d.companyid=e.companyid and d.loginid=e.loginid and a.roleid=e.roleid
+		and d.loginid=#{loginid} and d.companyid=#{companyid}
+	</select>
+	
+	<select id="queryUserarea" parameterType="Map" resultType="NewHashMap">						
+		 select group_CONCAT(areaid) as area from userarea where userid=#{loginid} 
+		 and companyid=#{companyid} group by companyid,userid
+	</select>
+	
+	<select id="getLoginShopList" parameterType="Map" resultType="NewHashMap">						
+		select c.* from login a,login_nx_shop b,shop c
+		where a.loginid=b.loginid and a.companyid=b.companyid and b.shopid=c.shopid and a.companyid=c.companyid and a.companyid=#{companyid} and a.loginid=#{loginid} 
+		<if test="searchShop != null and searchShop !=''">
+			and ShopName like  CONCAT('%',#{searchShop},'%') 
+		</if>
+		
+	</select>
+	
+	<select id="existsUser" parameterType="Map" resultType="NewHashMap">						
+		select * from login 
+		where companyid=#{companyid}
+		and loginid=#{loginid}
+		and password=#{oldpwd} 
+	</select>
+	
+	<select id="modifyPassword" parameterType="Map" resultType="NewHashMap">						
+		update login
+		set password=#{newpwd} 
+		where companyid=#{companyid}
+		and loginid=#{loginid}
+		and password=#{oldpwd}  
+	</select>
+
+	<select id="adminmodifyPassword" parameterType="Map" resultType="NewHashMap">						
+		update login
+		set password=#{newpwd} 
+		where companyid=#{companyid}
+		and loginid=#{loginid}
+	</select>
+	
+	<select id="getShopList" parameterType="Map" resultType="NewHashMap">						
+		select * from shop where companyid=#{companyid}
+	</select>
+	
+	<select id="test_feng" parameterType="Map" resultType="NewHashMap">						
+		select 222
+	</select>
+	
+		  
+</mapper>	

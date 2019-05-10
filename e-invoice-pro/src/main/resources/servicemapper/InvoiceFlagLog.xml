@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.InvoiceFlagLogDao">	
+
+ <select id="queryInvoiceFlagLog" resultType="NewHashMap">
+		select * from invoiceFlaglog  
+        WHERE entid = #{entid} and processTime between #{sdate} and #{edate}
+        <if test="sheetid != null and sheetid != ''">
+			and sheetid = #{sheetid}
+		</if>
+        order by processTime desc 
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+	    </if> 
+
+  </select>
+  
+  
+  <select id="getInvoiceFlagLogcount" resultType="int">
+		select count(*) as count from invoiceFlaglog  
+        WHERE entid = #{entid} and processTime between #{sdate} and #{edate}
+        <if test="sheetid != null and sheetid != ''">
+			and sheetid = #{sheetid}
+		</if>
+
+  </select>
+	
+	<insert id="insertInvoiceFlagLog" parameterType="com.invoice.bean.db.InvoiceFlagLog">
+		insert into invoiceFlaglog (entid,sheetid,islock,invoicetype,flag,userid,username,processTime) 
+		values (#{entid},#{sheetid},#{islock},#{invoicetype},#{flag},#{userid},#{username},#{processTime})
+	</insert>
+	 
+</mapper>

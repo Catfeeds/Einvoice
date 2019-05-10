@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/fapiaodetail.js"></script>
+		
+	</head>
+	<body >
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">发票明细查询</li>
+            </ol>
+            
+            
+            
+            <div class="am-portlet-components">
+            <div class="am-tabs" data-am-tabs="{noSwipe: 1}" id="tab1">
+			  <ul class="am-tabs-nav am-nav am-nav-tabs">
+			    <li class="am-active"><a href="javascript: void(0)">发票清单</a></li>
+			    <li><a href="javascript: void(0)">发票明细</a></li>
+			  </ul>
+			  <div class="am-tabs-bd">
+			    <div class="am-tab-panel am-active">
+			      <div class="am-g am-margin-bottom-lg">
+                   		<div class="am-u-lg-2">
+					      		<input type="text" class="am-form-field" id="fphm" placeholder="发票号码" >
+						</div>
+						<div class="am-u-lg-2">
+					      		<input type="text" class="am-form-field" id="fpdm" placeholder="发票代码" >
+						</div>
+						<div class="am-u-lg-2">
+					      		<input type="text" class="am-form-field" id="nash" placeholder="纳税号" >
+						</div>
+						<div class="am-u-lg-6">
+					      	<button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch" onclick="search(0)"></button>
+						</div>
+                    </div>
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                                <table id="invtable" class="am-table am-table-hover table-main am-table-bordered am-text-truncate">
+                                    <thead>
+                                        <tr>
+                                            <th class="">发票id</th>
+                                            <th class="">发票申请流水号</th>
+                                            <th class="">发票号码</th>
+                                            <th class="">发票代码</th>
+                                            <th class="">购买方名称</th>
+                                            <th class="">购买方纳税号</th>
+                                            <th class="">合计不含税金额</th>
+                                            <th class="">合计税额</th>
+                                            <th class="">开票日期</th>
+                                            <th class="">是否包含清单</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchRows">
+                                    	
+                                    </tbody>
+                                </table>
+                        </div>
+                        <div data-am-widget="navbar" class="am-navbar am-cf  " id="">
+							<div class="am-fr">
+								<div id="page"></div>
+							</div>
+						</div>
+                    </div>
+			    </div>
+			    <div class="am-tab-panel">
+			      
+			      <div class="am-panel am-panel-success am-margin-bottom-0">
+				  <div class="am-panel-hd">
+				  发票信息：
+				  </div>
+				  <div class="am-panel-bd am-cf">
+					<table id="invoice_head" class="am-table am-table-hover table-main am-table-bordered am-text-truncate">
+					    <thead>
+					        <tr>
+					            <th class="">购买方名称</th>
+					            <th class="">购买方纳税人识别号</th>
+					            <th class="">购买方地址电话</th>
+					            <th class="">购买方银行帐号</th>
+					            <th class="">销售方名称</th>
+					            <th class="">销售方纳税人识别号</th>
+					            <th class="">销售方地址电话</th>
+					            <th class="">销售方银行帐号</th>
+					        </tr>
+					    </thead>
+					    <tbody id="invoice_headRows"></tbody>
+					</table>
+				  </div>
+				  </div>
+				  
+				  <div class="am-panel am-panel-success am-margin-bottom-0">
+					  <div class="am-panel-hd">
+					 	 发票明细：
+					  </div>
+					  <div class="am-panel-bd am-cf">
+						<table id="invoice_detail" class="am-table am-table-hover table-main am-table-bordered am-text-truncate">
+						    <thead>
+						        <tr>
+						            <th class="">名称</th>
+						            <th class="">单位</th>
+						            <th class="">规格型号</th>
+						            <th class="">数量</th>
+						            <th class="">单价</th>
+						            <th class="">金额</th>
+						            <th class="">税率</th>
+						            <th class="">税额</th>
+						        </tr>
+						    </thead>
+						    <tbody id="invoice_detailRows"></tbody>
+						</table>
+					  </div>
+				  </div>
+				  <div class="am-panel am-panel-success am-margin-bottom-0">
+					  <div class="am-panel-hd">
+					 	 小票单据：
+					  </div>
+					  <div class="am-panel-bd am-cf">
+						<table id="invque_list" class="am-table am-table-hover table-main am-table-bordered am-text-truncate">
+						    <thead>
+						        <tr>
+						            <th class="">开票申请流水号</th>
+						            <th class="">单据号</th>
+						            <th class="">门店编码</th>
+						            <th class="">收银机编码</th>
+						            <th class="">小票流水号</th>
+						            <th class="">单据总金额</th>
+						            <th class="">可开票金额</th>
+						            <th class="">总税额</th>
+						        </tr>
+						    </thead>
+						    <tbody id="invque_listRows"></tbody>
+						</table>
+					  </div>
+				  </div>
+				  
+			    </div>
+			  </div>
+			</div>
+                </div>
+            </div>
+        
+        <table  style="display:none;">
+        	<tbody id="modelrows">
+        	<tr ondblclick="detail('||invoiceid||')">
+                <td>||invoiceid||</td>
+                <td>||fpqqlsh||</td>
+                <td>||fphm||</td>
+                <td>||fpdm||</td>
+                <td>||gmf_Mc||</td>
+                <td>||gmf_Nsrsbh||</td>
+                <td>||hjbhsje||</td>
+                <td>||hjse||</td>
+                <td>||kprq||</td>
+                <td>||xhqdbz||</td>
+            </tr>
+            </tbody>
+            
+            <tbody id="modeldetailrows">
+        	<tr>
+                <td>||sheetid||</td>
+                <td>||sheettype||</td>
+                <td>||shopid||</td>
+                <td>||syjid||</td>
+                <td>||billno||</td>
+                <td>||totalamount||</td>
+                <td>||invoiceamount||</td>
+                <td>||totaltaxfee||</td>
+            </tr>
+            </tbody>
+        </table>
+</body>
+</html>

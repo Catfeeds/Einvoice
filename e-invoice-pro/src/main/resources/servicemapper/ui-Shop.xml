@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.ShopDao">	
+
+ <select id="queryShop" resultType="NewHashMap">
+		select a.*,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 6 and a.SHOPSTATUS=c.FIELDVALUE) as lookup,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 12 and a.isEinvoice=c.FIELDVALUE) as lookup1,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 12 and a.isopenall=c.FIELDVALUE) as lookup2
+        from Shop a
+        WHERE entid = #{entid}
+        <if test="shopid != null and shopid != ''">
+			and shopid = #{shopid}
+		</if>
+		<if test="shopname != null and shopname != ''">
+			and shopname like CONCAT('%',#{shopname},'%') 
+		</if>
+		<if test="iseinvoice != null and iseinvoice != ''">
+			and iseinvoice = #{iseinvoice}
+		</if>
+        order by entid desc 
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+	    </if> 
+
+  </select>
+	
+  <select id="getShopById" parameterType="com.invoice.bean.db.Shop" resultType="com.invoice.bean.db.Shop">
+        select * from Shop where shopid = #{shopid} and entid = #{entid}
+   </select>
+   
+   <select id="getShopsByEntId" parameterType="com.invoice.bean.db.Shop" resultType="com.invoice.bean.db.Shop">
+        select * from Shop where entid = #{entid} and isopenall=1
+   </select>
+   
+<!-- 天一广场专用语句 -->
+	 <select id="getShops" parameterType="com.invoice.bean.db.Shop" resultType="com.invoice.bean.db.Shop">
+        select * from Shop where entid = #{entid} 
+   </select>
+   
+<!-- 银座专用语句 -->
+  <select id="getShopByShopId" parameterType="com.invoice.bean.db.Shop" resultType="com.invoice.bean.db.Shop">
+        select * from Shop where shopid = #{shopid} and entid = #{entid}
+   </select>
+	
+	<insert id="insertShop" parameterType="com.invoice.bean.db.Shop">
+		insert into Shop(entid,shopid,shopname,shopstatus,shoptype,taxno,manager,telephone,isEinvoice,isopenall,opentime)
+		values(#{entid},#{shopid},#{shopname},#{shopstatus},#{shoptype},#{taxno},#{manager},#{telephone},#{isEinvoice},#{isopenall},#{opentime})
+	</insert>
+	
+	<delete id="deleteShop" parameterType="com.invoice.bean.db.Shop" >	
+		delete from Shop where shopid = #{shopid} and entid = #{entid}
+	</delete>	
+	
+	<update id="updateShop" parameterType="com.invoice.bean.db.Shop">
+		update Shop set  entid =#{entid}, shopid =#{shopid},  shopname =#{shopname},  shopstatus =#{shopstatus},  shoptype =#{shoptype},  taxno =#{taxno},  manager =#{manager},  telephone =#{telephone}, isEinvoice=#{isEinvoice},isopenall=#{isopenall},opentime=#{opentime}  where  shopid =#{shopid} and entid = #{entid}
+	</update>
+
+    <select id="getShopCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Shop where entid= #{entid}
+        <if test="shopid != null and shopid != ''">
+			and shopid = #{shopid}
+		</if>
+		<if test="shopname != null and shopname != ''">
+			and shopname like CONCAT('%',#{shopname},'%') 
+		</if>
+		<if test="isEinvoice != null and isEinvoice != ''">
+			and iseinvoice = #{iseinvoice}
+		</if>
+    </select>
+</mapper>

@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://ws.aisino.com"
+	xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.aisino.com"
+	xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding">
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="qualified" elementFormDefault="qualified"
+			targetNamespace="http://ws.aisino.com">
+			<xsd:element name="fpkccxInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fpkccxInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="eiInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="eiInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fpkjInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fpkjInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="yhzxxcxInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="yhzxxcxInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fpcyInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fpcyInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="jspxxcxInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="jspxxcxInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="kxzpycxInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="kxzpycxInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="kcmxcxInterface">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="in0"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="kcmxcxInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="djxxcxInterface">
+				<xsd:complexType />
+			</xsd:element>
+			<xsd:element name="djxxcxInterfaceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="1" minOccurs="1" name="out"
+							nillable="true" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="eiInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:eiInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="djxxcxInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:djxxcxInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="kxzpycxInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:kxzpycxInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="yhzxxcxInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:yhzxxcxInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fpkjInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:fpkjInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fpcyInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:fpcyInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fpcyInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:fpcyInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fpkccxInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:fpkccxInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="kcmxcxInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:kcmxcxInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="djxxcxInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:djxxcxInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="kcmxcxInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:kcmxcxInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="jspxxcxInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:jspxxcxInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="jspxxcxInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:jspxxcxInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="eiInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:eiInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fpkjInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:fpkjInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="yhzxxcxInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:yhzxxcxInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="kxzpycxInterfaceResponse">
+		<wsdl:part name="parameters" element="tns:kxzpycxInterfaceResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fpkccxInterfaceRequest">
+		<wsdl:part name="parameters" element="tns:fpkccxInterface">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="IEInvWebServicePortType">
+		<wsdl:operation name="fpkccxInterface">
+			<wsdl:input name="fpkccxInterfaceRequest" message="tns:fpkccxInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="fpkccxInterfaceResponse" message="tns:fpkccxInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="eiInterface">
+			<wsdl:input name="eiInterfaceRequest" message="tns:eiInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="eiInterfaceResponse" message="tns:eiInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="fpkjInterface">
+			<wsdl:input name="fpkjInterfaceRequest" message="tns:fpkjInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="fpkjInterfaceResponse" message="tns:fpkjInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="yhzxxcxInterface">
+			<wsdl:input name="yhzxxcxInterfaceRequest" message="tns:yhzxxcxInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="yhzxxcxInterfaceResponse" message="tns:yhzxxcxInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="fpcyInterface">
+			<wsdl:input name="fpcyInterfaceRequest" message="tns:fpcyInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="fpcyInterfaceResponse" message="tns:fpcyInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="jspxxcxInterface">
+			<wsdl:input name="jspxxcxInterfaceRequest" message="tns:jspxxcxInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="jspxxcxInterfaceResponse" message="tns:jspxxcxInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="kxzpycxInterface">
+			<wsdl:input name="kxzpycxInterfaceRequest" message="tns:kxzpycxInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="kxzpycxInterfaceResponse" message="tns:kxzpycxInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="kcmxcxInterface">
+			<wsdl:input name="kcmxcxInterfaceRequest" message="tns:kcmxcxInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="kcmxcxInterfaceResponse" message="tns:kcmxcxInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="djxxcxInterface">
+			<wsdl:input name="djxxcxInterfaceRequest" message="tns:djxxcxInterfaceRequest">
+			</wsdl:input>
+			<wsdl:output name="djxxcxInterfaceResponse" message="tns:djxxcxInterfaceResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="IEInvWebServiceHttpBinding" type="tns:IEInvWebServicePortType">
+		<wsdlsoap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="fpkccxInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="fpkccxInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="fpkccxInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="eiInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="eiInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="eiInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="fpkjInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="fpkjInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="fpkjInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="yhzxxcxInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="yhzxxcxInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="yhzxxcxInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="fpcyInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="fpcyInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="fpcyInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="jspxxcxInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="jspxxcxInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="jspxxcxInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="kxzpycxInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="kxzpycxInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="kxzpycxInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="kcmxcxInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="kcmxcxInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="kcmxcxInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="djxxcxInterface">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="djxxcxInterfaceRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="djxxcxInterfaceResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="IEInvWebService">
+		<wsdl:port name="IEInvWebServiceHttpPort" binding="tns:IEInvWebServiceHttpBinding">
+			<wsdlsoap:address
+				location="http://221.234.42.183:8082/zzs_kpfw_ARM9/webservice/eInvWS/15000119780514458045" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

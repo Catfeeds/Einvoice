@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+		<script src="../assets/js/qrcode.lib.min.js"></script>
+		<script src="../assets/js/qrcode.js"></script>
+		
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/invoiceOpen.js"></script>
+		
+		
+		
+		<style type="text/css">
+		.tbl-panel {}
+		.panel-enabled {}
+		.diplaynone{display: none;}
+		input[node-type=jsbridge]{
+		    visibility: hidden;display: none;
+		}
+		.am-app-piao{
+			border:1px solid #ccc;
+			background-color: #fff;
+		}
+		.am-app-piao-can{
+			background-color: #afa;
+			color: #000;
+		}
+		.am-app-piao-uncan{
+			background-color: #faa;
+			color: #000;
+		}
+		.am-app-piao-amt{
+			font-size: 3rem;
+			color: red;
+		}
+		.am-app-preview{
+			border:1px solid orange;
+			width: 100%;
+		}
+		.am-app-preview td{
+			border:1px solid orange;
+			padding: 4px;
+		}
+		</style>
+	</head>
+	<body>
+		  <header data-am-widget="header" class="am-header am-header-default">
+		      <div class="am-header-left am-header-nav">
+		          <a href="invoiceOpen.html" class="">
+		                <i class="am-header-icon am-icon-home"></i>
+		          </a>
+		      </div>
+		
+		      <h1 class="am-header-title">
+		          <a href="#title-link" class="">
+		           	<span id="title-text">开票申请</span>
+		          </a>
+		      </h1>
+		</header>
+		
+		<nav data-am-widget="menu" class="am-menu  am-menu-dropdown1"   data-am-menu-collapse > 
+		    <a href="javascript: void(0)" class="am-menu-toggle">
+		          <i class="am-menu-toggle-icon am-icon-list"></i>
+		    </a>
+			<ul class="am-menu-nav am-avg-sm-1 am-collapse">
+			    <li id="kaipiaojilu">
+			      <a href="invoiceList.html" class="" >我的开票记录</a>
+			    </li>
+			    <li class="">
+			      <a href="invoiceOpen.html" class="" >申请开票</a>
+			    </li>
+			</ul>
+		</nav>
+		
+		<div class=" am-margin-top-xs tbl-panel panel-enabled" id="div_qc" data-index="0">
+			<div class="am-progress ">
+				<div class="am-progress-bar am-progress-bar-success"  style="width: 30%">选择小票</div>
+				<div class="am-progress-bar"  style="width: 70%">填入开票信息</div>
+			</div>
+			<div class="am-g" id="inputHead" style="display:none;">
+	        	<div class="am-u-sm-12 am-margin-bottom-sm am-hide am-padding-0" id="qr-div">
+	        		<button type="button" class="am-btn am-btn-success am-btn-block" node-type="qr-btn">
+	        			<i class="am-icon-qrcode "></i> 扫描发票提取码
+	        		</button>
+	        		<input node-type="jsbridge" type="file" name="myPhoto" style="width:0px;height:0px;"/>
+		        </div>
+		        
+		        <div class="am-u-sm-12" id="wxHelp">
+		        	<label class=" am-app-form-lable am-hide">填写发票提取信息</label>
+		        	<figure data-am-widget="figure" class="am am-figure am-figure-default am-hide" data-am-figure="{pureview:'true'}" style="margin:0px;width:100%">
+				      <img data-rel="help.jpg" alt="查看示例 图中所示的位置填入小票信息" class="am-margin-0"/>
+					</figure>
+		        </div>
+		        
+		        <ul class="am-u-sm-12" id="inputPiao" style="display:none;padding:0px;margin:4px 0px 4px 0px;">
+		        	<li>
+             		<div class="am-u-sm-3" style="padding: 0px"><input type="text" class="am-form-field am-radius" style="display: inline;width:90%;margin-right: 1%;" placeholder="" id="requestShopid" value="" >-</div>
+             		<div class="am-u-sm-3" style="padding: 0px"><input type="text" class="am-form-field am-radius" style="display: inline;width:90%;margin-right: 1%;" placeholder="" id="requestSyjid" value="" >-</div>
+             		<div class="am-u-sm-3" style="padding: 0px"><input type="text" class="am-form-field am-radius" style="display: inline;width:90%;margin-right: 1%;" placeholder="" id="requestShinvno" value="">-</div>
+             		<div class="am-u-sm-3" style="padding: 0px"><input type="text" class="am-form-field am-radius" style="display: inline;width:100%;"                 placeholder="" id="requestJe" value=""></div>
+             		</li>
+		        </ul>
+		        
+		        <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4" id="inputSerial" style="display:none;">
+		        	<li>
+             		<div class="am-u-sm-12" style="padding: 6px"><input type="text" class="am-form-field am-radius" placeholder="发票提取码" id="requestSerial" value=""></div>
+             		</li>
+		        </ul>
+		        
+		        <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4" id="inputOther" style="display:none;">
+		        	<li>
+             		<div class="am-u-sm-8" style="padding: 6px"><input type="text" class="am-form-field am-radius" placeholder="单号" id="requestSheetid" value=""></div>
+             		<div class="am-u-sm-4" style="padding: 6px"><input type="text" class="am-form-field am-radius" placeholder="金额" id="requestSheetJe" value=""></div>
+             		</li>
+		        </ul>
+		        
+		        <div class="am-u-sm-12 am-margin-top-sm am-padding-0">
+	        		<button type="button" class="am-btn  am-btn-primary am-fr" id="buttonCheck">
+	        			<i class="am-icon-eye "></i> 验　证
+	        		</button>
+		        </div>
+		        
+		     </div>
+		     <div class="am-g am-g-collapse" id="piaoList">
+		     </div>
+		     
+		     <div class="am-g am-g-collapse" id="overPiaoList">
+		     </div>
+		</div>
+		
+		<div class=" am-margin-top-xs tbl-panel diplaynone" id="div_info" data-index="1">
+			<div class="am-progress">
+				<div class="am-progress-bar am-progress-bar-success"  style="width: 60%">填入开票信息</div>
+				<div class="am-progress-bar"  style="width: 40%">预览发票</div>
+			</div>
+			
+			<ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4 am-form-horizontal">
+				<li class="am-margin-top-xs" id="chooseInvoiceTitleDiv" style="display:none;">
+					<a class="am-btn am-btn-success am-btn-lg" href="#" onclick="chooseInvoiceTitle()">
+					  [快捷]微信发票抬头
+					</a>
+             	</li>
+				<li class="am-margin-top-xs" id="usePhone" style="display:none;">
+             		<label class="am-u-sm-3 am-form-label">接收手机</label>
+             		<div class="am-u-sm-9"><input type="text" class="js-pattern-mobile am-form-field am-radius" placeholder="接收发票信息的手机号" id="invRecvPhone"></div>
+             	</li>
+             	<li class="am-margin-top-xs" id="useEmail" style="display:none;">
+             		<label class="am-u-sm-3 am-form-label">接收邮箱</label>
+             		<div class="am-u-sm-9"><input type="email" class="am-form-field am-radius" placeholder="接收发票信息的邮箱" id="invRecvMail" required></div>
+             	</li>
+             	
+             	<hr/>
+             	
+             	<li class="am-margin-top-xs am-padding-left-sm">
+             		<label class="am-radio-inline am-input-lg">
+             			<input type="radio" name="invoiceHead" id="invoiceHeadPerson">个人
+             		</label>
+             		<label class="am-radio-inline am-input-lg">
+             			<input type="radio" name="invoiceHead" id="invoiceHeadEnt">单位
+             		</label>
+             	</li>
+             	
+             	<li class="am-margin-top-xs" id="liPerson">
+             		<label class="am-u-sm-3 am-form-label">发票抬头</label>
+             		<div class="am-u-sm-9">
+						<input type="text" class="am-form-field am-radius" value="个人" id="invoiceHeadPersonText">
+					</div>
+             	</li>
+             	
+             	<li class="am-margin-top-xs am-hide" id="liText">
+             		<label class="am-u-sm-3 am-form-label">单位名称</label>
+             		<div class="am-u-sm-9">
+						<input type="text" data-query="entName" class="am-form-field am-radius" placeholder="[必填]单位名称" id="invoiceHeadEntText">
+					</div>
+             	</li>
+             	
+             	<li class="am-margin-top-xs am-hide" id="liTaxno">
+             		<label class="am-u-sm-3 am-form-label">纳税号</label>
+             		<div class="am-u-sm-9">
+						<input type="text" data-query="entName" class="am-form-field am-radius" placeholder="[必填]纳税人识别号" id="invoiceHeadEntTaxno">
+					</div>
+             	</li>
+             	
+             	<li class="am-margin-top-xs am-hide" id="liAddr">
+             		<label class="am-u-sm-3 am-form-label">地址电话</label>
+             		<div class="am-u-sm-9">
+						<input type="text" data-query="entName" class="am-form-field am-radius" placeholder="[可选]地址及联系方式" id="invoiceHeadEntAddr">
+					</div>
+             	</li>
+             	
+             	<li class="am-margin-top-xs am-hide" id="liBank">
+             		<label class="am-u-sm-3 am-form-label">银行账号</label>
+             		<div class="am-u-sm-9">
+						<input type="text" data-query="entName" class="am-form-field am-radius" placeholder="[可选]开户银行及账号" id="invoiceHeadEntBank">
+					</div>
+             	</li>
+             	
+             	
+             	<li class="am-margin-top-xs" style="display: none;">
+             		<label class="am-u-sm-3 am-form-label">发票内容</label>
+             		<div class="am-u-sm-3">
+             			<label class="am-checkbox">
+					      <input type="radio" value="" name="taxType" id="taxNoteType1" data-am-ucheck>
+					      类目
+					    </label>
+					 </div>
+					 <div class="am-u-sm-3">
+             			<label class="am-checkbox">
+					      <input type="radio" value="" name="taxType" id="taxNoteType2" data-am-ucheck checked>
+					      明细
+					    </label>
+					</div>
+					<div class="am-u-sm-3"></div>
+             	</li>
+             </ul>
+		</div>
+		
+		<div class=" am-margin-top-xs tbl-panel diplaynone" id="div_preview" data-index="2">
+			<div class="am-progress am-margin-0">
+				<div class="am-progress-bar am-progress-bar-success"  style="width: 80%">预览发票</div>
+				<div class="am-progress-bar"  style="width: 20%">提交</div>
+			</div>
+			
+			<div class="am-panel am-panel-default">
+			    <div>请确认以下信息正确，点击提交按钮开具电子发票。</div>
+			    <div id="previewPhoneDiv" style="display:none;">发票接收电话：<span id="previewPhone"></span></div>
+			    <div id="previewMailDiv" style="display:none;">发票接收邮箱：<span id="previewMail"></span></div>
+			</div>
+			
+			<div class="am-panel am-margin-top-sm am-text-xs" id="preview">
+				
+			</div>
+		</div>
+	  
+	  <div data-am-widget="gotop" class="am-gotop am-gotop-fixed" >
+	    <a href="#top" title="回到顶部">
+	        <span class="am-gotop-title">回到顶部</span>
+	          <i class="am-gotop-icon am-icon-chevron-up"></i>
+	    </a>
+	  </div>
+	  
+	  <div data-am-widget="navbar" class="am-navbar am-navbar-default " id="">
+	  	<div class="am-margin-top-xs">
+			<div class="am-u-sm-6">
+				<button type="button" id="btn_prev" value="-1" class="am-btn am-btn-secondary am-radius am-fl" disabled>上一步</button>
+			</div>
+			<div class="am-u-sm-6">
+					<button type="button" id="btn_submit" class="am-btn am-btn-secondary am-radius am-fr" style="display: none;">提交</button>
+					<button type="button" id="btn_next" value="1" class="am-btn am-btn-secondary am-radius am-fr" style="outline: 0px;">下一步</button>
+			</div>
+		</div>
+	  </div>
+	  
+	  <div id="rowPiao1" style="display: none;">
+	  <div class="am-panel am-panel-success am-margin-top-sm">
+		  <div class="am-panel-hd am-g">
+		  	<div class="am-u-sm-9"><label class="am-checkbox am-secondary am-margin-0"><input type="checkbox" checked="checked" name="checkedPiao" value="||sheetid||-||totalamount||" id="check||sheetid||"> ||tradedate||</label></div>
+		  	<div class="am-u-sm-3 am-text-center am-app-piao-can" id="checkText||sheetid||">可开票</div>
+		  </div>
+		  <div class="am-panel-bd am-padding-0">
+		  	<div class="am-g am-padding-0">
+			  	<div class="am-u-sm-8" >
+	     			<div class="am-padding-horizontal-xs">单号：<span>||sheetid||</span></div>
+	     			<div class="am-padding-horizontal-xs">金额：<span>||totalamount||</span></div>
+	     			<div class="am-padding-horizontal-xs">纳税人：<span class="am-text-xs">||taxname||</span></div>
+	     		</div>
+	     		<div class="am-u-sm-4">
+	     			<div class="am-text-xs">可开票金额：</div>
+	     			<div><span class="am-text-xl am-text-danger">||invoiceamount||</span><span class="am-text-xs">元</span></div>
+	     		</div>
+     		</div>
+		  </div>
+		  <div class="am-panel-default am-panel-hd ">
+		      <div class="am-panel-title" data-am-collapse="{parent: '#piaoList', target: '#paneldetailList||id||'}">
+				||weixinNote||
+		      </div>
+		  </div>
+		  <div id="paneldetailList||id||" class="am-panel-collapse am-collapse">
+		      <div class="am-g" id="detailList||id||">
+			  </div>
+			  <div class="am-g" id="payList||id||">
+			  </div>
+		  </div>
+		</div>
+		</div>
+		
+		<div id="rowPiao2" style="display: none;">
+			<div class="am-panel am-panel-warning am-margin-top-sm" onclick="$.gotoUrl('./invoiceView.html?iqseqno=||iqseqno||')">
+			  <div class="am-panel-hd am-g">
+			  	<div class="am-u-sm-5 am-u-sm-offset-7 am-text-center am-app-piao-uncan">已开票[点击查看]</div>
+			  </div>
+			  <div class="am-panel-bd am-padding-0">
+			  	<div class="am-g am-padding-0">
+				  	<div class="am-u-sm-8" >
+		     			<div class="am-padding-horizontal-xs">单号：<span>||sheetid||</span></div>
+	     			<div class="am-padding-horizontal-xs">金额：<span>||totalamount||</span></div>
+	     			<div class="am-padding-horizontal-xs">纳税人：<span class="am-text-xs">||taxname||</span></div>
+		     		</div>
+		     		<div class="am-u-sm-4">
+		     			<div class="am-text-xs">开票金额：</div>
+		     			<div><span class="am-text-xl am-text-danger">||invoiceamount||</span><span class="am-text-xs">元</span></div>
+		     		</div>
+	     		</div>
+			  </div>
+			</div>
+		</div>
+		
+		<div id="rowPiao3" style="display: none;">
+			<div class="am-panel am-panel-warning am-margin-top-sm" >
+			  <div class="am-panel-hd am-g">
+			  	<div class="am-u-sm-6 am-u-sm-offset-6 am-text-center am-app-piao-uncan">正在开票，请稍后再来</div>
+			  </div>
+			  <div class="am-panel-bd am-padding-0">
+			  	<div class="am-g am-padding-0">
+				  	<div class="am-u-sm-8" >
+		     			<div class="am-padding-horizontal-xs">单号：<span>||sheetid||</span></div>
+	     			<div class="am-padding-horizontal-xs">金额：<span>||totalamount||</span></div>
+	     			<div class="am-padding-horizontal-xs">纳税人：<span class="am-text-xs">||taxname||</span></div>
+		     		</div>
+		     		<div class="am-u-sm-4">
+		     			<div class="am-text-xs">开票金额：</div>
+		     			<div><span class="am-text-xl am-text-danger">||invoiceamount||</span><span class="am-text-xs">元</span></div>
+		     		</div>
+	     		</div>
+			  </div>
+			</div>
+		</div>
+		
+		<div id="rowPreview" style="display: none;">
+			<div class="am-panel am-panel-default am-margin-0">
+			  <div class="am-panel-hd">第||r||张发票</div>
+			</div>
+			<table class="am-table-bordered am-app-preview am-margin-bottom-sm">
+					<tbody>
+					<tr>
+						<td width="5%">购买方</td>
+						<td colspan="4" width="95%"><div>
+				  		名　　　　称：<span class="">||gmfMc||</span>
+				  		</div>
+				  		<div>纳税人识别号：||gmfNsrsbh||</div>
+				  		<div>地址、　电话：||gmfDzdh||</div>
+				  		<div>开户行及账号：||gmfYhzh||</div></td>
+					</tr>
+					<tr class="am-text-center">
+						<td colspan="2" width="35%">货物名称</td>
+						<td width="25%">金额</td>
+						<td width="15%">税率</td>
+						<td width="25%">税额</td>
+					</tr>
+					<tr id="previewDetail||index||"></tr>
+					<tr class="am-text-center">
+						<td colspan="5">价税合计（大写）||amountDX||　　（小写）||amount||</td>
+					</tr>
+					<tr>
+						<td>销售方</td>
+						<td colspan="4"><div>
+				  		名　　　　称：<span class="">||xsfMc||</span>
+				  		</div>
+				  		<div>纳税人识别号：||xsfNsrsbh||</div>
+				  		<div>地址、　电话：||xsfDzdh||</div>
+				  		<div>开户行及账号：||xsfYhzh||</div></td>
+					</tr>
+					</tbody>
+				</table>
+		</div>
+		
+		<table style="display: none;">
+			<tbody  id="rowPreviewDetail">
+			<tr class="">
+				<td colspan="2" width="35%">||goodsName||</td>
+				<td width="25%" class="am-text-right">||amount||</td>
+				<td width="15%" class="am-text-right">||taxRate||%</td>
+				<td width="25%" class="am-text-right">||taxFee||</td>
+			</tr>
+			</tbody>
+		</table>
+				
+	</body>
+</html>

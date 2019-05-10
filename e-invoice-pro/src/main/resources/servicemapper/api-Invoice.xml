@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.InvoiceDao">
+
+	<insert id="insertInvoiceHead" parameterType="com.invoice.bean.db.InvoiceHead">
+		INSERT INTO invoice_head (invoiceid, iqseqno, status, lxdm, invoiceType, xsfTax, xsfName, xsfAddr, xsfBank, gmfTax, gmfName, gmfAddr, gmfBank, operator, checker, fpRQ, fpDM, fpHM, fpSKM, fpJYM, fpEWM, yfpDM, yfpHM, pdf, totalAmt, totalTaxAmt, totalTaxFee, memo, xfzEmail, xfzPhone, taxversion, zsfs, BYZD1, BYZD2, BYZD3, BYZD4, BYZD5, BYZD6, BYZD7, isList) 
+		VALUES (#{invoiceid},#{ iqseqno},#{ status},#{ lxdm},#{ invoicetype},#{ xsftax},#{ xsfname},#{ xsfaddr},#{ xsfbank},#{ gmftax},#{ gmfname},#{ gmfaddr},#{ gmfbank},#{ operator},#{ checker},#{ fprq},#{ fpdm},#{ fphm},#{ fpskm},#{ fpjym},#{ fpewm},#{ yfpdm},#{ yfphm},#{ pdf},#{ totalamt},#{ totaltaxamt},#{ totaltaxfee},#{ memo},#{ xfzemail},#{ xfzphone},#{ taxversion},#{ zsfs},#{ byzd1},#{ byzd2},#{ byzd3},#{ byzd4},#{ byzd5},#{ byzd6},#{ byzd7},#{ islist})
+	</insert>
+	
+	<insert id="insertInvoiceDetail" parameterType="java.util.List">
+		INSERT INTO invoice_detail (invoiceid, seqno, rowno, unit, spec, qty, price, amount, taxrate, taxfee, amt, goodsid, goodsname, taxitemid, fphxz, zhdyhh, yhzcbs, lslbs, zzstsgl) 
+		VALUES 
+		<foreach collection ="list" item="detail" index= "index" separator =",">
+		(#{detail.invoiceid},#{detail.seqno},#{detail.rowno},#{detail.unit},#{detail.spec},#{detail.qty},#{detail.price},#{detail.amount},#{detail.taxrate},#{detail.taxfee},#{detail.amt},#{detail.goodsid},#{detail.goodsname},#{detail.taxitemid},#{detail.fphxz},#{detail.zhdyhh},#{detail.yhzcbs},#{detail.lslbs},#{detail.zzstsgl})
+		</foreach >
+	</insert>
+	
+	<select id="getInvoiceCount" resultType="int"  parameterType="NewHashMap">
+		select count(*) from invoice_head where invoiceType =0 and status=100
+		 and iqseqno=#{iqseqno}
+	</select>
+	
+	<update id="updateInvoiceStatus" parameterType="NewHashMap">
+		update invoice_head set status =#{status} where iqseqno=#{iqseqno} and fpDM=#{fpDM} and fpHM=#{fpHM}
+	</update>
+
+	<update id="updateInvoicePdf" parameterType="NewHashMap">
+		update invoice_head set pdf =#{pdf} where iqseqno=#{iqseqno} and fpDM=#{fpDM} and fpHM=#{fpHM}
+	</update>
+	
+	<select id="getIsInvoiceCount" resultType="int"  parameterType="NewHashMap">
+		select count(*) from invoice_head where fpDM = #{rtfpdm} and fpHM = #{rtfphm}
+	</select>
+
+	<select id="getInvoiceHeadByYfp" resultType="com.invoice.bean.db.InvoiceHead"  parameterType="NewHashMap">
+		select * from invoice_head where fpDM = #{fpDM} and fpHM = #{fpHM}
+	</select>
+	
+	<select id="getInvoiceHeadCount" resultType="int"  parameterType="NewHashMap">
+		SELECT count(*)  from invoice_head a,invque b,  shop d ,invque_list c 
+		where a.iqseqno=b.iqseqno and b.iqseqno=c.iqseqno
+		 and b.iqentid=#{entid} and d.ENTID=#{entid} and b.iqshop = d.SHOPID 
+		<if test="loginid != null">
+		   and b.iqperson=#{loginid} 
+		</if>
+		<if test="shopid != null">
+		   and b.iqshop=#{shopid} 
+		</if>
+		<if test="invoicetype != null">
+		    and a.invoicetype=#{invoicetype} 
+		</if>
+		<if test="fphm != null">
+		   and a.fphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and c.sheetid=#{sheetid}
+		</if>
+		<if test="iqfplxdm != null and iqfplxdm !=''">
+			and b.iqfplxdm=#{iqfplxdm}
+		</if>
+		<if test="iqchannel != null and iqchannel !=''">
+			and b.iqchannel=#{iqchannel}
+		</if>
+		<if test="iqtaxno != null and iqtaxno !=''">
+			and b.iqtaxno=#{iqtaxno}
+		</if>
+		<if test="iqgmfname != null and iqgmfname !=''">
+			and b.iqgmfname like CONCAT('%',#{iqgmfname},'%') 
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus ==30">
+			and b.iqstatus=30
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus !=30">
+			and b.iqstatus != 30
+		</if>
+	</select>
+	
+	<select id="getInvoiceHead" resultType="NewHashMap"  parameterType="NewHashMap">
+		SELECT b.iqshop, d.shopname, c.sheetid,b.iqtaxzdh,a.*,b.iqperson,b.iqdate,iqadmin,b.iqmsg,b.iqgmftax,b.iqgmfname,b.iqgmfadd,b.iqgmfbank,b.iqtaxno from invoice_head a,invque b,  shop d ,invque_list c 
+		where a.iqseqno=b.iqseqno and b.iqseqno=c.iqseqno
+		 and b.iqentid=#{entid} and d.ENTID=#{entid} and b.iqshop = d.SHOPID 
+		<if test="shopid != null">
+		   and b.iqshop=#{shopid} 
+		</if>
+		<if test="syjid != null">
+		   and c.syjid=#{syjid} 
+		</if>
+		<if test="billno != null">
+		   and c.billno=#{billno} 
+		</if>
+		<if test="loginid != null">
+		   and b.iqperson=#{loginid} 
+		</if>
+		<if test="invoicetype != null">
+		    and a.invoicetype=#{invoicetype} 
+		</if>
+		<if test="fphm != null">
+		   and a.fphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and c.sheetid=#{sheetid}
+		</if>
+		<if test="iqfplxdm != null and iqfplxdm !=''">
+			and b.iqfplxdm=#{iqfplxdm}
+		</if>
+		<if test="iqchannel != null and iqchannel !=''">
+			and b.iqchannel=#{iqchannel}
+		</if>
+		<if test="iqtaxno != null and iqtaxno !=''">
+			and b.iqtaxno=#{iqtaxno}
+		</if>
+		<if test="iqgmfname != null and iqgmfname !=''">
+			and b.iqgmfname like CONCAT('%',#{iqgmfname},'%') 
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus !=30">
+			and b.iqstatus != 30
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus ==30">
+			and b.iqstatus=30
+		</if>
+		
+		order by a.fpRQ desc
+		
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	
+	<select id="getHnyjHeadCount" resultType="int"  parameterType="NewHashMap">
+		SELECT count(*)  from (
+		SELECT  c.sheetid,a.xfzEmail,a.totalAmt,a.fpHM,a.fpRQ,b.iqmsg,b.iqgmftax,b.iqgmfname,b.iqgmfbank,b.iqtaxno from invoice_head a,invque b,  shop d ,invque_list c 
+		where a.iqseqno=b.iqseqno and b.iqseqno=c.iqseqno
+		 and b.iqentid=#{entid} and d.ENTID=#{entid} and b.iqshop = d.SHOPID 
+		<if test="shopid != null">
+		   and b.iqshop=#{shopid} 
+		</if>
+		<if test="syjid != null">
+		   and c.syjid=#{syjid} 
+		</if>
+		<if test="billno != null">
+		   and c.billno=#{billno} 
+		</if>
+		<if test="loginid != null">
+		   and b.iqperson=#{loginid} 
+		</if>
+		<if test="invoicetype != null">
+		    and a.invoicetype=#{invoicetype} 
+		</if>
+		<if test="fphm != null">
+		   and a.fphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and c.sheetid=#{sheetid}
+		</if>
+		<if test="iqfplxdm != null and iqfplxdm !=''">
+			and b.iqfplxdm=#{iqfplxdm}
+		</if>
+		<if test="iqchannel != null and iqchannel !=''">
+			and b.iqchannel=#{iqchannel}
+		</if>
+		<if test="iqtaxno != null and iqtaxno !=''">
+			and b.iqtaxno=#{iqtaxno}
+		</if>
+		<if test="iqgmfname != null and iqgmfname !=''">
+			and b.iqgmfname like CONCAT('%',#{iqgmfname},'%') 
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus !=30">
+			and b.iqstatus != 30
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus ==30">
+			and b.iqstatus=30
+		</if>
+		
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus ==30">
+		UNION ALL
+		SELECT a.sheetid,"" as xfzEmail,a.totalAmount,"" as fphm, a.tradeDate as fprq, "无接收邮箱" as iqmsg,a.gmftax,a.gmfname,a.gmfbank,d.SHOPNAME from invoice_sale_head a,shop d  
+		where a.isauto=0 and a.entid=#{entid} and d.ENTID=#{entid} and a.shopid = d.SHOPID
+		
+		<if test="startdate != null and startdate !=''">
+			and a.tradeDate &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.tradeDate &lt;= #{enddate} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and a.sheetid=#{sheetid}
+		</if>
+		<if test="iqgmfname != null and iqgmfname !=''">
+			and a.gmfname like CONCAT('%',#{iqgmfname},'%') 
+		</if>
+		<if test="iqtaxno != null and iqtaxno !=''">
+			and d.taxno=#{iqtaxno}
+		</if>
+		</if>
+		) e
+	</select>
+	
+	<select id="getHnyjHead" resultType="NewHashMap"  parameterType="NewHashMap">
+		SELECT  c.sheetid,a.xfzEmail,a.totalAmt,a.fpHM,a.fpRQ,b.iqmsg,b.iqgmftax,b.iqgmfname,b.iqgmfbank,b.iqtaxno from invoice_head a,invque b,  shop d ,invque_list c 
+		where a.iqseqno=b.iqseqno and b.iqseqno=c.iqseqno
+		 and b.iqentid=#{entid} and d.ENTID=#{entid} and b.iqshop = d.SHOPID 
+		<if test="shopid != null">
+		   and b.iqshop=#{shopid} 
+		</if>
+		<if test="syjid != null">
+		   and c.syjid=#{syjid} 
+		</if>
+		<if test="billno != null">
+		   and c.billno=#{billno} 
+		</if>
+		<if test="loginid != null">
+		   and b.iqperson=#{loginid} 
+		</if>
+		<if test="invoicetype != null">
+		    and a.invoicetype=#{invoicetype} 
+		</if>
+		<if test="fphm != null">
+		   and a.fphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and c.sheetid=#{sheetid}
+		</if>
+		<if test="iqfplxdm != null and iqfplxdm !=''">
+			and b.iqfplxdm=#{iqfplxdm}
+		</if>
+		<if test="iqchannel != null and iqchannel !=''">
+			and b.iqchannel=#{iqchannel}
+		</if>
+		<if test="iqtaxno != null and iqtaxno !=''">
+			and b.iqtaxno=#{iqtaxno}
+		</if>
+		<if test="iqgmfname != null and iqgmfname !=''">
+			and b.iqgmfname like CONCAT('%',#{iqgmfname},'%') 
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus !=30">
+			and b.iqstatus != 30
+		</if>
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus ==30">
+			and b.iqstatus=30
+		</if>
+		
+		<if test="iqstatus != null and iqstatus !=''  and iqstatus ==30">
+		UNION ALL
+		SELECT a.sheetid,"" as xfzEmail,a.totalAmount,"" as fphm, a.tradeDate as fprq, "无接收邮箱" as iqmsg,a.gmftax,a.gmfname,a.gmfbank,d.SHOPNAME from invoice_sale_head a,shop d  
+		where a.isauto=0 and a.entid=#{entid} and d.ENTID=#{entid} and a.shopid = d.SHOPID
+		
+		<if test="startdate != null and startdate !=''">
+			and a.tradeDate &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.tradeDate &lt;= #{enddate} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and a.sheetid=#{sheetid}
+		</if>
+		<if test="iqgmfname != null and iqgmfname !=''">
+			and a.gmfname like CONCAT('%',#{iqgmfname},'%') 
+		</if>
+		<if test="iqtaxno != null and iqtaxno !=''">
+			and d.taxno=#{iqtaxno}
+		</if>
+		</if>
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	
+	<select id="queryInvoiceHeadCount" resultType="int"  parameterType="Map">
+		SELECT count(*) from invoice_head a
+		join invque b on a.iqseqno=b.iqseqno
+		where b.iqentid=#{entid} 
+		<if test="invoicetype != null">
+		   and b.invoiceType=#{invoicetype} 
+		</if>
+		<if test="status != null">
+		   and b.status=#{status} 
+		</if>
+		<if test="loginid != null">
+		   and b.iqperson=#{loginid} 
+		</if>
+		<if test="fpdm != null">
+		    and a.fpDM=#{fpdm}
+		</if>
+		<if test="fphm != null">
+		   and a.fphm=#{fphm}
+		</if>
+		<if test="shopid != null">
+		   and b.iqshop=#{shopid}
+		</if>
+	</select>
+	
+	<select id="queryInvoiceHead" resultType="com.invoice.bean.db.InvoiceHead"  parameterType="Map">
+		SELECT a.*,b.iqperson from invoice_head a
+		join invque b on a.iqseqno=b.iqseqno
+		where b.iqentid=#{entid} 
+		<if test="invoicetype != null">
+		   and b.invoiceType=#{invoicetype} 
+		</if>
+		<if test="status != null">
+		   and b.status=#{status} 
+		</if>
+		<if test="loginid != null">
+		   and b.iqperson=#{loginid} 
+		</if>
+		<if test="fpdm != null">
+		    and a.fpDM=#{fpdm}
+		</if>
+		<if test="fphm != null">
+		   and a.fphm=#{fphm}
+		</if>
+		<if test="shopid != null">
+		   and b.iqshop=#{shopid}
+		</if>
+		<if test="sheetid != null">
+		   EXISTS (SELECT 1 from invque_list c where c.iqseqno=b.iqseqno
+		   and c.sheetid=#{sheetid}
+		   and c.sheettype=#{sheettype}
+		   )
+		</if>		
+		order by a.fphm desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	
+	<select id="getInvoiceDetail" resultType="com.invoice.bean.db.InvoiceDetail"  parameterType="NewHashMap">
+		SELECT * from invoice_detail where invoiceid=#{invoiceid}
+		order by seqno asc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	
+	<select id="getHongInvoiceDetail" resultType="com.invoice.bean.db.InvoiceSaleDetail"  parameterType="NewHashMap">
+	    SELECT b.*, b.YHZCBS as taxpre,b.LSLBS as zerotax,b.ZZSTSGL as taxprecon from invoice_head a,invoice_detail b
+		where a.invoiceid = b.invoiceid 
+		and a.fpDM=#{yfpdm}
+		and a.fpHM=#{yfphm}
+		ORDER BY b.seqno asc
+	</select>
+	
+	<select id="getInvoiceDetailCount" resultType="int"  parameterType="NewHashMap">
+		SELECT count(*) from invoice_detail where invoiceid=#{invoiceid}
+	</select>
+	
+	<select id="getInvoiceDetailForSum" resultType="NewHashMap"  parameterType="NewHashMap">
+		SELECT d.sheetid,a.fphm,b.goodsid,b.goodsName,b.price,b.amt,b.qty,a.fpRQ,c.iqperson,b.taxRate,b.taxitemid,e.taxitemname
+		from invoice_head a,invoice_detail b,invque c,invque_list d,taxitem e where a.iqseqno=c.iqseqno and a.invoiceid = b.invoiceid 
+		 and b.taxitemid = e.taxitemid and c.iqseqno=d.iqseqno and a.invoiceType =0 and a.status=100 
+		and c.iqentid=#{entid} 
+		<if test="iqsource != null and iqsource !=''">
+			and c.iqsource=#{iqsource} 
+		</if>
+		and d.shopid=#{shopid} 
+		<if test="fphm != null and fphm !=''">
+			and a.fphm = #{fphm} 
+		</if>
+		<if test="taxitemid != null and taxitemid !=''">
+			and b.taxitemid = #{taxitemid} 
+		</if>
+		<if test="goodsid != null and goodsid !=''">
+			and b.goodsid = #{goodsid} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and d.sheetid=#{sheetid} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate} 
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and b.goodsName like CONCAT('%',#{goodsname},'%') 
+		</if>
+		order by a.fphm desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	
+	<select id="getInvoiceDetailForSumCount" resultType="int"  parameterType="NewHashMap">
+		SELECT count(*)
+		from invoice_head a,invoice_detail b,invque c,invque_list d,taxitem e where a.iqseqno=c.iqseqno and a.invoiceid = b.invoiceid 
+		 and b.taxitemid = e.taxitemid and c.iqseqno=d.iqseqno and a.invoiceType =0 and a.status=100 
+		and c.iqentid=#{entid} 
+		<if test="iqsource != null and iqsource !=''">
+			and c.iqsource=#{iqsource} 
+		</if>
+		and d.shopid=#{shopid}
+		<if test="fphm != null and fphm !=''">
+			and a.fphm = #{fphm} 
+		</if>
+		<if test="taxitemid != null and taxitemid !=''">
+			and b.taxitemid = #{taxitemid} 
+		</if>
+		<if test="goodsid != null and goodsid !=''">
+			and b.goodsid = #{goodsid} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and d.sheetid=#{sheetid} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate}
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate}
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and b.goodsName like CONCAT('%',#{goodsname},'%') 
+		</if>
+	</select>
+	
+	<select id="getDetailForSumAmt" resultType="NewHashMap"  parameterType="NewHashMap">
+		SELECT a.fphm,b.goodsid,b.goodsName,b.price,SUM(b.amt) as zamt,SUM(b.qty) as zqty,a.fpRQ,c.iqperson
+		from invoice_head a,invoice_detail b,invque c,invque_list d,taxitem e where a.iqseqno=c.iqseqno and a.invoiceid = b.invoiceid 
+		 and b.taxitemid = e.taxitemid and c.iqseqno=d.iqseqno and a.invoiceType =0 and a.status=100 
+		and c.iqentid=#{entid} 
+		<if test="iqsource != null and iqsource !=''">
+			and c.iqsource=#{iqsource} 
+		</if>
+		and d.shopid=#{shopid} 
+		<if test="fphm != null and fphm !=''">
+			and a.fphm = #{fphm} 
+		</if>
+		<if test="taxitemid != null and taxitemid !=''">
+			and b.taxitemid = #{taxitemid} 
+		</if>
+		<if test="goodsid != null and goodsid !=''">
+			and b.goodsid = #{goodsid} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and d.sheetid=#{sheetid} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.fpRQ &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.fpRQ &lt;= #{enddate} 
+		</if>
+		<if test="goodsname != null and goodsname !=''">
+			and b.goodsName like CONCAT('%',#{goodsname},'%') 
+		</if>
+		order by a.fphm desc
+		
+	</select>
+	
+	<select id="getbillreportCount" resultType="int"  parameterType="NewHashMap">
+		select count(*) from invque a,invque_list b,invoice_head c where a.iqseqno=b.iqseqno and a.iqseqno=c.iqseqno
+		and a.iqentid=#{entid} 
+		and a.iqsource='1' 
+		<if test="shopid != null and shopid !=''">
+			and b.shopid=#{shopid} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and b.sheetid=#{sheetid} 
+		</if>
+		<if test="fphm != null and fphm !=''">
+			and a.rtfphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.rtkprq &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.rtkprq &lt;= #{enddate} 
+		</if>
+		order by a.rtkprq desc
+	</select>
+	
+	<select id="getbillreport" resultType="NewHashMap"  parameterType="NewHashMap">
+		select b.sheetid,a.*,c.* from invque a,invque_list b,invoice_head c where a.iqseqno=b.iqseqno and a.iqseqno=c.iqseqno
+		and a.iqentid=#{entid} 
+		and a.iqsource='1' 
+		<if test="shopid != null and shopid !=''">
+			and b.shopid=#{shopid} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and b.sheetid=#{sheetid} 
+		</if>
+		<if test="fphm != null and fphm !=''">
+			and a.rtfphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.rtkprq &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.rtkprq &lt;= #{enddate} 
+		</if>
+		order by a.rtkprq desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	
+	<select id="getbillreportForsum" resultType="NewHashMap"  parameterType="NewHashMap">
+		select SUM(totalamt) as zamt from invque a,invque_list b,invoice_head c where a.iqseqno=b.iqseqno and a.iqseqno=c.iqseqno
+		and a.iqentid=#{entid} 
+		and a.iqsource='1' 
+		<if test="shopid != null and shopid !=''">
+			and b.shopid=#{shopid} 
+		</if>
+		<if test="sheetid != null and sheetid !=''">
+			and b.sheetid=#{sheetid} 
+		</if>
+		<if test="fphm != null and fphm !=''">
+			and a.rtfphm=#{fphm} 
+		</if>
+		<if test="startdate != null and startdate !=''">
+			and a.rtkprq &gt;= #{startdate} 
+		</if>
+		<if test="enddate != null and enddate !=''">
+			and a.rtkprq &lt;= #{enddate} 
+		</if>
+		order by a.rtkprq desc
+	</select>
+	
+	<!-- For 高灯回调接口 -->
+	<select id="queryInvoiceHeadByCallGD" resultType="com.invoice.bean.db.InvoiceHead"  parameterType="Map">
+		select * from invoice_head where iqseqno=#{iqseqno}
+	</select>
+	
+	<update id="updateInvoiceStatus" parameterType="com.invoice.bean.db.InvoiceHead">
+		update invoice_head 
+		set status=#{status},fpDM=#{fpDM},fpHM=#{fpHM},fpskm=#{fpskm},fpjym=#{fpjym},fpewm=#{fpewm},pdf=#{pdf}
+		where iqseqno=#{iqseqno} and status != 100
+	</update>
+	
+</mapper>

@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amaze.min.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="../assets/js/qrcode.lib.min.js"></script>
+		<script src="../assets/js/qrcode.js"></script>
+		<script src="js/invoiceView.js"></script>
+		<script src="../js/time.js"></script>
+		
+		
+		<style type="text/css">
+		
+		</style>
+	</head>
+	<body>
+		<div class="am-panel am-panel-success" id="accordion">
+		  <h3 class="am-panel-hd am-margin-0">发票信息</h3>
+		  <div class="am-panel-bd">
+		  <table>
+		  <tbody>
+		    <tr>
+		      <td>发票代码：</td><td id="rtfpdm"></td>
+		    </tr>
+		     <tr>
+		      <td>发票号码：</td><td id="rtfphm"></td>
+		    </tr>
+		     <tr>
+		      <td>开票日期：</td><td id="iqdate"></td>
+		    </tr>
+		    <tr>
+		      <td>无税金额：</td><td id="iqtotje"></td>
+		    </tr>
+		     <tr>
+		      <td>发票状态：</td><td id="iqstatus"></td>
+		    </tr>
+		  </tbody>
+		  </table> 
+		  </div>
+		</div>
+		
+		<div class="am-panel am-panel-success">
+		  <div class="am-panel-hd ">
+		  小票信息
+		  </div>
+		  <div class="am-panel-bd" id="quelist">
+			  </div>
+		  </div>
+		
+		<div class="am-g am-text-center">
+			<a class="am-btn am-btn-warning am-btn-lg" id="downpdf" href="#" target="_blank">
+			</a>
+		</div>
+		
+		<div class="am-g am-text-center am-margin-top-sm">
+			<a class="am-btn am-btn-success am-btn-lg" id="back" href="javascript:history.back(-1)" target="_self">
+				返回
+			</a>
+		</div>
+		
+		<div class="am-g am-margin-top">
+			<div>注意：下载后请使用PDF Reader阅读工具打开。</div>
+		    <div>　　　电子发票具有纸质发票同等法律效力。</div>
+		</div>
+		
+	</body>
+</html>

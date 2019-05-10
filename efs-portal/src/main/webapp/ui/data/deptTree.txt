@@ -1,0 +1,5 @@
+[	
+	{"name":"shop", "id":"shop", expanded: true},
+	{"name":"module", "id":"cw", expanded: true},
+	{"name":"goods", "id":"yw", expanded: true},	
+]

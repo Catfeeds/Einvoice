@@ -1,0 +1,343 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>
+		角色管理
+	</title>
+	
+ 	<link rel="stylesheet" href="../assets/css/admin.css">						 														
+	<link rel="Stylesheet" type="text/css" href="../css/comm/base.css"/>
+	<link rel="Stylesheet" type="text/css" href="../css/comm/B000003.css"/>	
+	<link rel="stylesheet" href="../assets/css/amazeui.min.css"/>	  								
+	<script type="text/javascript" src="../jq/jquery/jquery-1.8.0.js"></script>				
+	<script src="../js/comm/myApp.js"></script>	
+	
+	<style type="text/css">
+    	.module{
+			float:left;margin-top:5px;margin-bottom:5px;margin-left:10px;margin-right:10px;
+			height:30px;border: 3px solid #FFF;-webkit-box-shadow:0 0 3px rgba(0,0,0,.35);
+			padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px;min-width:140px;
+		}	
+		
+		.control{
+			float:left;margin-top:5px;margin-bottom:5px;margin-left:10px;margin-right:10px;
+			height:30px;border: 3px solid #FFF;-webkit-box-shadow:0 0 3px rgba(0,0,0,.35);
+			padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px;min-width:140px;
+		}				
+		.am-checkbox{
+			margin:1;
+			padding-left:0px;
+			padding-bottom:10px;	
+		}
+		.am-ucheck-icons{
+			margin-top:3px;
+		}
+    </style>
+														 							
+</head>
+<body>	
+	
+		<div class="sys-curd-div" style="width:100%;margin-top:5px;">		
+			<div style="float:left;margin-left:10px;">
+				<button id="btn-add" type="button" class="am-btn am-btn-primary" onclick="addrow()"><span class="am-icon-plus"></span> 新增</button>
+			</div>	
+			
+			<div style="float:right;margin-right:20px;">
+				<button id="btn-search" type="button" class="am-btn am-btn-primary" style="height:36px"><span class="am-icon-search"></span> 搜索</button>							
+			</div>
+			<div style="float:right;">
+				<input type="text" id="edt-search" class="am-form-field">							
+			</div>											
+		</div>		
+		
+		<div style="width:100%;margin-top:45px;">
+			<hr style="width:100%;height:0px;margin-bottom:0px;" color="#D0D0D0" ></hr>
+		</div>
+		
+		<!-- 表头 -->
+		<div id="tabletitle" style="position:absolute;top:45px;left:10px;right:10;overflow:hidden;border-top-left-radius:8px;border-top-right-radius: 8px;">
+			<table>	
+				<tr width="100%">				
+					<td>					
+						<table class="am-table am-table-striped am-table-hover table-main" style="font-size:12px;table-layout:fixed;padding:0;margin:0;">
+							<thead style="width:100%">
+								<tr style="text-align:left;width:100%;">					              		 					              			                		                	
+									<th width="60px"></th>  
+			              			<th width="60px">#</th>                		                		
+			                		<th width="150px">角色</th>
+			                		<th width="300px">备注</th>
+			                		<th width="120px">绑定账号数</th>
+			                		<th width="120px">可操作模块数</th>
+			                		<th width="400px">操作</th>			
+								</tr>
+							</thead> 			          		
+						</table>
+					</td>
+					<td style="width:11px;padding:0;margin:0;">	
+									
+					</td>
+				</tr>				
+			</table>
+		</div>		 
+		
+		<!-- 表体 -->
+		<div style="position:absolute;top:80px;bottom:20px;left:10px;right:10;overflow-y:auto;overflow-y:scroll;"
+			onscroll="document.getElementById('tabletitle').scrollLeft = this.scrollLeft;">
+				<table class="am-table am-table-striped am-table-hover table-main" style="font-size:12px;table-layout:fixed;padding:0;margin:0;">
+					<thead style="width:100%;display:none;">
+						<tr style="text-align:left;width:100%;">					              		 					              			                		                	
+							<th width="60px"></th>  
+	              			<th width="60px">#</th>                		                		
+	                		<th width="150px">角色</th>
+	                		<th width="300px">备注</th>
+	                		<th width="120px">绑定账号数</th>
+	                		<th width="120px">可操作模块数</th>
+	                		<th width="400px">操作</th>	
+						</tr>
+					</thead> 	
+					<tbody id="tabledata" style="height:100%;width:100%;padding:0;">
+		     		
+					</tbody>  			          		
+				</table>		
+		</div>
+	       
+		
+	    
+	    <div id="footer" class="sys-curd-div" style="position:absolute;height:20px;bottom:0px;left:0px;right:0px;z-index:9999;">
+	    	<table style="margin-left:10px;font-size:14px;">
+	    		<tr>	    		
+	    			<td>合共[</td>
+	    			<td id="totalcount" style="padding-left:3px;padding-right:3px"></td>
+	    			<td>]个角色的信息...</td>
+		    	</tr>
+	    	</table>
+	   	</div>																						
+						
+		<div class="am-modal am-modal-prompt" tabindex="-1" id="editform" >
+	  		<div class="am-modal-dialog">
+	    		<div class="am-modal-hd" style="height:60px;">
+	    			修改角色信息
+	    			<a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close style="font-size:22px;margin-right:10px;">&times;</a>
+	    		</div>
+	    		<hr style="width:100%;height:1px;margin:0;padding:0;" color="#3bb4f2"></hr>
+	    		<div class="am-modal-bd" style="height:200px">
+	    			<table width="100%" height="150px">
+	    				<tr>
+	    					<td style="width:100px;padding-top:8px;padding-left:20px;">
+	    						角色名称
+	    					</td>
+	    					<td style="padding-top:5px;">
+	     						<input type="text" id="rolename" class="am-modal-prompt-input">
+	     					</td>	 	      					      				
+	      				</tr>
+	      				<tr>
+	      					<td style="width:100px;padding-top:8px;padding-left:20px;">
+	    						备注
+	    					</td>
+	      					<td style="padding-top:4px;">
+	      						<input type="text" id="note" class="am-modal-prompt-input">
+	      					</td>
+	      				</tr>
+	      			</table>
+	    		</div>
+	    		<div class="am-modal-footer" style="height:50px;">
+	    			<span class="am-modal-btn" data-am-modal-confirm>保存</span>
+	      			<span class="am-modal-btn" data-am-modal-cancel>取消</span>	      		
+	    		</div>
+  			</div>
+		</div>	
+		
+		<div class="am-modal am-modal-prompt" tabindex="-1" id="newform">
+	  		<div class="am-modal-dialog">
+	    		<div class="am-modal-hd" style="height:60px;">
+	    			新增角色信息
+	    			<a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close style="font-size:22px;margin-right:10px;">&times;</a>
+	    		</div>
+	    		<hr style="width:100%;height:1px;margin:0;padding:0;" color="#3bb4f2"></hr>
+	    		<div class="am-modal-bd" style="height:200px">
+	    			<table width="100%" height="150px">
+	    				<tr>
+	    					<td style="width:100px;padding-top:8px;padding-left:20px;">
+	    						角色名称
+	    					</td>
+	    					<td style="padding-top:5px;">
+	     						<input type="text" id="rolename" class="am-modal-prompt-input">
+	     					</td>	 	      					      				
+	      				</tr>
+	      				<tr>
+	      					<td style="width:100px;padding-top:8px;padding-left:20px;">
+	    						备注
+	    					</td>
+	      					<td style="padding-top:4px;">
+	      						<input type="text" id="note" class="am-modal-prompt-input">
+	      					</td>
+	      				</tr>
+	      			</table>
+	    		</div>
+	    		<div class="am-modal-footer" style="height:50px;">
+	    			<span class="am-modal-btn" data-am-modal-confirm>保存</span>
+	      			<span class="am-modal-btn" data-am-modal-cancel>取消</span>	      		
+	    		</div>
+  			</div>
+		</div>						
+			
+		
+		<!-- 提示框 -->
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal-loading" >
+  			<div class="am-modal-dialog" style="height:150px;">
+  				<table height="100%" width="100%">
+  					<tr>
+  						<td valign="middle" >  						
+  							<center>	
+	  						<div class="am-modal-hd" id="msgcontent"></div>
+	    					<div class="am-modal-bd" id="loadingicon">
+	      						<span class="am-icon-spinner am-icon-spin" ></span>
+	    					</div>  
+	    					</center>  						
+  						</td>
+  					</tr>  				
+  				</table>    			
+  			</div>  		  		  		  		
+		</div>
+		
+		<!-- 处理中提示框 -->
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal-msg" >
+  			<div class="am-modal-dialog" style="height:150px;">
+  				<table height="100%" width="100%">
+  					<tr>
+  						<td valign="middle" >  							
+	  						<div class="am-modal-hd" id="msgcontent"></div>	    					  					
+  						</td>
+  					</tr>  				
+  				</table>    			
+  			</div>  		  		  		  		
+		</div>
+		
+		<!-- 确认选择框 -->
+		<div class="am-modal am-modal-confirm" tabindex="-1" id="my-modal-confirm" style="height:400px;">
+  			<div class="am-modal-dialog">
+    			<div class="am-modal-hd">
+    				询问
+    				<a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close style="font-size:22px;margin-right:10px;">&times;</a>
+    			</div>    
+    			<hr style="width:100%;height:2px;margin:0;padding:0;" color="#3bb4f2"></hr>			      				    			
+    			<table height="150px" width="100%" style="margin-top:50px;">
+  					<tr>
+  						<td valign="middle" >  							
+	  						<div class="am-modal-bd" id="msgcontent" style="height:150px;font-size:22px;">这里是询问信息	
+	  						</div>    					  					
+  						</td>
+  					</tr>  				
+  				</table>  
+  				
+    			<div class="am-modal-footer">
+    				<span class="am-modal-btn" data-am-modal-confirm>确定</span>
+      				<span class="am-modal-btn" data-am-modal-cancel>取消</span>      				
+    			</div>    		
+  			</div>
+		</div>
+		
+		<!-- ##################################################弹出页面####################################################### -->
+		<!-- 模块选择框 -->
+		<div class="am-modal am-modal-confirm" tabindex="-1" id="allot-module-form">
+	  		<div class="am-modal-dialog">
+	    		<div class="am-modal-hd">
+	    			请选择[<span id="role-module-title" style="color:#f0ad4e"></span>]可以使用的功能
+	      			<a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+	    		</div>
+	    		<hr style="width:100%;height:1px;margin:0;padding:0;" color="#3bb4f2"></hr>
+	    		<div class="am-modal-bd" align="left"  style="padding:0px">
+	    		  <table style="width:100%;height:100%;">
+	    		    <tr>
+	    		       <td style="width:15%;height:100%;border-right:1px solid #dedede" valign="top">
+	    		           <div  id="div_modulecontorl">
+	    		             
+	    		           </div>
+	    		       </td>
+	    		       <td style="width:85%;height:100%;">
+	    		            <div id="menu-list" style="padding-top:10px;padding-left:20px;overflow-y:scroll;height:350px;width:100%;"></div>	 
+	    		       </td>
+	    		    </tr>
+	    		</table>
+	    		</div>   		
+	    		<div class="am-modal-footer" style="height:40px;">
+	    			<span class="am-modal-btn" data-am-modal-confirm>保存</span>
+	      			<span class="am-modal-btn" data-am-modal-cancel>取消</span>	      		
+	    		</div>
+	  		</div>
+		</div>				
+		
+		<!-- ##################################################样本########################################################### -->
+		
+		<table id="rowsample" style="display:none;">	<!-- 这里就需要用table来取到tbody标签，否则tr td在转字符串时就被自动解析掉了 -->
+			<tr>
+       			<td width="60px"><input type="checkbox" style="margin-top:4px;"></td>
+       			<td width="60px">||serialid||</td>
+       			<td width="150px">||rolename||</td>
+       			<td width="300px">||note||</td>
+       			<td width="120px">||logincount||</td>
+       			<td width="120px">||modulecount||</td>
+       			<td style="padding-top:4px;padding-bottom:4px;" width="400px">
+       				<div class="am-btn-toolbar">
+             			<div class="am-btn-group am-btn-group-xs" >
+               				<button data-id="||roleid||" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="updaterow(||roleid||)" style="font-size:12px;">
+               					<span class="am-icon-pencil-square-o"></span> 编辑
+               				</button>
+               				<button class="am-btn am-btn-default am-btn-xs am-text-default" onclick="setmodule(||roleid||,'||rolename||')" style="font-size:12px;">
+               					<span class="am-icon-copy" ></span> 设置模块
+               				</button>
+               				<button class="am-btn am-btn-default am-btn-xs am-text-danger" onclick="deleterow(||roleid||)" style="font-size:12px;">
+               					<span class="am-icon-trash-o"></span> 删除
+               				</button>
+             			</div>
+           			</div>
+       			</td>
+          	</tr>            
+		</table>
+		
+		<div id="menusample" style="display:none;">
+			<div style="float:left;text-align:left;width:50%;margin-top:20px;">
+				<span class="am-badge am-badge-danger am-radius" style="font-weight:normal;font-size:16px;text-align:left;">
+					||menuname||
+				</span>
+			</div>
+			<div style="float:right;width:80px;margin-top:20px;margin-right:38px;">
+				<label class="am-checkbox" onmouseover="$(this).css('color','#3276b1')" style="padding-left:20px" onmouseout="$(this).css('color','#000000')">
+      				<input type="checkbox" value="" id="menu_all_||menuid||"  data-am-ucheck class="allcheck"
+      					onclick="menucheckboxclick(this,'#menu_||menuid||')"
+      				>全选
+    			</label>
+			</div>
+				
+			<hr style="float:left;width:100%;height:0px;margin-top:0px;margin-bottom:10px;" color="#D0D0D0" ></hr>
+			<div id="menu_||menuid||" class="menu-module-list" style="float:left;width:100%">				
+			</div>			
+		</div>
+
+		<div id="modulesample" style="display:none;">
+			<div class="module" onmouseover="$(this).css('background-color','#ffffff')" onmouseout="$(this).css('background-color','#f8f8f8')">
+				<label class="am-checkbox" onmouseover="$(this).css('color','#3276b1')" style="padding-left:20px" onmouseout="$(this).css('color','#000000')">
+      				<input type="checkbox" value="" data-moduleid="||moduleid||" id="module_||moduleid||"  data-am-ucheck
+      				onclick="modulecheckboxclick(||menuid||)"> 
+      				||modulename||
+    			</label>
+			</div>
+		</div>
+		
+		<div id="modulecontrolsample" style="display:none;">
+			<div class="control" onmouseover="$(this).css('background-color','#ffffff')" onmouseout="$(this).css('background-color','#f8f8f8')">
+				<label class="am-checkbox" onmouseover="$(this).css('color','#3276b1')" style="padding-left:20px" onmouseout="$(this).css('color','#000000')">
+      				<input  class="control_check" type="checkbox" value=""   data-controlid="||controlid||" id="control_||controlid||"  data-am-ucheck > 
+      				||controlname||
+    			</label>
+			</div>
+		</div>
+		
+								
+	<!-- JS -->  						  		  			
+	<script src="../assets/js/amazeui.min.js"></script>	
+ 	<script type="text/javascript" src="../js/comm/B000003.js"></script>	<!-- 引入基类JS文件 -->	
+	<script type="text/javascript" src="../js/module/J700001.js"></script>	<!-- 引入模块JS文件 -->					
+																
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.TaxinfoDao">	
+
+ <select id="queryTaxinfo" resultType="NewHashMap">
+		select a.*,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 3 and a.TAXMODE=c.FIELDVALUE) as lookup,
+        (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 8 and a.ITFeqpttype=c.FIELDVALUE) as lookup1
+        from taxinfo a
+        WHERE entid = #{entid}
+        <if test="taxno != null and taxno != ''">
+			and taxno = #{taxno}
+		</if>
+		<if test="taxname != null and taxname != ''">
+			and taxname like CONCAT('%',#{taxname},'%') 
+		</if> 
+         order by entid desc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+  </select>
+  
+	
+  <select id="getTaxinfoByNo" parameterType="com.invoice.bean.db.Taxinfo" resultType="com.invoice.bean.db.Taxinfo">
+        select * from Taxinfo where taxno = #{taxno} and entid = #{entid}     
+  </select>
+ 
+  <select id="getTaxinfoItemByNo" parameterType="com.invoice.bean.db.Taxinfo" resultType="com.invoice.bean.db.Taxinfo">
+        select * from taxinfoitem where itfkpd=#{itfkpd} and taxno = #{taxno} and entid = #{entid}     
+  </select>
+	
+	<insert id="insertTaxinfo" parameterType="com.invoice.bean.db.Taxinfo">
+		insert into Taxinfo(entid,taxno,taxname,taxadd,taxbank,taxperson,taxmode,itfkpd,itfeqpttype,itfskpbh,itfskpkl,itfkeypwd,itfbbh,itfserviceUrl,itfjrdm)
+		values(#{entid},#{taxno},#{taxname},#{taxadd},#{taxbank},#{taxperson},#{taxmode},#{itfkpd},#{itfeqpttype},#{itfskpbh},#{itfskpkl},#{itfkeypwd},#{itfbbh},#{itfserviceUrl},#{itfjrdm})
+	</insert>
+	
+	<delete id="deleteTaxinfo" parameterType="com.invoice.bean.db.Taxinfo" >	
+		delete from Taxinfo where entid= #{entid} and taxno =#{taxno}
+	</delete>	
+	
+	<update id="updateTaxinfo" parameterType="com.invoice.bean.db.Taxinfo">
+		update Taxinfo set  entid =#{entid}, taxno =#{taxno},  taxname =#{taxname},  taxadd =#{taxadd},  taxbank =#{taxbank},  taxperson =#{taxperson},  taxmode =#{taxmode},  itfkpd =#{itfkpd},  itfeqpttype =#{itfeqpttype},  itfskpbh =#{itfskpbh},  itfskpkl =#{itfskpkl},  itfkeypwd =#{itfkeypwd},  itfbbh =#{itfbbh},  itfserviceUrl =#{itfserviceUrl},  itfjrdm =#{itfjrdm}  where  taxno =#{taxno}
+	</update>
+
+   <select id="getTaxinfoCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Taxinfo where entid= #{entid}
+        <if test="taxno != null and taxno != ''">
+			and taxno = #{taxno}
+		</if>
+		<if test="taxname != null and taxname != ''">
+			and taxname like CONCAT('%',#{taxname},'%') 
+		</if> 
+    </select>
+
+   <select id="getTaxnoSelect" resultType="com.invoice.bean.ui.Option" parameterType="java.lang.Integer">
+		select taxno as value, taxname as name from taxinfo where entid=#{entid}
+   </select>
+  
+    <select id="getTaxprintinfoByNo" parameterType="com.invoice.bean.db.Taxprintinfo" resultType="com.invoice.bean.db.Taxprintinfo">
+        select * from taxprintinfo where flag=1 and kpd=#{kpd} and taxno = #{taxno} and entid = #{entid}     
+  </select>
+  
+</mapper>

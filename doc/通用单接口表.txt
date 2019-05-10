@@ -1,0 +1,44 @@
+CREATE TABLE `invoice_sheet_head` (
+  `ENTID` varchar(20) NOT NULL COMMENT '企业ID，写固定值',
+  `SHEETID` varchar(30) NOT NULL COMMENT '单据编码，保证唯一',
+  `SHEETTYPE` varchar(5) NOT NULL COMMENT '单据类型，写死7',
+  `INVOICELX` varchar(3) DEFAULT NULL COMMENT '发票类型，电子票写死为026',
+  `SHOPID` varchar(30) NOT NULL COMMENT '店ID，这里就是结算主体的ID',
+  `TOTALAMOUNT` decimal(12,2) DEFAULT NULL COMMENT '总含税金额，填入单据的总金额',
+  `TRADEDATE` date DEFAULT NULL COMMENT '交易日期，单据的审核日期',
+  `REMARK` varchar(50) DEFAULT NULL COMMENT '备注，此处会写到发票的备注栏，如果没有填空',
+  `GMFNO` varchar(40) DEFAULT NULL COMMENT '购买方识别ID，填租户的唯一ID',
+  `GMFTAX` varchar(20) DEFAULT NULL COMMENT '购买方税号，租户的纳税号',
+  `GMFNAME` varchar(100) DEFAULT NULL COMMENT '购买方名称，租户的发票抬头名',
+  `GMFADD` varchar(100) DEFAULT NULL COMMENT '购买方地址电话，可以不填',
+  `GMFBANK` varchar(100) DEFAULT NULL COMMENT '购买方银行账号，可以不填',
+  `RECVPHONE` varchar(20) DEFAULT NULL COMMENT '收票电话，填空',
+  `RECVEMAIL` varchar(40) DEFAULT NULL COMMENT '收票邮箱，开票成功后会发到这个邮件',
+  `ISAUTO` int(11) DEFAULT '0' COMMENT '是否自动开具 1=自动，填入1',
+  `FLAG` int(11) DEFAULT '0' COMMENT '提取标记 0=待提取 10=已提取 100=已开票，填入0',
+  `FLAGMSG` varchar(2000) DEFAULT NULL COMMENT '提取信息',
+  `INVOICECODE` varchar(16) DEFAULT NULL COMMENT '发票代码（发票开具后回写）',
+  `INVOICENO` varchar(16) DEFAULT NULL COMMENT '发票号码',
+  `INVOICEDATE` date DEFAULT NULL COMMENT '发票PDF文件地址',
+  `PDFURL` varchar(1000) DEFAULT NULL COMMENT '开票日期',
+  `extSheetid` varchar(30) DEFAULT NULL COMMENT '相关单号，填空',
+  `CREATETIME` datetime DEFAULT NULL COMMENT '数据写入时间',
+  PRIMARY KEY (`SHEETID`,`SHEETTYPE`,`ENTID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `invoice_sheet_detail` (
+  `ENTID` varchar(20) NOT NULL COMMENT '企业ID，表头主键列',
+  `SHEETID` varchar(30) NOT NULL COMMENT '单据编码，表头主键列',
+  `SHEETTYPE` varchar(5) NOT NULL COMMENT '单据类型，表头主键列',
+  `ROWNO` int(11) NOT NULL COMMENT '行号',
+  `CATEGORYID` varchar(10) DEFAULT NULL COMMENT '类别ID，可以空',
+  `GOODSID` varchar(30) NOT NULL COMMENT '商品ID，填入费用编码',
+  `GOODSNAME` varchar(80) NOT NULL COMMENT '商品名称，填入费用名称',
+  `TAXITEMID` varchar(30) NOT NULL COMMENT '税目ID，填空',
+  `QTY` decimal(12,4) DEFAULT NULL COMMENT '数量，填1？',
+  `UNIT` varchar(20) DEFAULT NULL COMMENT '单位，可以空',
+  `SPEC` varchar(20) DEFAULT NULL COMMENT '规格，可以空',
+  `AMT` decimal(12,2) NOT NULL COMMENT '含税金额，填写实收金额',
+  PRIMARY KEY (`SHEETID`,`SHEETTYPE`,`ENTID`,`ROWNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

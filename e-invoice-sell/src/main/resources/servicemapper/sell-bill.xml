@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.BillDao">
+
+	<select id="test" resultType="NewHashMap">
+		select 1 from v_sellhead where 1=2
+	</select>
+	
+	<select id="getHead" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellhead where shopid=#{shopid} and syjid=#{syjid} and billno=#{billno} and status in ('1')
+	</select>
+	
+	<select id="getHeadRet" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellhead where shopid=#{shopid} and refsheetid=#{refsheetid} and status in ('4')
+	</select>
+	
+	<select id="getDetail" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_selldetail where sheetid=#{sheetid}
+	</select>
+	
+	<select id="getPayment" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellpayment where sheetid=#{sheetid}
+	</select>
+	
+	<select id="getList" resultType="NewHashMap" parameterType="NewHashMap">
+	<![CDATA[
+		SELECT
+		  distinct *
+		FROM
+		 invoice_sheet_itf a
+		 where a.flag=0 and rownum< 10000
+	]]>
+	</select>
+	
+	<update id="callbackSheet" parameterType="NewHashMap">
+		update invoice_sheet_itf
+		   set 
+		   	   <if test="flagmsg!=null">
+		   	   flagmsg=#{flagmsg},
+		   	   </if>
+		   	   <if test="invoiceCode!=null">
+		       invoiceCode=#{invoiceCode},
+		       </if>
+		       <if test="invoiceno!=null">
+		       invoiceNo=#{invoiceNo},
+		       </if>
+		       <if test="invoiceDate!=null">
+		       invoiceDate=#{invoiceDate},
+		       </if>
+		       <if test="pdfurl!=null">
+		       pdfurl=#{pdfurl},
+		       </if>
+		       <if test="recvemail !=null">
+		       recvemail=#{recvemail},
+		       </if>
+		       <if test="recvphone !=null">
+		       recvphone=#{recvphone},
+		       </if>
+		       flag=#{flag}
+		 where sheetid=#{sheetid} and sheettype=1
+	</update>
+
+</mapper>

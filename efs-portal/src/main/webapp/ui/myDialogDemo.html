@@ -1,0 +1,913 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>对话框示例</title>
+
+<script type="text/javascript" src="../jq/jquery/jquery-1.8.0.js"></script>    
+<link rel="Stylesheet" type="text/css" href="../../css/dialog.css" />
+
+</head>
+<body>		
+
+<div>		
+
+  <div id="allmsg">
+  	<div><!-- 这里一定要多一层div，否则用jquery无法find到msg.... -->
+		<div id="msg">
+    		<div id="MyDialog">        		        			
+        			<div id="dialogtitle">
+        				<span id="dialogtitletext" style="position:relative;left:10px;top:10px;font-size:18px;">消息</span>
+        			</div>
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="font-size:18px;cursor:pointer;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×            			
+            		</div>            			
+        		      	
+        		    <div width="100%" style="position:relative;color:#000000;top:50px;">
+        		    		<table style="text-align:center;">
+							<tr>
+								<td id="dialogcontent" style="vertical-align:middle;height:30px;padding-left:40px;padding-right:20px;font-size:18px;">										
+										消息的内容										
+								</td>
+							</tr>																					
+						</table>       		    		
+        		    </div> 
+        		    
+        		   	<div style="position:absolute;left:217px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<button id="confirm" class="btn btn-xs btn-success" style="font-size:18px;" onclick="javascript:closeMyDialog()">
+										<i class="icon-check" style="margin-right:10px"></i>确认	
+									</button>
+								</td>
+							</tr>
+						</table>										
+					</div>		
+    		</div>
+    	</div>	     	
+    
+    	<div id="ask">
+    		<div id="MyDialog">    	    					
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;font-size:18px;">询问</span>
+					</div>
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="font-size:18px;cursor:pointer;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×            			
+            		</div>                 		        		       			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:50px;">
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="dialogcontent" style="vertical-align:middle;height:30px;padding-left:40px;padding-right:20px;font-size:18px;">										
+										消息的内容										
+								</td>
+							</tr>																					
+						</table>							        		    		
+        		    </div>        		              		            		    					
+					
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:50px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;font-size:18px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:25px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->
+    				</div>  					
+        		    
+        		    <div id="dialogSelect" style="position:absolute;left:140px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>									
+									<button id="confirm" class="btn btn-xs btn-success" style="font-size:18px;">
+										<i class="icon-check" style="margin-right:10px"></i>确认	
+									</button>
+								</td>
+								<td>
+									<button id="cancel" class="btn btn-xs btn-warning" style="font-size:18px;margin-left:10px;" onclick="javascript:closeMyDialog()">
+										<i class="icon-share" style="margin-right:10px"></i>取消	
+									</button>
+								</td>
+							</tr>
+						</table>										
+					</div>		
+					<div id="dialogOK" style="position:absolute;left:217px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>									
+									<button id="okbtn" class="btn btn-xs btn-success" style="font-size:18px;" onclick="javascript:closeMyDialog()">
+										<i class="icon-check" style="margin-right:10px"></i>确认	
+									</button>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>
+    	</div>
+    	
+    	<div id="loading">
+    		<div id="MyDialog">    	    					
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;font-size:18px;">执行中</span>
+					</div>
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="font-size:18px;cursor:pointer;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×            			
+            		</div>                 		        		       			        		      	        		              		            		    					
+					
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:50px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;font-size:18px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:25px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->
+    				</div>  					
+        		            		    
+					<div id="dialogOK" style="position:absolute;left:217px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>									
+									<button id="okbtn" class="btn btn-xs btn-success" style="font-size:18px;" onclick="javascript:closeMyDialog()">
+										<i class="icon-check" style="margin-right:10px"></i>确认	
+									</button>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>
+    	</div>	 
+    	
+    	
+    	<div id="input">
+    		<div id="MyDialog">    	    		
+    				    			    		    				
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">询问</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+            		</div>                     	            		   			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:10px;padding-left:18px;padding-right:28px;">        		            		      						
+						<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+							<tr width="280px">								
+								<td id="dialogcontent" align=left width="100%"> 																			
+																											
+								</td>
+							</tr>						
+							<tr id="inputvaluetext" width="100%">
+								<td align=left width="100%">																												
+										<textarea id="inputvalue" style="width:100%;height:120px;"></textarea>																										
+								</td>
+							</tr>																														
+						</table>							        		    		
+        		    </div>
+        		            		            		    
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:50px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	    
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:25px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->										
+    				</div>  
+    				        		    
+
+        		    
+        		    <div id="dialogSelect" style="position:absolute;left:120px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img id="confirm" width="90px" height="28px" src="../images/button/oklongbtn1.png"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+								<td>
+									<img style="padding-left:5px;" width="90px" height="28px" src="../images/button/cancellongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/cancellongbtn2.png'" onmouseout="this.src='../images/button/cancellongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		
+					<div id="dialogOK" style="position:absolute;left:217px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img width="90px" height="28px" src="../images/button/oklongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>
+    	</div>	  
+    	
+    	<!-- iframe -->
+		<div id="iframe">           	  
+    		<div id="MyDialog" style="width:80%;height:80%">   
+    				<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">窗口</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeiframe()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+           			</div>	     
+           					        			
+        			<iframe id="myiframe" src="http://www.baidu.com" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>	
+    		</div>
+    	</div>
+    	
+    	
+    	
+    	<!-- 订单任务高级查询对话框 -->
+    	<div id="taskfind">
+    			<div id="MyDialog" style="width:660px;height:50%">    	    		
+    			  			    		    				
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">询问</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+            		</div>                     	            		   			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:10px;padding-left:0px;padding-right:28px;">        		            		      						
+						<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+							<tr width="280px">								
+								<td id="dialogcontent" align=left width="100%" style="color:red;">																		
+																											
+								</td>
+							</tr>						
+							<tr id="findfield" width="100%">
+								<td align=left width="100%">																												
+									<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+										<tr height="40px">																				
+											<td style="width:150px;text-align:right;padding-left:60px;padding-right:10px;padding-bottom:3px;">订单任务号</td>												
+											<td style="width:200px;text-align:left;">
+												<input type="text" class="find_field" style="height:22px;width:142px;padding-left:8px;" id="find_taskid" placeholder="" />
+											</td>
+										
+											<td style="width:150px;text-align:right;padding-right:10px;padding-bottom:1px;">客户标识</td>											
+											<td style="width:150px;text-align:left;">
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='find_clientsign' class='diy_select_input find_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_clientsign" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>												
+											</td>																	
+										</tr>	
+									
+										<tr height="40px">
+											<td style="width:150px;text-align:right;padding-right:10px;padding-bottom:1px;">渠道</td>											
+											<td style="width:200px;text-align:left;">			
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='find_channelsign' class='diy_select_input find_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_channelsign" class='diy_select_list'>	 																
+		 											</ul>			 												
+												</div>
+											</td>
+											
+											<td style="width:150px;text-align:right;padding-left:60px;padding-right:10px;padding-bottom:1px;">交货日期</td>												
+											<td style="width:150px;text-align:left;">
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='find_deliverydatecontrol' class='diy_select_input find_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_deliverydatecontrol" class='diy_select_list'>
+	 																	
+		 											</ul>			 												
+												</div>
+											</td>
+										</tr>	
+										
+										<tr height="40px">
+											<td style="width:150px;text-align:right;padding-right:10px;padding-bottom:3px;">收货人姓名</td>											
+											<td style="width:200px;text-align:left;">
+												<input  type="text" class="find_field" style="height:22px;width:142px;padding-left:8px;" id="find_receivername" placeholder="模糊匹配" />
+											</td>
+											
+											<td style="width:150px;text-align:right;padding-left:60px;padding-right:10px;padding-bottom:3px;">收货人电话</td>												
+											<td style="width:150px;text-align:left;">
+												<input type="text" class="find_field" style="height:22px;width:142px;padding-left:8px;" id="find_receiverphone" placeholder="可以输入手机或者固话" />
+											</td>
+										</tr>	
+										
+										<tr height="40px">
+											<td style="width:150px;text-align:right;padding-right:10px;padding-bottom:1px;">交货方式</td>											
+											<td style="width:200px;text-align:left;">												
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='find_transporttype' class='diy_select_input find_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_transporttype" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>
+											</td>
+											
+											<td style="width:150px;text-align:right;padding-left:60px;padding-right:10px;padding-bottom:1px;">物流方式</td>												
+											<td style="width:150px;text-align:left;">												
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='find_logisticsname' class='diy_select_input find_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_logisticsname" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>
+											</td>
+										</tr>		
+										
+										<tr height="40px">
+											<td style="width:150px;text-align:right;padding-right:10px;padding-bottom:1px;">是否需要发票</td>											
+											<td style="width:200px;text-align:left;">												
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='find_invoiceneed' class='diy_select_input find_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_invoiceneed" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>
+											</td>
+											
+											<td style="width:150px;text-align:right;padding-left:60px;padding-right:10px;padding-bottom:3px;">发票抬头</td>												
+											<td style="width:150px;text-align:left;">
+												<input type="text" class="find_field" style="height:22px;width:142px;padding-left:8px;" id="find_invoicetitle" placeholder="模糊匹配" />
+											</td>
+										</tr>																																									
+									</table>																													
+								</td>
+							</tr>																														
+						</table>																													        		    		
+        		    </div>
+        		            		            		    
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:100px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	    
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:75px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->										
+    				</div>  
+    				
+        		    <div id="clearbtn" style="position:absolute;left:60px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img id="clear" width="90px" height="28px" src="../images/button/clearlongbtn1.png" onclick="javascript:clearfindfield()"
+										onmouseover="this.src='../images/button/clearlongbtn2.png'" onmouseout="this.src='../images/button/clearlongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>	    				
+    				        		            		    
+        		    <div id="dialogSelect" style="position:absolute;right:30px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img id="confirm" width="90px" height="28px" src="../images/button/oklongbtn1.png"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+								<td>
+									<img style="padding-left:5px;" width="90px" height="28px" src="../images/button/cancellongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/cancellongbtn2.png'" onmouseout="this.src='../images/button/cancellongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		
+					<div id="dialogOK" style="position:absolute;right:20px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img width="90px" height="28px" src="../images/button/oklongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>    		    		    		    		
+    	</div>	
+    	
+    	
+    	<div id="setorderby">
+    			<div id="MyDialog" style="width:360px;height:50%">    	    		
+    			  			    		    				
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">排序设置</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+            		</div>                     	            		   			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:10px;padding-left:18px;padding-right:28px;">        		            		      						
+					<table width="100%" style="vertical-align:middle;margin-left:12px;margin-right:12px;" cellSpacing=0 cellPadding=0 align=left border=0>
+							<tr width="280px">								
+								<td id="dialogcontent" align=left width="100%" style="color:red;">																		
+																											
+								</td>
+							</tr>						
+							<tr id="findfield" width="100%">
+								<td align=left width="100%">																												
+									<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+										<tr height="42px">
+											<td width="10%" style="padding-left:10px;"></td>											
+											<td width="35%" style="padding-left:10px;">方向</td>
+											<td width="55%" style="padding-left:10px;;">排序列</td>
+										</tr>
+										
+										<tr height="42px">								
+											<td style="text-align:right;padding-right:10px;padding-bottom:1px;text-align:left">1</td>				
+											<td style="width:200px;text-align:left;">																										
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:100px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_way1' class='diy_select_input orderby_way'/>											
+		 											<div class='diy_select_txt'>升序</div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>
+		 												<li>升序</li>
+		 												<li>降序</li>	 																
+		 											</ul>			 												
+												</div>
+											</td>																					
+											<td style="width:200px;text-align:left;">														
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_value1' class='diy_select_input orderby_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>	
+ 	 																
+		 											</ul>			 												
+												</div>
+											</td>											
+										</tr>	
+																				
+										<tr height="42px">								
+											<td style="text-align:right;padding-right:10px;padding-bottom:1px;text-align:left">2</td>			
+											<td style="width:200px;text-align:left;">															
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:100px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_way2' class='diy_select_input orderby_way'/>											
+		 											<div class='diy_select_txt'>升序</div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>
+		 												<li>升序</li>
+		 												<li>降序</li>	 																
+		 											</ul>			 												
+												</div>
+											</td>																					
+											<td style="width:200px;text-align:left;">			
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_value2' class='diy_select_input orderby_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>	
+ 	 																
+		 											</ul>			 												
+												</div>
+											</td>											
+										</tr>	
+										
+										<tr height="42px">								
+											<td style="text-align:right;padding-right:10px;padding-bottom:1px;text-align:left">3</td>				
+											<td style="width:200px;text-align:left;">														
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:100px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_way3' class='diy_select_input orderby_way'/>											
+		 											<div class='diy_select_txt'>升序</div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>
+		 												<li>升序</li>
+		 												<li>降序</li>	 																
+		 											</ul>			 												
+												</div>
+											</td>																					
+											<td style="width:200px;text-align:left;">			
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_value3' class='diy_select_input orderby_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>	
+		 													 	 																
+		 											</ul>			 												
+												</div>
+											</td>											
+										</tr>	
+										
+										<tr height="40px">			
+											<td style="text-align:right;padding-right:10px;padding-bottom:1px;text-align:left">4</td>									
+											<td style="width:200px;text-align:left;">			
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:100px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_way4' class='diy_select_input orderby_way'/>											
+		 											<div class='diy_select_txt'>升序</div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>
+		 												<li>升序</li>
+		 												<li>降序</li>	 																
+		 											</ul>			 												
+												</div>
+											</td>																					
+											<td style="width:200px;text-align:left;">			
+												<!-- 下拉选择框 -->																					
+												<div class='diy_select' style="width:152px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='orderby_value4' class='diy_select_input orderby_field'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul class='diy_select_list'>	
+		 												 	 																
+		 											</ul>			 												
+												</div>
+											</td>											
+										</tr>																																														
+									</table>																													
+								</td>
+							</tr>																														
+						</table>																													        		    		
+        		    </div>
+        		            		            		    
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:100px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	    
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:75px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->										
+    				</div>  
+    				
+        		    <div id="clearbtn" style="position:absolute;left:30px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img id="clear" width="90px" height="28px" src="../images/button/savelongbtn1.png" onclick="javascript:saveorderby()"
+										onmouseover="this.src='../images/button/savelongbtn2.png'" onmouseout="this.src='../images/button/savelongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>	    				
+    				        		            		    
+        		    <div id="dialogSelect" style="position:absolute;right:30px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img id="confirm" width="90px" height="28px" src="../images/button/oklongbtn1.png"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+								<td>
+									<img style="padding-left:5px;" width="90px" height="28px" src="../images/button/cancellongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/cancellongbtn2.png'" onmouseout="this.src='../images/button/cancellongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		
+					<div id="dialogOK" style="position:absolute;right:20px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img width="90px" height="28px" src="../images/button/oklongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>    		    		    		    		
+    	</div>	
+    	
+    	
+    	<!-- 新增货架对话框 -->
+    	<div id="shelfinput">
+    			<div id="MyDialog" style="width:340px;height:350px;">    	    		
+    			  			    		    				
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">新增货架</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+            		</div>                     	            		   			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:10px;padding-left:0px;padding-right:28px;">        		            		      						
+						<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+							<tr width="280px">								
+								<td id="dialogcontent" align=left width="100%" style="color:red;">																		
+																											
+								</td>
+							</tr>						
+							<tr width="100%">
+								<td align=left width="100%">																												
+									<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+										<tr height="50px">																				
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架编码 :</td>												
+											<td style="width:200px;text-align:left;">
+												<input type="text" style="height:22px;width:180px;" id="shelfid" placeholder="" />
+											</td>
+										</tr>
+										<tr height="50px">
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架类型 :</td>											
+											<td style="width:200px;text-align:left;">
+												<div class='diy_select' style="width:182px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='shelftype' class='diy_select_input'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_shelftype" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>												
+											</td>																	
+										</tr>	
+										<tr height="50px">
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架分类 :</td>											
+											<td style="width:200px;text-align:left;">
+												<div class='diy_select' style="width:182px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='shelfkind' class='diy_select_input'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_shelfkind" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>												
+											</td>																	
+										</tr>
+										<tr height="50px">																				
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架层数 :</td>												
+											<td style="width:200px;text-align:left;">
+												<input type="text" style="height:22px;width:180px;" id="row" placeholder="" />
+											</td>
+										</tr>
+										<tr height="50px">																				
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架备注  :</td>												
+											<td style="width:200px;text-align:left;">
+												<input type="text" style="height:22px;width:180px;" id="note" placeholder="" />
+											</td>
+										</tr>
+																																																		
+									</table>																													
+								</td>
+							</tr>																														
+						</table>																													        		    		
+        		    </div>
+        		            		            		    
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:100px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	    
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:75px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->										
+    				</div>      				    			
+    				        		            		    
+        		    <div id="dialogSelect" style="">   
+        		    	<center>
+        		    		<img id="confirm" width="90px" height="28px" style="padding-top:30px;padding-bottom:30px;margin-right:20px" src="../images/button/oklongbtn1.png"
+								onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								
+							<img width="90px" height="28px" style="padding-top:30px;padding-bottom:30px;margin-left:20px" src="../images/button/cancellongbtn1.png" onclick="javascript:closeMyDialog()"
+								onmouseover="this.src='../images/button/cancellongbtn2.png'" onmouseout="this.src='../images/button/cancellongbtn1.png'"></img>
+        		    	</center>        		         		            		    										
+					</div>		
+					<div id="dialogOK" style="position:absolute;right:20px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img width="90px" height="28px" src="../images/button/oklongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>    		    		    		    		
+    	</div>    
+    	
+    	<!--修改货架对话框 -->
+    	<div id="shelfupdate">
+    			<div id="MyDialog" style="width:340px;height:350px;">    	    		
+    			  			    		    				
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">新增货架</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+            		</div>                     	            		   			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:10px;padding-left:0px;padding-right:28px;">        		            		      						
+						<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+							<tr width="280px">								
+								<td id="dialogcontent" align=left width="100%" style="color:red;">																		
+																											
+								</td>
+							</tr>						
+							<tr width="100%">
+								<td align=left width="100%">																												
+									<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+										<tr height="50px">																				
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架编码 :</td>												
+											<td style="width:200px;text-align:left;" id="shelfid"></td>
+										</tr>
+										<tr height="50px">
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架类型 :</td>											
+											<td style="width:200px;text-align:left;">
+												<div class='diy_select' style="width:182px;height:25px;text-align: left;">		
+													<input type='hidden' style="height:10px;width:10px;" id='shelftype' class='diy_select_input'/>											
+		 											<div class='diy_select_txt'></div>
+		 											<div class='diy_select_btn'></div>
+		 											<ul id="diy_select_shelftype" class='diy_select_list'>	 																	
+		 											</ul>			 												
+												</div>												
+											</td>																	
+										</tr>	
+										<tr height="50px">																				
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架层数 :</td>												
+											<td style="width:200px;text-align:left;">
+												<input type="text" style="height:22px;width:180px;" id="row" placeholder="" />
+											</td>
+										</tr>
+										<tr height="50px">																				
+											<td style="width:80px;text-align:left;padding-left:40px;padding-bottom:3px;">货架备注  :</td>												
+											<td style="width:200px;text-align:left;">
+												<input type="text" style="height:22px;width:180px;" id="note" placeholder="" />
+											</td>
+										</tr>
+																																																		
+									</table>																													
+								</td>
+							</tr>																														
+						</table>																													        		    		
+        		    </div>
+        		            		            		    
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:100px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	    
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:75px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->										
+    				</div>      				    			
+    				        		            		    
+        		    <div id="dialogSelect" style="">   
+        		    	<center>
+        		    		<img id="confirm" width="90px" height="28px" style="padding-top:30px;padding-bottom:30px;margin-right:20px" src="../images/button/oklongbtn1.png"
+								onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								
+							<img width="90px" height="28px" style="padding-top:30px;padding-bottom:30px;margin-left:20px" src="../images/button/cancellongbtn1.png" onclick="javascript:closeMyDialog()"
+								onmouseover="this.src='../images/button/cancellongbtn2.png'" onmouseout="this.src='../images/button/cancellongbtn1.png'"></img>
+        		    	</center>        		         		            		    										
+					</div>		
+					<div id="dialogOK" style="position:absolute;right:20px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img width="90px" height="28px" src="../images/button/oklongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>    		    		    		    		
+    	</div>    	
+    	
+    	<div id="ExpressInput">
+    		<div id="MyDialog">    	    		    				    			    		    				
+					<div id="dialogtitle">
+						<span id="dialogtitletext" style="position:relative;left:10px;top:10px;">询问</span>
+					</div>
+										
+        			<div id="dialogcloseBtn" onclick="javascript:closeMyDialog()" style="z-index:100000;cursor:pointer;top:-20px;" title="关闭窗口" class="dialogcloseBtn" onmouseover="$(this).css({color:'black'})" onmouseout="$(this).css({color:'#999'})" >            			
+            			×        		            			
+            		</div>                     	            		   			
+        		      	
+        		    <div id="content" width="100%" style="position:relative;color:#000000;top:10px;padding-left:18px;padding-right:28px;">        		            		      						
+						<table width="100%" style="vertical-align:middle;" cellSpacing=0 cellPadding=0 align=left border=0>
+							<tr width="280px">								
+								<td id="dialogcontent" align=left width="100%"> 																			
+																											
+								</td>
+							</tr>						
+							<tr height="50px">
+								<td style="width:120px;text-align:left;padding-left:20px;padding-bottom:3px;">快递 :</td>											
+								<td style="width:200px;text-align:left;">
+									<div class='diy_select' style="width:182px;height:25px;text-align: left;">		
+											<input type='hidden' style="height:10px;width:10px;" id="express" class='diy_select_input'/>											
+		 									<div class='diy_select_txt'></div>
+		 									<div class='diy_select_btn'></div>
+		 									<ul id="diy_select_express" class='diy_select_list'>	 																	
+		 									</ul>			 												
+									</div>												
+								</td>																	
+							</tr>	
+							<tr height="50px">																				
+								<td style="width:120px;text-align:left;padding-left:20px;padding-bottom:3px;">快递单号 :</td>												
+								<td style="width:200px;text-align:left;">
+										<input type="text" style="height:22px;width:180px;" id="expresssheetid" placeholder="" />
+								</td>
+							</tr>																													
+						</table>							        		    		
+        		    </div>
+        		            		            		    
+    				<div id="returndiv" width="100%" style="position:relative;color:#000000;top:50px;">    				    
+        		    	<table style="text-align:center;">
+							<tr>
+								<td id="returncontent" style="z-index:5000;vertical-align:middle;height:30px;padding-left:20px;padding-right:20px;">										
+										执行函数等待及返回...									
+								</td>
+							</tr>																					
+						</table>	    
+						
+						<!-- FULL WIDTH 进度条 -->
+						<div id="processDialog" style="position:relative;margin-left:25px;margin-right:25px;margin-top:25px;">
+							<span class="expand"></span>
+						</div>
+						<!-- END FULL WIDTH -->										
+    				</div>  
+    				        		    
+
+        		    
+        		    <div id="dialogSelect" style="position:absolute;left:120px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img id="confirm" width="90px" height="28px" src="../images/button/oklongbtn1.png"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+								<td>
+									<img style="padding-left:5px;" width="90px" height="28px" src="../images/button/cancellongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/cancellongbtn2.png'" onmouseout="this.src='../images/button/cancellongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		
+					<div id="dialogOK" style="position:absolute;left:217px;bottom:10px;">        		    
+        		    	<table>  		    	
+							<tr>
+								<td>
+									<img width="90px" height="28px" src="../images/button/oklongbtn1.png" onclick="javascript:closeMyDialog()"
+										onmouseover="this.src='../images/button/oklongbtn2.png'" onmouseout="this.src='../images/button/oklongbtn1.png'"></img>
+								</td>
+							</tr>
+						</table>										
+					</div>		   	
+    		</div>
+    	</div>	 	   
+	</div>    
+  </div>
+</div>  
+
+<script type="text/javascript" src="../newjs/comm/select.js"></script> 
+</body>
+</html>
+
+
+

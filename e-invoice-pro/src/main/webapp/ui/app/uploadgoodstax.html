@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+        <script src="../js/jquery.form.js"></script>
+        <script src="js/uploadgoodstax.js"></script>
+        <link rel="stylesheet" href="../assets/css/uploadfile.css" />
+        <script src="../assets/js/jquery.uploadfile.min.js"></script>
+    </head>
+	<body>
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">导入商品与税目对应关系</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span>导入商品与税目对应关系
+                    </div>
+                </div>
+                <div class="am-app-block">
+				  <div id="fileuploader">上传附件</div>
+				   <div class="caption font-green bold" id="erMsg">
+                        错误或重复商品编码
+                    </div>
+                <table class="am-table am-table-striped am-table-hover table-main">
+                    <thead>
+                        <tr>
+                            <th>商品代码</th>
+                            <th>商品名称</th>
+                            <th>税目代码</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rowTraget">
+                    	
+                    </tbody>
+                </table>
+                <table  style="display:none;">
+        	<tbody id="rowSample">
+        	<tr>
+                <td>||goodsid||</td>
+                <td>||goodsname||</td>
+                <td>||taxitemid||</td>
+                <td>||status||</td>
+            </tr>
+            </tbody>
+        </table>
+                </div>
+            </div>
+        </div>
+        <form id="myerrlsit" action="">
+        <input type="hidden" id="excelName" name="excelName" class="am-form-field">
+        </form>
+	</body>
+</html>

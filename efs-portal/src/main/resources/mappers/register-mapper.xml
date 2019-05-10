@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.efuture.portal.dao.db.one.RegisterDao">
+  
+  	<select id="findEnterpriseRegister" parameterType="string" resultType="RegisterBean">
+        select entid,registerid,sdate from enterpriseregister where entid = #{entid}
+  	</select>
+  
+  	<insert id="insertEnterpriseRegister" parameterType="RegisterBean">
+		insert into enterpriseregister(entid,registerid,sdate)
+		values(#{entid},#{registerid},now())
+	</insert>
+	
+  	<delete id="deleteEnterpriseRegister" parameterType="string" >	
+		delete from enterpriseregister where entid= #{entid}
+	</delete>	
+  
+  	<insert id="insertRegisterLog" parameterType="RegisterLogBean">
+		insert into enterpriseregisterlog(userid,entid,newregisterid,registerid,flag,sdate,inputdate)
+		values(#{userid},#{entid},#{newregisterid},#{registerid},#{flag},#{sdate},now())
+	</insert>
+	
+	<select id="findcompanyByentid" parameterType="String" resultType="int">
+	    select count(*) from company where entid = #{entid}
+	</select>
+  
+</mapper>

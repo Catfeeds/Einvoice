@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.InvoiceSaleDao">
+
+	<insert id="insertSaleHead" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		INSERT INTO invoice_sale_head 
+		(serialid, entid, sheetid, sheettype, shopid, syjid, billno, totalAmount, invoiceAmount, totalTaxFee, tradeDate, remark, createtime,gmftax,gmfname,gmfadd,gmfbank,gmfno,invoicelx,recvemail,recvphone,isauto) 
+		VALUES 
+		(#{serialid},#{entid},#{sheetid},#{sheettype},#{shopid},#{syjid},#{billno},#{totalamount},#{invoiceamount},#{totaltaxfee},#{tradedate},#{remark},#{createtime},#{gmftax},#{gmfname},#{gmfadd},#{gmfbank},#{gmfno},#{invoicelx},#{recvemail},#{recvphone},#{isauto})
+	</insert>
+	<insert id="insertSaleDetail" parameterType="java.util.List">
+		INSERT INTO invoice_sale_detail 
+		(serialid, entid, sheetid, sheettype, rowno, goodsid, goodsName, taxitemid, qty, unit, spec, price, amount, taxFee, taxRate,amt,oldAmt,isinvoice,taxpre,taxprecon,zerotax,tradeDate,categoryid,fphxz,zhdyhh) 
+		VALUES 
+		<foreach collection ="list" item="detail" index= "index" separator =",">
+		(#{detail.serialid}, #{detail.entid},#{detail.sheetid},#{detail.sheettype},#{detail.rowno},#{detail.goodsid},#{detail.goodsname},#{detail.taxitemid},#{detail.qty},#{detail.unit},#{detail.spec},#{detail.price},#{detail.amount},#{detail.taxfee},#{detail.taxrate},#{detail.amt},#{detail.oldamt},#{detail.isinvoice},#{detail.taxpre},#{detail.taxprecon},#{detail.zerotax},#{detail.tradedate},#{detail.categoryid},#{detail.fphxz},#{detail.zhdyhh})
+		</foreach >
+	</insert>
+	
+	<insert id="insertSalePay" parameterType="java.util.List">
+		INSERT INTO invoice_sale_pay
+		(serialid, entid, sheetid, sheettype, rowno, payid, payname, amt, isinvoice) 
+		VALUES 
+		<foreach collection ="list" item="detail" index= "index" separator =",">
+		(#{detail.serialid},#{detail.entid},#{detail.sheetid},#{detail.sheettype},#{detail.rowno},#{detail.payid},#{detail.payname},#{detail.amt},#{detail.isinvoice})
+		</foreach >
+	</insert>
+	
+	<delete id="deleteSaleHead" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		delete from invoice_sale_head where serialid=#{serialid}
+	</delete>
+	<delete id="deleteSaleDetail" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		delete from invoice_sale_detail where serialid=#{serialid}
+	</delete>
+	<delete id="deleteSalePay" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		delete from invoice_sale_pay where serialid=#{serialid}
+	</delete>
+	
+	<update id="updateInvoiceSaleFlag" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		update invoice_sale_head set flag=#{flag},iqseqno=#{iqseqno}
+		 where entid=#{entid}
+		   and sheettype = #{sheettype}
+		   and sheetid = #{sheetid}	
+	</update>
+	
+	<update id="lockedInvoiceSaleFlag" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		update invoice_sale_head set flag=1,iqseqno=#{iqseqno},backflag=0,recvemail=#{recvemail},recvphone=#{recvphone}
+		 where entid=#{entid}
+		   and sheettype = #{sheettype}
+		   and sheetid = #{sheetid}
+		   and flag != 1
+	</update>
+	
+	<update id="lockedInvoiceSaleDetailFlag" parameterType="com.invoice.bean.db.InvoiceSaleDetail">
+		update invoice_sale_detail set flag=1,iqseqno=#{iqseqno}
+		 where entid=#{entid}
+		   and sheettype = #{sheettype}
+		   and sheetid = #{sheetid}
+		   and rowno = #{rowno}
+		   and flag != 1
+	</update>
+	
+	<update id="lockedInvoiceSaleDetailFlag4All" parameterType="com.invoice.bean.db.InvoiceSaleDetail">
+		update invoice_sale_detail set flag=1,iqseqno=#{iqseqno}
+		 where entid=#{entid}
+		   and sheettype = #{sheettype}
+		   and sheetid = #{sheetid}
+		   and flag != 1
+	</update>
+	
+	<select id="countInvqueList" resultType="int" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		select count(*) from invoice_sale_detail 
+		 where entid=#{entid}
+		   and sheettype = #{sheettype}
+		   and sheetid = #{sheetid}
+		   and flag = 0
+		   and isinvoice='Y'
+	</select>
+	
+	<update id="unLockedInvoiceSaleFlag" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		update invoice_sale_head set flag=0,iqseqno=#{iqseqno}
+		 where entid=#{entid}
+		   and sheettype = #{sheettype}
+		   and sheetid = #{sheetid}
+		   and flag=1
+	</update>
+	
+	<!-- 银座-->
+	<update id="updateInvoiceSaleFlagByserialid" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		update invoice_sale_head set flag=#{flag},iqseqno=#{iqseqno},backflag=#{backflag}
+		 where serialid in (${serialid})  and entid=#{entid}
+	</update>
+
+	<select id="getInvoiceSaleHead" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.ui.ResponseBillInfo">
+		select a.*,c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd,b.shopname
+		from invoice_sale_head a
+		left join shop b on b.ENTID=a.entid and b.SHOPID=a.shopid
+		left join taxinfo c on c.ENTID=a.entid and c.TAXNO=b.TAXNO
+		where 1=1
+		and a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.sheetid = #{sheetid}
+		<if test="shopid != null">
+			and a.shopid=#{shopid}
+		</if>	
+	</select>
+	
+	<select id="getInvoiceSaleHeadByBillno" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.ui.ResponseBillInfo">
+		select a.*,c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd,b.shopname
+		from invoice_sale_head a
+		left join shop b on b.ENTID=a.entid and b.SHOPID=a.shopid
+		left join taxinfo c on c.ENTID=a.entid and c.TAXNO=b.TAXNO
+		where 1=1
+		and a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.billno = #{sheetid}
+		<if test="shopid != null">
+			and a.shopid=#{shopid}
+		</if>
+	</select>
+	
+	<select id="getInvoiceSaleHeadByGmfNo" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.ui.ResponseBillInfo">
+		select a.*,c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd
+		from invoice_sale_head a
+		left join shop b on b.ENTID=a.entid and b.SHOPID=a.shopid
+		left join taxinfo c on c.ENTID=a.entid and c.TAXNO=b.TAXNO
+		where 1=1
+		and a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.gmfno=#{gmfno}
+		and a.flag=0
+		<![CDATA[and a.invoiceAmount > 0]]>
+		
+		<if test="fplxdm != null">
+			and (a.invoicelx=#{fplxdm} or a.invoicelx ='' or a.invoicelx is null)
+		</if>
+	</select>
+	<!-- 直接查询开票数据清单 -->
+	<select id="getInvoiceSaleHeadList" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.ui.ResponseBillInfo">
+		select a.*,b.*,b.iqfplxdm invoicelx
+		from invoice_sale_head a
+		left join invque b on b.iqseqno=a.iqseqno
+		where 1=1
+		and a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		<if test="shopid != null">
+			and a.shopid = #{shopid}
+		</if>
+		<if test="sheetid != null">
+			and a.sheetid = #{sheetid}
+		</if>
+		<if test="syjid != null">
+			and a.syjid = #{syjid}
+		</if>
+		<if test="billno != null">
+			and a.billno = #{billno}
+		</if>
+		<if test="flag != null">
+			and a.flag = #{flag}
+		</if>
+		<if test="iqstatus != null">
+			and b.iqstatus = #{iqstatus}
+		</if>
+		limit 1000
+	</select>
+<!-- 银座-->
+	<select id="getInvoiceSaleHeadByiqseqno" parameterType="String" resultType="com.invoice.bean.ui.ResponseBillInfo">
+		select a.*,c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd
+		from invoice_sale_head a
+		left join shop b on b.ENTID=a.entid and b.SHOPID=a.shopid
+		left join taxinfo c on c.ENTID=a.entid and c.TAXNO=b.TAXNO
+		where 1=1
+		and a.serialid = #{iqseqno}
+	</select>
+	
+	<select id="getInvoiceSaleDetail" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.db.InvoiceSaleDetail">
+		select a.*
+		from invoice_sale_detail a 
+		where a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.sheetid = #{sheetid}	
+	</select>
+	
+	<select id="getInvoiceSaleDetailWithTaxName" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.db.InvoiceSaleDetail">
+		select a.*,e.taxitemname
+		from invoice_sale_detail a 
+	    join invoice_sale_head b on b.serialid=a.serialid
+	    join shop c on c.SHOPID=b.shopid and c.ENTID=b.entid
+	    join taxinfo d on d.taxno = c.TAXNO 
+	    left join taxitem e on e.taxversion=d.itfbbh and e.taxitemid=a.taxitemid
+		where a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.sheetid = #{sheetid}	
+	</select>
+	
+	<select id="getInvoiceSaleDetailRow" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.db.InvoiceSaleDetail">
+		select a.*
+		from invoice_sale_detail a 
+		where a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.sheetid = #{sheetid}
+		and a.rowno = #{rowno}
+	</select>
+	
+	<select id="getInvoiceSalePay" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.db.InvoiceSalePay">
+		select a.entid,a.sheetid,a.sheettype,a.payid,a.payname,sum(a.amt) amt,a.isinvoice from invoice_sale_pay a 
+		where a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.sheetid = #{sheetid}	
+		GROUP BY a.entid,a.sheetid,a.sheettype,a.payid,a.payname,a.isinvoice
+	</select>
+
+	<select id="getInvoiceSaleDetailList" parameterType="com.invoice.bean.db.InvoiceSaleDetail" resultType="com.invoice.bean.db.InvoiceSaleDetail">
+		select a.*
+		from invoice_sale_detail a 
+		where a.entid = #{entid}
+		and a.sheettype = #{sheettype}
+		and a.sheetid = #{sheetid}	
+		and a.rowno in (${goodsid})
+	</select>
+	
+	<select id="getTaxinfo" resultType="com.invoice.bean.db.Taxinfo" parameterType="com.invoice.bean.db.Taxinfo">
+		select * from Taxinfo where 1=1
+			and entid = #{entid}
+			and taxno = #{taxno}
+	</select>
+	<select id="getSaleDetailListByInvquelist" parameterType="NewHashMap" resultType="com.invoice.bean.db.InvoiceSaleDetail">
+		SELECT c.* from invque_list b,invoice_sale_detail c where 1=1 
+		and b.iqseqno =#{iqseqno}	
+		and b.serialid = c.serialid and b.sheetid = c.sheetid 
+		and c.entid = #{entid}
+	</select>
+	
+	
+	<select id="getInvoiceBillDetailList" parameterType="NewHashMap" resultType="NewHashMap">
+		select a.entid,a.sheetid,a.sheettype,a.serialid,a.shopid,c.SHOPNAME,
+			 a.syjid,a.billno,a.totalAmount,a.invoiceAmount,a.totalTaxFee,
+			 a.tradeDate,a.remark,a.gmftax taxno,a.gmfname taxname,a.gmfadd taxadd,a.gmfbank taxbank,
+			 d.itfkpd kpd,d.taxmode,b.rowno,b.goodsid,b.goodsName,b.taxitemid,b.qty,b.unit,b.price,b.amount,
+			 b.taxFee,b.taxRate,b.amt,b.oldAmt,b.taxpre,b.taxprecon,b.zerotax,b.isInvoice
+		from invoice_sale_head a
+		join invoice_sale_detail b on b.serialid=a.serialid
+		join shop c on c.SHOPID=a.shopid and c.ENTID=a.entid
+		join taxinfo d on d.entid=a.entid and d.taxno=c.TAXNO
+		where b.isInvoice='Y' and b.flag =0
+		and a.sheettype=#{sheettype}
+		and a.entid=#{entid}
+		and a.tradeDate between #{mintradedate} and #{maxtradedate}
+		<if test="sheetid != null">
+			and a.sheetid=#{sheetid}
+		</if>
+		<if test="shopid != null">
+			and a.shopid=#{shopid}
+		</if>
+		order by a.serialid asc
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize} 
+	    </if> 
+	</select>
+	<select id="getInvoiceBillDetailListCount" parameterType="NewHashMap" resultType="int">
+	    select count(1)
+		from invoice_sale_head a
+		join invoice_sale_detail b on b.serialid=a.serialid
+		join shop c on c.SHOPID=a.shopid and c.ENTID=a.entid
+		join taxinfo d on d.entid=a.entid and d.taxno=c.TAXNO
+		where b.isInvoice='Y'  and b.flag =0
+		and a.sheettype=#{sheettype}
+		and a.entid=#{entid}
+		and a.tradeDate between #{mintradedate} and #{maxtradedate}
+		<if test="sheetid != null">
+			and a.sheetid=#{sheetid}
+		</if>
+		<if test="shopid != null">
+			and a.shopid=#{shopid}
+		</if>
+		<if test="taxrate != null and taxrate !=''">
+			and b.taxrate=#{taxrate}
+		</if>
+		<if test="itemname != null and itemname !=''">
+			and b.goodsname like CONCAT(#{itemname},'%')
+		</if>
+		<if test="gmfname != null and gmfname !=''">
+			and a.gmfname like CONCAT(#{gmfname},'%')
+		</if>
+		order by a.serialid asc
+	</select>
+	<update id="resetBill" parameterType="NewHashMap">
+		update invoice_sale_head set flag=#{flag}
+		 where serialid = #{serialid}
+	</update>
+	
+	<select id="getDetailCallbackList" parameterType="NewHashMap" resultType="NewHashMap">
+		SELECT
+			a.serialid,a.sheetid,a.rowno,b.rtfpdm invoiceCode,b.rtfphm invoiceNo,b.rtkprq invoiceDate,b.iqfplxdm invoiceType,b.iqshop shopid
+		FROM
+			invoice_sale_detail a
+		JOIN invque b ON b.iqseqno = a.iqseqno
+		AND a.backflag = 0
+		and a.entid=#{entid}
+		<if test="shopid != null">
+		and b.iqshop=#{shopid}
+		</if>
+		<if test="sheettype != null">
+		and a.iqsource=#{sheettype}
+		</if>
+	</select>
+	
+	<update id="updateDetailCallbackFlag" parameterType="NewHashMap">
+		update invoice_sale_detail set backflag=#{backflag}
+		 where serialid = #{serialid} and rowno=#{rowno}
+	</update>
+	
+	<select id="getCallbackList" parameterType="NewHashMap" resultType="NewHashMap">
+		SELECT
+			a.serialid,a.sheetid,a.flag,b.rtfpdm invoiceCode,b.rtfphm invoiceNo,b.rtkprq invoiceDate,b.iqfplxdm invoiceType,b.iqshop shopid,iqpdf pdfurl,a.recvPhone,recvEmail
+		FROM
+			invoice_sale_head a
+		JOIN invque b ON b.iqseqno = a.iqseqno
+		AND a.backflag = 0 and a.flag in (-1,1) and b.iqstatus=50
+		and a.entid=#{entid}
+		<if test="shopid != null">
+		and a.shopid=#{shopid}
+		</if>
+		<if test="sheettype != null">
+		and a.sheettype=#{sheettype}
+		</if>
+	</select>
+	
+	<select id="getSaleCallBackList" parameterType="NewHashMap" resultType="NewHashMap">
+		select ish.serialid,i.iqseqno,ish.entid,ish.sheetid,ish.shopid,ish.syjid,ish.billno,ish.tradeDate,i.iqtype,ish.totalAmount,ish.invoiceAmount,ish.totalTaxFee,i.rtfpdm,i.rtfphm,i.rtkprq,i.iqyfpdm,i.iqyfphm
+			from invoice_sale_head ish,invque i,invque_list il
+			where i.iqseqno=il.iqseqno and ish.serialid=il.serialid
+			and  entid=#{entid} and iqentid=#{entid} and i.iqstatus=50 and iqpdf is not null and ish.flag in (1,-1) and ish.backflag=0
+		<if test="shopid != null">
+		and ish.shopid=#{shopid}
+		</if>
+	</select>
+	
+	<update id="updateCallbackFlag" parameterType="NewHashMap">
+		update invoice_sale_head set backflag=#{backflag}
+		where serialid = #{serialid}
+	</update>
+	
+	
+	<update id="NBupdateCallbackFlag" parameterType="NewHashMap">
+		update invoice_sale_head set backflag=#{backflag}
+		where entid=#{entid} and serialid = #{serialid}
+	</update>
+	
+	<select id="getAutoList" parameterType="Map" resultType="NewHashMap">
+		SELECT
+			*
+		FROM
+			invoice_sale_head a
+		<where>
+			a.isauto = 1 
+			and a.flag=0 
+			and invoiceamount>0
+			and a.entid=#{entid}
+			<if test="shopid != null">
+			and a.shopid=#{shopid}
+			</if>
+		</where>
+		limit 10000
+	</select>
+	
+</mapper>

@@ -1,0 +1,4 @@
+openinvoice=http://10.0.134.184:8081/FPGLXTFW/wb/sendData.action
+findInvoice=http://10.0.134.184:8081/FPGLXTFW/wb/getData.action
+userid=wang1234
+password=wang123456

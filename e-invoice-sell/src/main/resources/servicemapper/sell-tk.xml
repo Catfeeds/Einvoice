@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.TKDao">
+
+	<select id="test" resultType="NewHashMap">
+		select 1 from openapi_sale_head where 1=2
+	</select>
+	
+	<select id="getHead" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from openapi_sale_head where shopid=#{shopid} and sheetid=#{sheetid} and entid=#{entid}
+	</select>
+	
+	<select id="getDetail" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from openapi_sale_detail where sheetid=#{sheetid} and entid=#{entid}
+	</select>
+	
+</mapper>

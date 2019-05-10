@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.CateDisDao">	
+
+ 	<select id="queryCatedis" parameterType="NewHashMap" resultType="com.invoice.bean.db.Catedis">
+		select * from catedis    where entid = #{entid}  
+		<if test="cateid != null  and cateid != ''">
+        and cateid = #{cateid}
+        </if>
+        <if test="catename != null and catename != '' ">
+        and catename  like CONCAT('%',#{catename},'%')  
+        </if>
+         order by cateid desc 
+        <if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+		</if>
+		
+	</select>
+	
+ 
+	
+	<select id="getCatedisCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from catedis where entid= #{entid}
+		<if test="cateid != null and cateid != '' ">
+        and cateid = #{cateid}
+        </if>
+    </select>
+    
+    <select id="getCatedisById" resultType="com.invoice.bean.db.Catedis" parameterType="NewHashMap">
+		select  * from catedis where entid= #{entid}  and cateid = #{cateid}
+    </select>
+    
+ 
+	<insert id="insertCateDis" parameterType="com.invoice.bean.db.Catedis">
+		insert into catedis (entid,cateid,catename)
+		values(#{entid},#{cateid},#{catename})
+	</insert>
+	
+	<delete id="deleteCateDis" parameterType="com.invoice.bean.db.Catedis" >	
+		delete from catedis where entid= #{entid} and cateid = #{cateid}
+	</delete>	
+  
+ 
+</mapper>

@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		
+		<script src="../js/comm/myJq.js"></script>
+		<script src="../js/comm/route.js"></script>
+		<script src="../js/module/100004.js"></script>
+		
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		
+		<style type="text/css">
+		
+		</style>
+	</head>
+	<body>
+		  <header data-am-widget="header" class="am-header am-header-default">
+		      <div class="am-header-left am-header-nav">
+		          <a href="#left-link" class="">
+		                <i class="am-header-icon am-icon-home"></i>
+		          </a>
+		      </div>
+		
+		      <h1 class="am-header-title">
+		          <a href="#title-link" class="">
+		           电子发票下载
+		          </a>
+		      </h1>
+		
+		      <div class="am-header-right am-header-nav">
+		          <a href="#right-link" class="">
+		                <i class="am-header-icon am-icon-bars"></i>
+		          </a>
+		      </div>
+		</header>
+		
+		<div class="am-panel am-panel-success" id="accordion">
+		  <h3 class="am-panel-hd">发票信息</h3>
+		  <div class="am-panel-bd">
+		  <table>
+		  <tbody>
+		    <tr>
+		      <td width="48%">发票代码：</td><td>11111111111</td>
+		    </tr>
+		     <tr>
+		      <td>发票号码：</td><td>2222222222222</td>
+		    </tr>
+		     <tr>
+		      <td>开票日期：</td><td>2017-04-22</td>
+		    </tr>
+		    <tr>
+		      <td>发票金额：</td><td>432.29</td>
+		    </tr>
+		     <tr>
+		      <td>发票状态：</td><td>可下载</td>
+		    </tr>
+		  </tbody>
+		  </table> 
+		  </div>
+		  <div class="am-panel-default am-panel-hd ">
+		      <div class="am-panel-title" data-am-collapse="{parent: '#accordion', target: '#ticketList'}">
+		        小票信息
+		      </div>
+		  </div>
+		  <div id="ticketList" class="am-panel-collapse am-collapse">
+		      <div class="am-panel-bd">
+			    <div>小票号：XXXXXX 开票金额：88.88 </div>
+			    <div>小票号：XXXXXX 开票金额：99.99 </div>
+			  </div>
+		  </div>
+		</div>
+		
+		<div class="am-g am-text-center">
+			<a class="am-btn am-btn-warning am-btn-lg" href="#">
+			  <i class="am-icon-file-pdf-o"></i>
+			  下载电子发票（PDF）
+			</a>
+		</div>
+		
+		<div class="am-g am-margin-top">
+			<div>注意：下载后请使用PDF Reader阅读工具打开。</div>
+		    <div>　　　电子发票具有纸质发票同等法律效力。</div>
+		</div>
+		
+		<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default " id="">
+	      <ul class="am-navbar-nav am-cf am-avg-sm-4">
+	          <li >
+	            <a href="#" class="am-btn-secondary" >
+	                <span class="am-icon-hand-pointer-o"></span>
+	                <span class="am-navbar-label">我要开票</span>
+	            </a>
+	          </li>
+	          <li>
+	            <a href="###" class="">
+	                  <span class="am-icon-newspaper-o"></span>
+	                <span class="am-navbar-label">已开发票</span>
+	            </a>
+	          </li>
+	          <li >
+	            <a href="#" class="">
+	                  <span class="am-icon-location-arrow"></span>
+	                <span class="am-navbar-label">绑定账号</span>
+	            </a>
+	          </li>
+	          <li >
+	            <a href="#" class="">
+	                  <span class="am-icon-phone"></span>
+	                <span class="am-navbar-label">我要反馈</span>
+	            </a>
+	          </li>
+	      </ul>
+	  </div>
+	  
+	  <div data-am-widget="gotop" class="am-gotop am-gotop-fixed" >
+	    <a href="#top" title="回到顶部">
+	        <span class="am-gotop-title">回到顶部</span>
+	          <i class="am-gotop-icon am-icon-chevron-up"></i>
+	    </a>
+	  </div>
+	  
+	</body>
+</html>

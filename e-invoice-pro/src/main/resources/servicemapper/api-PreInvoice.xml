@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.PreInvoiceDao">
+	
+	<select id="getPreInvoiceAsk" parameterType="Map" resultType="com.invoice.bean.db.PreInvoiceAsk">
+		SELECT
+			*
+		FROM
+			pre_invoice_ask
+		<where>
+			entid=#{entid}
+			and sheetid=#{sheetid}
+			and sheettype=#{sheettype}
+			and flag=#{flag}
+		</where> 
+	</select>
+	
+	<insert id="insertPreInvoiceAsk" parameterType="com.invoice.bean.db.PreInvoiceAsk">
+		replace into pre_invoice_ask(entid,sheetid,sheettype,recvemail,recvphone,flag,gmftax,gmfname,gmfadd,gmfbank,gmfno,invoicelx,createtime,processtime,openid)
+		values(#{entid},#{sheetid},#{sheettype},#{recvemail},#{recvphone},#{flag},#{gmftax},#{gmfname},#{gmfadd},#{gmfbank},#{gmfno},#{invoicelx},#{createtime},#{processtime},#{openid})
+	</insert>
+	<update id="updatePreInvoiceAsk" parameterType="com.invoice.bean.db.PreInvoiceAsk">
+		update pre_invoice_ask
+		set flag=#{flag}
+		<where>
+			entid=#{entid}
+			and sheetid=#{sheetid}
+			and sheettype=#{sheettype}
+		</where> 
+	</update>
+	
+</mapper>
