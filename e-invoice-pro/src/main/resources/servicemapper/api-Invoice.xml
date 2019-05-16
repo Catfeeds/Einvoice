@@ -546,11 +546,11 @@
 	<select id="queryInvoiceHeadByCallGD" resultType="com.invoice.bean.db.InvoiceHead"  parameterType="Map">
 		select * from invoice_head where iqseqno=#{iqseqno}
 	</select>
-
-	<update id="updateInvoiceHeadForCallGD" parameterType="com.invoice.bean.db.InvoiceHead">
-		update invoice_head
-		set status=#{status},fpDM=#{fpDM},fpHM=#{fpHM},fpskm=#{fpskm},fpjym=#{fpjym},fpewm=#{fpewm},pdf=#{pdf},fprq=#{fprq}
-		where iqseqno=#{iqseqno} and status = 100
-	</update>
 	
+	<update id="updateInvoiceHeadForCallGD" parameterType="com.invoice.bean.db.InvoiceHead">
+		update invoice_head 
+		set status=#{status},fpDM=#{fpdm},fpHM=#{fphm},fpskm=#{fpskm},fpjym=#{fpjym},fpewm=#{fpewm},pdf=#{pdf},fprq=#{fprq}
+		where iqseqno=#{iqseqno} and status not in (90,99)
+	</update>
+
 </mapper>

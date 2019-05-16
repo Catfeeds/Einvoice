@@ -26,13 +26,13 @@ import net.sf.json.JSONObject;
 @RequestMapping(value = "/")
 public class TechWebRest {
 	private final Log log = LogFactory.getLog(TechWebRest.class);
-
+	
 	@Autowired
 	InvoiceService invoiceService;
-
+	
 	@Autowired
 	InvqueDao inqueDao;
-
+	
 	@RequestMapping(value = "/recv/callforgd")
 	@ResponseBody
 	public String TechWebBackWriteInvoice(@RequestBody String data)
@@ -40,7 +40,7 @@ public class TechWebRest {
 		log.info(data);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SzTechWebCallBackReturnBean callBack = new SzTechWebCallBackReturnBean();
-
+		
 		try {
 			if (data == null || data.length() == 0)
 			{
@@ -50,7 +50,7 @@ public class TechWebRest {
 				log.info("发票数据回写内容为空!");
 				return callBack.toString();
 			}
-
+		
 			SzTechWebCallBackAcceptBean queryReponse = (SzTechWebCallBackAcceptBean)JSONObject.toBean(JSONObject.fromObject(data), SzTechWebCallBackAcceptBean.class);
 			if (queryReponse.getTicket_status() == 1)
 			{
@@ -60,10 +60,11 @@ public class TechWebRest {
 				log.error("开票中的数据请不要乱调!");
 				return callBack.toString();
 			}
-
-			if (queryReponse.getTicket_status() == 2 && (queryReponse.getTicket_sn()==null || queryReponse.getTicket_sn().trim().length()==0 ||
-					queryReponse.getTicket_code()==null || queryReponse.getTicket_code().trim().length()==0 ||
-					queryReponse.getPdf_url()==null || queryReponse.getTicket_code().trim().length()==0))
+			
+			if (queryReponse.getTicket_status() == 2 && 
+			   (queryReponse.getTicket_sn()==null || queryReponse.getTicket_sn().trim().length()==0 ||
+			    queryReponse.getTicket_code()==null || queryReponse.getTicket_code().trim().length()==0 ||
+			    queryReponse.getPdf_url()==null || queryReponse.getTicket_code().trim().length()==0))
 			{
 				callBack.setCode(-1);
 				callBack.setMsg("发票信息不完整!");
@@ -71,14 +72,13 @@ public class TechWebRest {
 				log.error("发票信息不完整!");
 				return callBack.toString();
 			}
-
-
+			
+			//查出平台原开票信息
 			Map<String, Object> p = new NewHashMap<>();
 			p.put("iqseqno", queryReponse.getOrder_id());
-
-			List<Invque> quelist = inqueDao.getInvque(p);
-
-			for (Invque myInvque : quelist)
+			List<Invque> queList = inqueDao.getInvque(p);
+			
+			for (Invque myInvque : queList)
 			{
 				if (myInvque != null && myInvque.getIqstatus() <= 40)
 				{
@@ -97,13 +97,13 @@ public class TechWebRest {
 						myInvque.setRtfpdm(queryReponse.getTicket_code());
 						myInvque.setIqpdf(queryReponse.getPdf_url());
 						myInvque.setRtjym(queryReponse.getCheck_code());
-
+					
 						myInvque.setIqstatus(50);
 						inqueDao.updateForCallGD(myInvque);
 					}
 				}
 			}
-
+			
 			//开票失败则视同处理成功
 			if  (queryReponse.getTicket_status() == -2)
 			{
@@ -113,9 +113,9 @@ public class TechWebRest {
 				log.info(queryReponse.getMessage()==null?"高灯返回开票失败":queryReponse.getMessage());
 				return callBack.toString();
 			}
-
-			List<InvoiceHead> headlist = invoiceService.queryInvoiceHeadByCallGD(p);
-			for (InvoiceHead myHead : headlist)
+			
+			List<InvoiceHead> headList = invoiceService.queryInvoiceHeadByCallGD(p);
+			for (InvoiceHead myHead : headList)
 			{
 				myHead.setFpskm(queryReponse.getG_unique_id());
 				myHead.setFprq(sdf.format(queryReponse.getTicket_date()).replace("-","").replace(":","").replace(" ",""));
@@ -131,10 +131,10 @@ public class TechWebRest {
 			callBack.setCode(0);
 			callBack.setMsg("发票信息回写成功!");
 			callBack.setData(null);
-
+			
 			return callBack.toString();
-		}
-		catch (Exception ex)
+		} 
+		catch (Exception ex) 
 		{
 			callBack.setCode(-1);
 			callBack.setMsg(ex.getMessage());

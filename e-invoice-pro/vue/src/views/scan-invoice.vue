@@ -87,19 +87,24 @@ export default {
   },
   methods: {
     toHelp() {
-    	let myEntId = Util.getUrlKey("entid");
-      	if (myEntId=='ZM002')
-      	{
-      		this.$router.push({name: "help6922",params: {}});
-      	}
-      	else if (myEntId=='ZM003')
-      	{
-      		this.$router.push({name: "help6921",params: {}});
-      	}
-      	else
-      	{
-      		this.$router.push({name: "help",params: {}});
-      	}
+    	this.$http({
+                url: "/e-invoice-pro/rest/wx/getEntIdForZM", //请求地址
+                method: "post"								 //请求类型
+               }).then(res => {
+               					let myEntId = res.data;
+  								if (myEntId == 'ZM002')
+    						  	{   
+    								this.$router.push({name:"help6922",params:{}});
+    							} 
+    							else if (myEntId == 'ZM003')
+    							{
+    								this.$router.push({name:"help6921",params:{}});
+    							}
+    							else
+    							{
+    								this.$router.push({name:"help",params:{}});
+    							}
+    						  });
     },
     nextAction() {
       this.$router.push({

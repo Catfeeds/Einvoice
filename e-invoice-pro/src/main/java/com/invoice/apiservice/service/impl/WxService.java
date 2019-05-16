@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.apache.commons.logging.Log;
@@ -71,8 +72,15 @@ public class WxService {
 	}
 	
 	synchronized public String getAccessToken(String entid) {
-		String secret = FGlobal.WeixTokenMap.get("access_token");
-		String expires = FGlobal.WeixTokenMap.get("expires");
+		//按企业进行初始化 By ZHAO on 2019.05.15
+		if (FGlobal.WeixTokenMap.get(entid) == null) {
+			HashMap<String,String> myMap = new HashMap<String,String>();
+			myMap.put("access_token",null);myMap.put("expires",null);
+			FGlobal.WeixTokenMap.put(entid,myMap);
+		}
+		
+		String secret = FGlobal.WeixTokenMap.get(entid).get("access_token");
+		String expires = FGlobal.WeixTokenMap.get(entid).get("expires");
 		
 		if (secret == null || Long.parseLong(expires) < System.currentTimeMillis()) {
 			String weixinAppid = entPrivatepara.get(entid, FGlobal.WeixinAppID);
@@ -85,17 +93,24 @@ public class WxService {
 			JSONObject json = JSONObject.parseObject(res);
 			secret = json.getString("access_token");
 			long expires_in = json.getIntValue("expires_in");
-			FGlobal.WeixTokenMap.put("access_token", secret);
+			FGlobal.WeixTokenMap.get(entid).put("access_token", secret);
 			expires_in = System.currentTimeMillis() + expires_in * 1000;
-			FGlobal.WeixTokenMap.put("expires", String.valueOf(expires_in));
+			FGlobal.WeixTokenMap.get(entid).put("expires", String.valueOf(expires_in));
 		}
 		
 		return secret;
 	}
 	
 	synchronized public String getJsApiTicket(String entid) {
-		String jsapi_ticket = FGlobal.WeixTokenMap.get("jsapi_ticket");
-		String expires = FGlobal.WeixTokenMap.get("expires");
+		//按企业进行初始化 By ZHAO on 2019.05.15
+		if (FGlobal.WeixTokenMap.get(entid) == null) {
+			HashMap<String,String> myMap = new HashMap<String,String>();
+			myMap.put("jsapi_ticket",null);myMap.put("expires",null);
+			FGlobal.WeixTokenMap.put(entid,myMap);
+		}
+				
+		String jsapi_ticket = FGlobal.WeixTokenMap.get(entid).get("jsapi_ticket");
+		String expires = FGlobal.WeixTokenMap.get(entid).get("expires");
 		
 		if (jsapi_ticket == null || Long.parseLong(expires) < System.currentTimeMillis()) {
 			String access_token = getAccessToken(entid);
@@ -105,14 +120,11 @@ public class WxService {
 			log.info("getJsApiTicket:"+res);
 			JSONObject json = JSONObject.parseObject(res);
 			jsapi_ticket = json.getString("ticket");
-			FGlobal.WeixTokenMap.put("jsapi_ticket", jsapi_ticket);
+			FGlobal.WeixTokenMap.get(entid).put("jsapi_ticket", jsapi_ticket);
 		}
 		
 		return jsapi_ticket;
 	}
-	
-	
-	
 	
 	public String getSpappid(String entid) {
 		String token = getAccessToken(entid);

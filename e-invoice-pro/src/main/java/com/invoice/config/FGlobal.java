@@ -64,9 +64,8 @@ public class FGlobal implements InitializingBean {
 		}
 	}
 	
-	
-
-	final public static Map<String, String> WeixTokenMap = new HashMap<String, String>();
+	//修正多企业时相互覆盖问题 by ZHAO on 2019.05.15
+	final public static Map<String, HashMap<String,String>> WeixTokenMap = new HashMap<String, HashMap<String,String>>();
 
 	final public static String WeixinAppID = "weixinAppid";
 	final public static String WeixinSecret = "weixinSecret";

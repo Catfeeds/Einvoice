@@ -214,7 +214,7 @@ public class WxRest {
 			entid = entid.trim();
 		}
 
-		String url = wxService.getIndex(entid)+"?entid="+entid+"&qr="+qr;
+		String url = wxService.getIndex(entid)+"?qr="+qr;
 				
 		String jsessionid = session.getId();
 		
@@ -322,7 +322,7 @@ public class WxRest {
 		
 		String index = wxService.getIndex(entid);
 		String ret = "redirect:" + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-		           + "/e-invoice-pro/ui/wx/"+index+"?entid="+entid+"&qr="+qr;
+		           + "/e-invoice-pro/ui/wx/"+index+"?qr="+qr;
 		return ret;
 	}
 	
@@ -365,5 +365,14 @@ public class WxRest {
 			token.setShopid(shopid);
 		}
 		return new RtnData(url).toString();
+	}
+	
+	@RequestMapping(value = "/getEntIdForZM")
+	@ResponseBody
+	public String getEntIdForZM() {
+		Token token = Token.getToken();
+		log.info(token.toString());
+		String entid = token.getEntid();
+		return new RtnData(entid).toString();
 	}
 }

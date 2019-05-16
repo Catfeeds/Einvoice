@@ -68,10 +68,12 @@ public class SzTechWebServiceImpl implements PortService {
 		else if(resInv == null){
 			throw new RuntimeException("发票开具失败："+rtn.getMessage());
 		}
-		else if(resInv.getReturncode().equals("-2")){
-			throw new RuntimeException(resInv.getReturnmessage());
+		else if(resInv.getReturncode() != null && resInv.getReturncode().equals("-2")){
+			throw new RuntimeException(resInv.getReturnmessage()==null?"高灯返回开票失败!":resInv.getReturnmessage());
 		}
-		else if(resInv.getReturncode().equals("2") && (resInv.getFp_hm() == null || "".equals(resInv.getFp_hm()))){
+		else if(resInv.getReturncode() != null && 
+				resInv.getReturncode().equals("2") && 
+				(resInv.getFp_hm() == null || "".equals(resInv.getFp_hm()))){
 			throw new RuntimeException("高灯返回开票成功但没有发票号!");
 		}
 		
@@ -87,8 +89,8 @@ public class SzTechWebServiceImpl implements PortService {
 		//生成Invoice_head和Invoice_detail数据
 		InvoiceHead invoiceHead = invoiceService.cookInvoiceHead(que, taxinfo, dataList);
 
-		invoiceHead.setFpskm(resInv.getSkm());
-		invoiceHead.setFprq(resInv.getKprq().replace("-","").replace(":","").replace(" ",""));
+		invoiceHead.setFpskm(resInv.getSkm()==null?"":resInv.getSkm());
+		invoiceHead.setFprq(resInv.getKprq()==null?"19990101":resInv.getKprq().replace("-","").replace(":","").replace(" ",""));
 		invoiceHead.setFphm(resInv.getFp_hm()==null?"":resInv.getFp_hm());
 		invoiceHead.setFpdm(resInv.getFp_dm()==null?"":resInv.getFp_dm());
 		invoiceHead.setPdf(resInv.getPdf_url()==null?"":resInv.getPdf_url());
@@ -98,15 +100,15 @@ public class SzTechWebServiceImpl implements PortService {
 		invoiceService.saveInvoice(invoiceHead);
 		
 		//针对深圳高灯特别作法：因为开具成功后，增加回调URL让高灯调用
-		que.setRtskm(resInv.getSkm());
-		que.setRtkprq(resInv.getKprq().replace("-","").replace(":","").replace(" ",""));
+		que.setRtskm(resInv.getSkm()==null?"":resInv.getSkm());
+		que.setRtkprq(resInv.getKprq()==null?"19990101":resInv.getKprq().replace("-","").replace(":","").replace(" ",""));
 		que.setRtfphm(resInv.getFp_hm()==null?"":resInv.getFp_hm());
 		que.setRtfpdm(resInv.getFp_dm()==null?"":resInv.getFp_dm());
 		que.setIqpdf(resInv.getPdf_url()==null?"":resInv.getPdf_url());
 		que.setRtjym(resInv.getJym()==null?"":resInv.getJym());
 		
 		//如果开票正确则更改状态
-		if (resInv.getReturncode().equals("2"))
+		if (resInv.getReturncode() != null && resInv.getReturncode().equals("2"))
 		{
 			que.setIqstatus(50);
 			inqueDao.updateForCallGD(que);
@@ -299,6 +301,7 @@ public class SzTechWebServiceImpl implements PortService {
 				invoice.setBuyerTitleType(invque.getIqgmftax()==null||invque.getIqgmftax().length()==0?1:2) //1：个人，2：企业
                        .setTaxpayerNum(taxinfo.getTaxno()) //销方税号
                        .setOrderId(invque.getIqseqno()) //订单号
+                       .setBuyerEmail(invque.getIqemail()) //购方Email
                        .setBuyerTitle(invque.getIqgmfname()) //购方名称
                        .setBuyerAddress(invque.getIqgmfadd()) //购方地址
                        .setBuyerPhone(invque.getIqtel()) //购方电话
@@ -398,9 +401,8 @@ public class SzTechWebServiceImpl implements PortService {
 			}
 			
 			//等待10秒后查询开具结果
-			//Thread.sleep(10000);
-			
-			//invoiceBean = findInvoice(invque, taxinfo, rtn);
+			Thread.sleep(10000);
+			invoiceBean = findInvoice(invque, taxinfo, rtn);
 			
 			return invoiceBean;
         }

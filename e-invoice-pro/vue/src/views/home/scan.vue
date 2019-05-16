@@ -63,7 +63,7 @@ img { pointer-events: none; }
     <div class="scan">
       <!--<van-icon @click="scanAction" class="scan-icon" name="qr" />-->
       <van-row>
-        <van-col offset="14" span="8" class="scan-p">点这里</van-col>
+        <van-col offset="14" span="8" class="scan-p" style="color:#f44">点这里</van-col>
       </van-row>
       <van-row>
         <div style="width:100%;" @click="scanAction">
@@ -72,7 +72,7 @@ img { pointer-events: none; }
         </van-col>
         </div>
       </van-row>
-      <p class="scan-p">点击扫描二维码</p>
+      <p class="scan-p" style="color:#f44">点击扫描二维码</p>
     </div>
   </div>
 
@@ -143,7 +143,7 @@ export default {
     getQrCode(data){
       if(data == "error decoding QR Code"){
         this.$dialog.alert({
-            message: "不能识别二维码或二维码不正确",
+            message: "未扫到二维码或者二维码不正确，请重试",
             confirmButtonText: "知道了"
           });
       }else{
@@ -155,7 +155,7 @@ export default {
             data = data.substr(startIdx);
           }else{
             this.$dialog.alert({
-              message: "不能识别二维码或二维码不正确",
+              message: "未扫到二维码或者二维码不正确，请重试",
               confirmButtonText: "知道了"
             });
           }
@@ -195,7 +195,7 @@ export default {
             });
         }else if (res.code == -6) {
             this.$dialog.alert({
-                message: "请在提货后开具发票",
+                message: "未扫描到二维码或者二维码不正确，请重试",
                 confirmButtonText: "知道了"
             });
         }else if (res.code == -9) {

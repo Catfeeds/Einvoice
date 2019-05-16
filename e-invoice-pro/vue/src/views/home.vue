@@ -15,7 +15,6 @@
 
 <template>
   <div>
-
     <!-- 头部导航结构 -->
     <van-nav-bar style="background-color:#CC3327;color:#ffffff;" title="微信开票申请">
       <van-icon style="color:#ffffff;font-size:20px;font-weight:bold;" name="wap-home" slot="left" />
@@ -50,7 +49,11 @@ export default {
 
     //   界面切换事件
     changePage(index, title) {
-      let myEntId = Util.getUrlKey("entid");
+      this.$http({
+                url: "/e-invoice-pro/rest/wx/getEntIdForZM", //请求地址
+                method: "post"								 //请求类型
+               }).then(res => {
+               					let myEntId = res.data;
       if (index == 0) {
       	if (myEntId=='ZM002')
 	    {   
@@ -79,27 +82,38 @@ export default {
         	this.$router.push({name: "extract", params: {}});
         }
       }
-    }
+    });
+   }
   },
   computed: {},
   mounted() {},
   activated() {
-    let myEntId = Util.getUrlKey("entid");
-    if (myEntId=='ZM002')
-    {   
-    	this.$router.push({name:"scan6922",params:{}});
-    } 
-    else if (myEntId=='ZM003')
-    {
-    	this.$router.push({name:"scan6921",params:{}});
-    }
-    else
-    {
-    	this.$router.push({name:"scan",params:{}});
+  	//根据企业切换界面
+  	let qr = Util.getUrlKey("qr");
+  	if (qr=='null'||qr==''||qr==null){
+  		this.$http({
+                url: "/e-invoice-pro/rest/wx/getEntIdForZM", //请求地址
+                method: "post"								 //请求类型
+               }).then(res => {
+               					let myEntId = res.data;
+
+  								if (myEntId == 'ZM002')
+    						  	{   
+    								this.$router.push({name:"scan6922",params:{}});
+    							} 
+    							else if (myEntId == 'ZM003')
+    							{
+    								this.$router.push({name:"scan6921",params:{}});
+    							}
+    							else
+    							{
+    								this.$router.push({name:"scan",params:{}});
+    							}
+    						  });
     }
   },
   created() {
-    //读取可能存在的qr参数
+    	//读取可能存在的qr参数
         let qr = Util.getUrlKey("qr");
         console.log("qr:"+qr);
         if(qr!='null' && qr!='' && qr!=null){
@@ -133,12 +147,12 @@ export default {
                     }
                 }else if (res.code == -2) {
                     this.$dialog.alert({
-                        message: "提取码错误",
+                        message: "不能识别二维码或二维码不正确",
                         confirmButtonText: "知道了"
                     });
                 }else if (res.code == -6) {
                     this.$dialog.alert({
-                        message: "请在提货后开具发票",
+                        message: "未扫描到二维码或者二维码不正确，请重试",
                         confirmButtonText: "知道了"
                     });
                 }else if (res.code == -9) {

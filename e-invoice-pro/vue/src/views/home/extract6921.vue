@@ -139,7 +139,7 @@ export default {
           }         
         }else if (res.code == -6) {
           (this.errorMsg1 = "校验失败");
-            /*(this.errorMsg2 = "请在提货后开具发票");*/
+            (this.errorMsg2 = "请输入正确的提取码或小票金额");
         }else if (res.code == -9) {
           this.$dialog.alert({
               message: res.message,
@@ -147,7 +147,7 @@ export default {
           });
         }else{
           (this.errorMsg1 = "校验失败");
-            /*(this.errorMsg2 = "请输入正确的提取码和小票金额");*/
+            (this.errorMsg2 = "请输入正确的提取码和小票金额");
         }
       });
     }
