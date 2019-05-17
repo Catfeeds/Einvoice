@@ -42,7 +42,5 @@ new Vue({
             Cookies.set('jsessionid',res.data.jsessionid);
         });
         */
-
-              
     }
 });
