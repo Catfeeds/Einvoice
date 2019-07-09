@@ -2,10 +2,9 @@
 <!DOCTYPE mapper
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <!-- namespace 一定要对应包的dao -->
-<!--  -->
 <mapper namespace="com.invoice.apiservice.dao.PrivateparaDao">	    
-	
 	<select id="getPrivatepara" parameterType="com.invoice.bean.db.Privatepara" resultType="com.invoice.bean.db.Privatepara">
 		select *
 		from Privatepara
@@ -19,10 +18,16 @@
    		order by entid
 	</select>
 	
-	<select id="updatePrivatepara" parameterType="com.invoice.bean.db.Privatepara">
-		upate Privatepara set pparavalue=#{pparavalue}
+	<update id="updatePrivatepara" parameterType="com.invoice.bean.db.Privatepara">
+		update Privatepara set pparavalue=#{pparavalue}
 		where entid=#{entid} and pparaid=#{pparaid}
-	</select>
+	</update>
+	
+	<!-- 支持在程序中动态生成参数 -->
+	<insert id="savePrivatepara" parameterType="com.invoice.bean.db.Privatepara">
+		insert into Privatepara(entid,pparaid,pparaname,pparavalue,pparastatus,pparamemo)
+		values (#{entid},#{pparaid},#{pparaname},#{pparavalue},#{pparastatus},#{pparamemo})
+	</insert>
 	
 	<select id="getShopConnectList" parameterType="NewHashMap" resultType="NewHashMap">
 		select a.entid,a.shopid,a.shoptype,a.clientid,a.memo,a.connectid,b.url,b.username,b.password,b.driver,b.dbcharcode
@@ -41,6 +46,7 @@
        	   and a.entid=#{entid}
        	   and a.shopid=#{shopid} 
 	</select>
+	
 	<select id="getCConnectList" parameterType="NewHashMap" resultType="NewHashMap">
 	    SELECT a.clientid,b.clientname,b.url as sellurl,c.* from c_shopconnect a,c_client b,c_connect c where 1=1 
 		and a.entid=#{entid} 
@@ -55,6 +61,7 @@
 			limit ${pagestart},${pagesize} 
 	    </if> 
 	</select>
+	
 	<select id="getCConnectCount" parameterType="NewHashMap" resultType="int">
 	    SELECT count(1) from(
 		SELECT c.* from c_shopconnect a,c_client b,c_connect c where 1=1 
@@ -67,6 +74,7 @@
 		GROUP BY a.clientid,a.connectid 
 		order by a.clientid,a.connectid asc) d 
 	</select>
+	
 	<update id="updateCConnect" parameterType="com.invoice.bean.db.CConnect">
 		update c_connect set url =#{url},username =#{username},password =#{password},driver =#{driver},dbcharcode =#{dbcharcode},memo =#{memo} 
 		 where entid =#{entid} and connectid =#{connectid}

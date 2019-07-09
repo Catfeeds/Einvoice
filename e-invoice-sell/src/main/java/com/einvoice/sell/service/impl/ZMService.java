@@ -79,8 +79,7 @@ public class ZMService extends BaseService {
 		}
 		
 		Map<String, Object> map = callBackMap(data);
-		
-		
+
 		log.info(JSONObject.toJSON(map));
 
 		int rows = dao.callbackSheet(map);

@@ -1,6 +1,6 @@
 <style scoped>
 .van-tab--active{
-  color:#CC3327;
+  color:#CC3327 !important;
 }
 .van-tabs__nav-bar{
     z-index: 1;
@@ -8,7 +8,7 @@
     bottom: 15px;
     height: 2px;
     position: absolute;
-    background-color: #CC3327;
+    background-color: #CC3327 !important;
 }
 
 </style>

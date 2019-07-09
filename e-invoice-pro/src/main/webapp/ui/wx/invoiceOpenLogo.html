@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html style="background-color: white;font-family: 'Microsoft YaHei'">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<title></title>
+		<title>开票申请</title>
 		
 		<!-- 引入jQuery UI的css文件 -->
 		<link rel="stylesheet" href="../css/jquery-ui.css" />
@@ -62,14 +62,32 @@
 			padding: 4px;
 		}
 		.header-area{
-			text-align: center;
-			margin-top: 5vh;
+			width: 100%;
 		}
+
+		#fpimg{
+			width: 90px;
+			height: 90px;
+			border: 1px solid white;
+			border-radius: 50px;
+			background-color: white;
+			margin: auto;
+			text-align: center;
+			box-shadow: 0px 0px 0.5px 0.5px lightgrey;
+		}
+
+		#titlebmg{
+			width: 80px;
+			height:80px;
+			margin-top: 1vh;
+		}
+
 		.companyName{
 			text-align: center;
-			margin-top: 1vh;
 			font-family: "Microsoft YaHei";
 			font-size: 14px;
+			font-weight: bold;
+			margin-top: 10px;
 		}
 		.tips{
 			margin-left: 6%;
@@ -172,9 +190,9 @@
 			text-align: center;
 			float: left;
 			margin-right: 5%;
-			border: 1px solid #5eb95e;
+			border: 1px solid #4A96FF;
 			border-radius: 5px;
-			color:#5eb95e;
+			color:#4A96FF;
 		}
 		#danwei{
 			width: 150%;
@@ -220,8 +238,8 @@
 			margin: auto;
 			color: white;
 			font-weight: 200;
-			background-color: #5eb95e;
-			border-radius: 5px;
+			background-color: #4A96FF;
+			border-radius: 20px;
 			border: none;
 		}
 		#btn_pro{
@@ -231,18 +249,18 @@
 			margin-left: 5%;
 			color: white;
 			font-weight: 200;
-			background-color: #5eb95e;
-			border-radius: 5px;
+			background-color: #4A96FF;
+			border-radius:20px;
 			border: none;
 		}
 		#btn_next{
 			width: 90%;
 			height: 40px;
-			border-radius: 5px;
+			border-radius: 20px;
 			line-height: 40px;
 			color: white;
 			font-weight: 200;
-			background-color: #5eb95e;
+			background-color: #4A96FF;
 			border: none;
 			margin-left: 5%;
 			margin-top: 3vh;
@@ -304,11 +322,31 @@
 			border: none;
 			margin-right: 1%;
 		}
+		#bmg{
+			width: 100%;
+			height: 200px;
+			border: none;
+			background-image: url("bgimg.png");
+			background-size:100% 100%;
+			background-repeat:no-repeat;
+		}
+		#banquan{
+			text-align: center;
+			color: lightgray;
+			font-size: 12px;
+			margin-bottom: 20px;
+		}
+		.adda{
+			padding-top: 20%;
+		}
+		.addc{
+			padding-top: 15%;
+		}
 
 		</style>
 	</head>
-	<body>
-		  <header data-am-widget="header" class="am-header am-header-default">
+	<body style="background-color: white;font-family: 'Microsoft YaHei'">
+		  <!--<header data-am-widget="header" class="am-header am-header-default">
 		      <div class="am-header-left am-header-nav">
 		          <a href="invoiceOpenLogo.html" class="">
 		                <i class="am-header-icon am-icon-home"></i>
@@ -320,9 +358,9 @@
 		           	<span id="title-text">开票申请</span>
 		          </a>
 		      </h1>
-		</header>
+		</header>-->
 		
-		<nav data-am-widget="menu" class="am-menu  am-menu-dropdown1"   data-am-menu-collapse > 
+		<!--<nav data-am-widget="menu" class="am-menu  am-menu-dropdown1"   data-am-menu-collapse >
 		    <a href="javascript: void(0)" class="am-menu-toggle">
 		          <i class="am-menu-toggle-icon am-icon-list"></i>
 		    </a>
@@ -331,22 +369,25 @@
 			      <a href="invoiceList.html" class="" >我的开票记录</a>
 			    </li>
 			</ul>
-		</nav>
+		</nav>-->
 		
-		<div class=" am-margin-top-xs tbl-panel panel-enabled" id="div_qc" data-index="0">
+		<!--<div class=" am-margin-top-xs tbl-panel panel-enabled" id="div_qc" data-index="0">-->
 
 			<!--声明部分-->
-			<div id="shengming">
-				<div class="header-area">
-					<img src="logo.png" height="80" width="80"/>
-				</div>
-				<div class="companyName" id="companyName"></div>
-				<div class="tips">
-					<p>提示：</p>
-					<p>1、企业发票必须填写纳税人识别号才可作为合法税务（报销）凭证。</p>
-					<p>2、支持模糊检索功能，选择企业类型时在抬头名称中输入公司名称自动带入税号。</p>
-					<!--<p>3、如事业单位需开带税号发票，请选择企业类型。</p>-->
-				</div>
+		  <div id="bmg" class="adda">
+			  <div id="shengming">
+				  <div class="header-area">
+					  <div id="fpimg">
+						  <img src="title.png" id="titlebmg"/>
+					  </div>
+				  </div>
+				  <div class="companyName" id="companyName"></div>
+			  </div>
+		  </div>
+			<div class="tips" id="tips">
+				<p>提示：</p>
+				<p>企业发票必须填写纳税人识别号才可作为合法税务（报销）凭证。</p>
+				<!--<p>3、如事业单位需开带税号发票，请选择企业类型。</p>-->
 			</div>
 
 			<!-- 注掉shit页部分<div class="am-progress ">
@@ -409,7 +450,7 @@
 				<div class="am-progress-bar am-progress-bar-success"  style="width: 60%">填入开票信息</div>
 				<div class="am-progress-bar"  style="width: 40%">预览发票</div>
 			</div>-->
-			
+
 			<ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4 am-form-horizontal">
 				<li class="am-margin-top-xs" id="chooseInvoiceTitleDiv" style="display:none;">
 					<a href="#" onclick="chooseInvoiceTitle()">
@@ -433,7 +474,7 @@
 				<div class="am-margin-top-xs am-padding-left-sm div-1" >
 					<div class="topType">抬头类型：</div>
 					<label class="am-radio-inline div-2" >
-						<input type="radio" name="invoiceHead" id="invoiceHeadPerson" style="border: 1px solid red; color: red;display:none;"><span id="geren">个人</span>
+						<input type="radio" name="invoiceHead" id="invoiceHeadPerson" style="border: 1px solid lightgray; color: lightgray;display:none;"><span id="geren">个人</span>
 					</label>
 					<label class="am-radio-inline div-2" >
 						<input type="radio" name="invoiceHead" id="invoiceHeadEnt" style="border: 1px solid lightgray; color: lightgray;display: none;"><span id="danwei">单位</span>
@@ -471,6 +512,9 @@
 				<!--下一步-->
 				<!--<div class="am-margin-top-xs butNex" style="display:block;">-->
 					<button type="button" id="btn_next">下一步</button>
+				<div id="banquan">
+					&copy;&nbsp;石基&nbsp;<img src="logo.png" style="width: 30px;height: 15px">&nbsp;电子发票服务平台
+				</div>
 				<!--</div>-->
 
              	
@@ -541,12 +585,16 @@
 	  </div>-->
 	  
 	  <div id="rowPiao1" style="display: none;">
-	  <div class="am-panel am-panel-success am-margin-top-sm" id="piao1">
-		  <div class="am-panel-hd am-g">
-		  	<div class="am-u-sm-9"><label class="am-checkbox am-secondary am-margin-0"><input type="checkbox" checked="checked" name="checkedPiao" value="||sheetid||-||totalamount||" id="check||sheetid||"> ||tradedate||</label></div>
-		  	<div class="am-u-sm-3 am-text-center am-app-piao-can" id="checkText||sheetid||">可开票</div>
+	  <div class="am-panel am-panel-success am-margin-top-sm" id="piao1" style="background-color: #F0F6FF;border-color: #C1DBFD;">
+		  <div class="am-panel-hd am-g" style="background-color: #F0F6FF;border-color: #C1DBFD;">
+		  	<div class="am-u-sm-9" style="color:black">
+				<label class="am-checkbox am-secondary am-margin-0">
+					<input type="checkbox" checked="checked" name="checkedPiao" value="||sheetid||-||totalamount||" id="check||sheetid||"> ||tradedate||
+				</label>
+			</div>
+		  	<div class="am-u-sm-3 am-text-center am-app-piao-can" id="checkText||sheetid||" style="background-color: #C1DBFD">可开票</div>
 		  </div>
-		  <div class="am-panel-bd am-padding-0">
+		  <div class="am-panel-bd am-padding-0" style="background-color: #F0F6FF">
 		  	<div class="am-g am-padding-0">
 			  	<div class="textSize" >
 	     			<div class="am-padding-horizontal-xs">单号：<span>||sheetid||</span></div>
@@ -560,12 +608,12 @@
 	     		</div>-->
      		</div>
 		  </div>
-		  <div class="am-panel-default am-panel-hd ">
+		  <div class="am-panel-default am-panel-hd " style="background-color: #F0F6FF">
 		      <div class="am-panel-title" data-am-collapse="{parent: '#piaoList', target: '#paneldetailList||id||'}">
 				||weixinNote||
 		      </div>
 		  </div>
-		  <div id="paneldetailList||id||" class="am-panel-collapse am-collapse">
+		  <div id="paneldetailList||id||" class="am-panel-collapse am-collapse" style="background-color: #F0F6FF">
 		      <div class="am-g" id="detailList||id||">
 			  </div>
 			  <div class="am-g" id="payList||id||">
@@ -575,7 +623,7 @@
 		</div>
 		
 		<div id="rowPiao2" style="display: none;">
-			<div class="am-panel am-panel-warning am-margin-top-sm" onclick="$.gotoUrl('./invoiceView.html?iqseqno=||iqseqno||')">
+			<div class="am-panel am-panel-warning am-margin-top-sm" onclick="$.gotoUrl('./invoiceViewLogo.html?iqseqno=||iqseqno||')">
 			  <div class="am-panel-hd am-g">
 			  	<div class="am-u-sm-5 am-u-sm-offset-7 am-text-center am-app-piao-uncan">已开票[点击查看]</div>
 			  </div>

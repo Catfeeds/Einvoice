@@ -1,6 +1,5 @@
 package com.invoice.port.sztechweb.invoice.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -181,7 +180,6 @@ public class SzTechWebServiceImpl implements PortService {
 	{
 		try {
 			RtInvoiceBean invoiceBean = new RtInvoiceBean();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
 			//调用HTTP/HTTPS
 			SzTechWebGenerateImpl mySend = new SzTechWebGenerateImpl();
@@ -229,7 +227,7 @@ public class SzTechWebServiceImpl implements PortService {
 				rtn.setMessage(strResult.substring(7));
 				return null;
 			}
-			
+
 			JSONObject jsonObj = JSONObject.fromObject(strResult);
 			
 			if (jsonObj.getInt("code") != 0)
@@ -243,10 +241,12 @@ public class SzTechWebServiceImpl implements PortService {
 			//转成JAVA对象
 			SzTechWebQueryResponseBean queryReponse = (SzTechWebQueryResponseBean)JSON.parseObject(strResult, SzTechWebQueryResponseBean.class);
 			
+			String myDate = queryReponse.getData().getTicket_date();
+			
 			invoiceBean.setSkm(queryReponse.getData().getG_unique_id()); //开票平台订单id
 			invoiceBean.setReturncode(String.valueOf(queryReponse.getData().getStatus())); //发票状态（0：待开票 1：开票中 2：开票成功 -2：开票失败）
 			invoiceBean.setReturnmessage(queryReponse.getData().getFail_msg()); //开票错误信息
-			invoiceBean.setKprq(sdf.format(queryReponse.getData().getTicket_date())); //开票日期
+			invoiceBean.setKprq(myDate==null||myDate.trim().length()==0?"1970-01-01":myDate); //开票日期
 			invoiceBean.setFp_hm(queryReponse.getData().getTicket_sn()); //发票号码
 			invoiceBean.setFp_dm(queryReponse.getData().getTicket_code()); //发票代码
 			invoiceBean.setCzdm(queryReponse.getData().getIs_red()); //是否为红票
@@ -270,6 +270,8 @@ public class SzTechWebServiceImpl implements PortService {
 	{
 		try
 		{
+			String callback = "/techweb/billcallback"; //让高灯回调地址
+			
 			RtInvoiceBean invoiceBean = new RtInvoiceBean();
 		
 			//调用高灯SDK
@@ -301,6 +303,7 @@ public class SzTechWebServiceImpl implements PortService {
 				invoice.setBuyerTitleType(invque.getIqgmftax()==null||invque.getIqgmftax().length()==0?1:2) //1：个人，2：企业
                        .setTaxpayerNum(taxinfo.getTaxno()) //销方税号
                        .setOrderId(invque.getIqseqno()) //订单号
+                       .setBuyerTaxCode(invque.getIqgmftax()) //购方税号
                        .setBuyerEmail(invque.getIqemail()) //购方Email
                        .setBuyerTitle(invque.getIqgmfname()) //购方名称
                        .setBuyerAddress(invque.getIqgmfadd()) //购方地址
@@ -314,7 +317,7 @@ public class SzTechWebServiceImpl implements PortService {
                        .setChecker(invque.getIqchecker()) //复核人
                        .setInvoicer(invque.getIqadmin()) //开票人
                        .setTradeType(0) //1通信、2餐饮、3交通、4支付平台、5票务/旅游、0其他
-                       .setCallbackUrl(taxinfo.getItfjrdm()) //回调URL
+                       .setCallbackUrl(taxinfo.getItfjrdm()+callback) //回调URL
                        .setInvoiceTypeCode("032") //004:增值税专用发票，007:增值税普通发票，026：增值税电子发票，025：增值税卷式发票, 032:区块链发票 默认为026
                        .setGoodsInfos(goodsInfos);
 				
@@ -371,7 +374,7 @@ public class SzTechWebServiceImpl implements PortService {
 		        
 		        redInvoices.add(redInvoice);
 
-		        invoiceRed.setCallbackUrl(taxinfo.getItfjrdm()).setInvoices(redInvoices);
+		        invoiceRed.setCallbackUrl(taxinfo.getItfjrdm()+callback).setInvoices(redInvoices);
 
 		        JSONObject result = sdk.invoiceRed(invoiceRed);
 		        

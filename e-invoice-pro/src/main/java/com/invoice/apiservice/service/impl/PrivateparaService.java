@@ -2,11 +2,8 @@ package com.invoice.apiservice.service.impl;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
 import com.invoice.apiservice.dao.PrivateparaDao;
 import com.invoice.bean.db.CClient;
 import com.invoice.bean.db.CConnect;
@@ -34,13 +31,9 @@ public class PrivateparaService {
 		dao.updatePrivatepara(p);
 	}
 
-	public String getConnectList(String entid, String clientid, String password) {
-		// TODO 验证客户端和密码
-
-		List<Map<String, String>> lits = dao.getConnectList(entid);
-		return new RtnData(lits).toString();
+	public void savePrivatepara(Privatepara p) {
+		dao.savePrivatepara(p);
 	}
-
 	/**
 	 * 返回链接信息。附带数据验证码，已企业号作为key。
 	 * @param entid
@@ -48,10 +41,15 @@ public class PrivateparaService {
 	 * @param password
 	 * @param time
 	 * @return
-	 */
-	public String getShopConnectList(String entid, String clientid, String password, String time) {
+	*/
+	public String getConnectList(String entid, String clientid, String password) {
+		// TODO 验证客户端和密码
+		List<Map<String, String>> lits = dao.getConnectList(entid);
+		return new RtnData(lits).toString();
+	}
 
-		// 校验
+	public String getShopConnectList(String entid, String clientid, String password, String time) {
+		//校验
 		String localPassword = SHA1.sha1(entid + clientid + time);
 		if (!localPassword.equals(password)) {
 			return new RtnData(-99, "鉴权不通过").toString();
@@ -74,12 +72,15 @@ public class PrivateparaService {
 		p.put("shopid", shopid);
 		return dao.getClientUrlByShopid(p);
 	}
+	
 	public List<Map<String, String>> getCConnectList(Map<String, Object> p) {
 		return dao.getCConnectList(p);
 	}
+	
 	public void updateCConnect(CConnect connect) throws Exception{
 		dao.updateCConnect(connect);
 	}
+	
 	public int getCConnectCount(Map<String, Object> p) {
 		return dao.getCConnectCount(p);
 	}

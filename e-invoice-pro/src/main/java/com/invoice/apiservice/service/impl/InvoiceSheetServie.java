@@ -144,7 +144,7 @@ public abstract class InvoiceSheetServie implements SheetService{
 				saleHead.setSheetid(head.getSheetid());
 				saleHead.setEntid(head.getEntid());
 				saleHead.setSerialid(head.getSerialid());
-				SpringContextUtil.getBean("BillInvoiceService", SheetService.class).txInvoiceSale2Delete(saleHead );
+				SpringContextUtil.getBean("BillInvoiceService", SheetService.class).txInvoiceSale2Delete(saleHead);
 				head = null;
 			}
 			
@@ -670,8 +670,9 @@ public abstract class InvoiceSheetServie implements SheetService{
 		Map<String, String> headMap = client.getHeadMap();
 		headMap.put("shopid", shopid);
 		headMap.put("sheetid", sheetid);
-		headMap.put("sheetname", SHEET_NAME);
-		
+		headMap.put("sheetname", SHEET_NAME);	
+		// 修改BUG BY ZHAO ON 2019.06.06
+		client.setHeadMap(headMap);	
 		String res = client.getMessage("getSheet");
 		
 		JSONObject r = JSONObject.parseObject(res);

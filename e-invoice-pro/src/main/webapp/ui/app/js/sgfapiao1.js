@@ -211,6 +211,7 @@ function kaipiao(){
 			params.action="update";
 			params.sheetid=dataJson.data.sheetid;
 			timepre(requestBill);
+            $("#invRecvMail").val("");
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			$.myAlert("status:"+textStatus+" msg:"+jqXHR.responseText);

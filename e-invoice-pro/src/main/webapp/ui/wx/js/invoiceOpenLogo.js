@@ -86,11 +86,11 @@ function keydown() {
 
 function clickTopType() {
     $("#geren").click(function () {
-        $(this).css({"border-color":"#5eb95e","color":"#5eb95e"});
+        $(this).css({"border-color":"#4A96FF","color":"#4A96FF"});
         $("#danwei").css({"border-color":"#D3D3D3","color":"#D3D3D3"});
     });
     $("#danwei").click(function () {
-        $(this).css({"border-color":"#5eb95e","color":"#5eb95e"});
+        $(this).css({"border-color":"#4A96FF","color":"#4A96FF"});
         $("#geren").css({"border-color":"#D3D3D3","color":"#D3D3D3"});
     });
 }
@@ -214,9 +214,13 @@ $(document).ready(function(){
        askPreView(requestBill);
 
        $("#div_info").css("display","none");
-       $("#shengming").css("display","none");
+       //$("#shengming").css("display","none");
        $("#rowPiao1").css("display","none");
        $("#piao1").css("display","none");
+       //$("#bmg").css("display","none");
+       $("#bmg").removeClass("adda");
+       $("#bmg").addClass("addc");
+       $("#tips").css("display","none");
        $("#div_preview").css("display","block");
        $("#preview").css("display","block");
 
@@ -229,6 +233,9 @@ $(document).ready(function(){
         $("#shengming").css("display","block");
         /*$("#rowPiao1").css("display","block");*/
         $("#piao1").css("display","block");
+        $("#bmg").removeClass("addc");
+        $("#bmg").addClass("adda");
+        $("#tips").css("display","block");
         $("#div_preview").css("display","none");
         $("#preview").css("display","none");
     });
@@ -841,7 +848,7 @@ function commit(){
             }
             previewData = {};
             var iqseqno = dataJson.data[0].iqseqno;
-            $.myConfirm({title:"成功",msg:"稍后电子发票将发送到您的手机和邮箱，请注意查收",btn1:"继续开票",btn2:"查看开票",onCancel:function(){window.location.reload();},onConfirm:function(){$.gotoUrl('./invoiceView.html?iqseqno='+iqseqno);}});
+            $.myConfirm({title:"成功",msg:"稍后电子发票将发送到您的手机和邮箱，请注意查收",btn1:"继续开票",btn2:"查看开票",onCancel:function(){window.location.reload();},onConfirm:function(){$.gotoUrl('./invoiceViewLogo.html?iqseqno='+iqseqno);}});
         },
         error: function (jqXHR, textStatus, errorThrown) {
             isLoading=false;

@@ -47,7 +47,7 @@ public class HandInvoiceService extends InvoiceSheetServie {
 			InvoiceSaleHead saleHead = deSheetid(bill);
 			saleHead.setEntid(bill.getEntid());
 			saleHead.setSheettype(SHEET_TYPE);
-			saleHead.setShopid(Token.getToken().getShopid());
+			saleHead.setShopid(bill.getShopid()==null?Token.getToken().getShopid():bill.getShopid());
 			Date now = new Date();
 			saleHead.setTradedate(Convert.dateFormat(now, "yyyyMMdd"));
 			saleHead.setRemark(bill.getRemark());
@@ -97,6 +97,9 @@ public class HandInvoiceService extends InvoiceSheetServie {
 				detail.setTaxpre(item.getTaxpre());
 				detail.setTaxprecon(item.getTaxprecon());
 				detail.setZerotax(item.getZerotax());
+				if(item.getCategoryid()!=null) {
+					detail.setCategoryid(item.getCategoryid());
+				}
 				if(StringUtils.isEmpty(item.getTradedate())){
 					detail.setTradedate(now);
 				}else{
@@ -139,6 +142,8 @@ public class HandInvoiceService extends InvoiceSheetServie {
 		return head;
 	}
 	
+	
+	
 	@Override
 	public void cookBillInfo(RequestBillInfo bill) {
 		// 如果是小票码形式则拆分为单号、金额
@@ -160,4 +165,5 @@ public class HandInvoiceService extends InvoiceSheetServie {
 		res.setSerialid(sheetid);
 		return res;
 	}
+	
 }

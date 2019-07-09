@@ -89,6 +89,4 @@ public class TXDService extends BaseService {
 		
 		return map;
 	}
-
-
 }

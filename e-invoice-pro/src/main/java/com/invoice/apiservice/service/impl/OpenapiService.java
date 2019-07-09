@@ -152,6 +152,7 @@ public class OpenapiService {
 			InvoiceSaleHead saleHead = service.calculateSheet(sell,null);
 			saleHead.setCreatetime(new Date());
 			saleHead.setFlag(0);
+			saleHead.setRemark(head.getRemark());
 			service.nxInvoiceSale2DB(saleHead);
 	}
 	

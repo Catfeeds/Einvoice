@@ -269,11 +269,12 @@ public class ZMSaleServiceImpl {
 		Map<String, String> headMap = client.getHeadMap();
 		headMap.put("shopid", shopid);
 		headMap.put("sheetname", "zm");
+		
+		client.setHeadMap(headMap);
 
 		String res = client.getMessage("getList");
 
-		if (StringUtils.isEmpty(res))
-			return null;
+		if (StringUtils.isEmpty(res)) return null;
 
 		JSONObject jo = JSONObject.parseObject(res);
 		if (jo.getIntValue("code") == 0) {
@@ -297,7 +298,8 @@ public class ZMSaleServiceImpl {
 		}
 
 		headMap.put("data", data);
-
+		client.setHeadMap(headMap);
+		
 		String res = client.getMessage("callBackSheet");
 		log.info("callBackSheet" + res);
 		return res;

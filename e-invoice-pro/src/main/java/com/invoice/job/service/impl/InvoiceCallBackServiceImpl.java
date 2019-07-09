@@ -138,8 +138,8 @@ public class InvoiceCallBackServiceImpl {
 		Map<String, String> headMap = client.getHeadMap();
 		headMap.put("shopid", shopid);
 		headMap.put("sheetname", s.getSHEET_NAME());
-		headMap.put("data", data);
-
+		headMap.put("data", data);	
+		client.setHeadMap(headMap);
 		String res = client.getMessage("callBackSheet");
 		log.info("callBackSheet" + res);
 		return res;

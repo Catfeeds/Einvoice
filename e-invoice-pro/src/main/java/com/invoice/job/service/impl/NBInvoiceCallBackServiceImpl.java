@@ -112,7 +112,7 @@ public class NBInvoiceCallBackServiceImpl {
 		headMap.put("shopid", shopid);
 		headMap.put("sheetname", "NBbill");
 		headMap.put("data", data);
-
+		client.setHeadMap(headMap);
 		String res = client.getMessage("NBcallBackSheet");
 		log.info("NBcallBackSheet" + res);
 		return res;

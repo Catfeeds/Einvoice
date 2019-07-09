@@ -25,7 +25,6 @@
 			<version>1.1.1</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -43,6 +42,7 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.6</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -67,8 +67,6 @@
 			<version>1.0</version>
 		</dependency>
 
-
-
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
@@ -82,7 +80,6 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -94,6 +91,12 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-nop</artifactId>
+    		<version>1.7.2</version>
 		</dependency>
 		<!-- log end -->
 
@@ -108,16 +111,19 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>commons-pool</groupId>
 			<artifactId>commons-pool</artifactId>
 			<version>1.6</version>
 		</dependency>
+		
 		<dependency>
     		<groupId>org.codehaus.jackson</groupId>
     		<artifactId>jackson-mapper-asl</artifactId>
@@ -125,7 +131,6 @@
     	</dependency>
 
 	</dependencies>
-
 
 	<build>
 		<finalName>${project.artifactId}</finalName>

@@ -4,14 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.einvoice.sell.bean.ShopConnect;
 import com.einvoice.sell.dao.CommonSheetDao;
@@ -96,7 +92,6 @@ public class CommonSheetService extends BaseService {
 		
 		Map<String, Object> map = callBackMap(data);
 		
-		
 		log.info(JSONObject.toJSON(map));
 
 		int rows = dao.callbackSheet(map);
@@ -117,7 +112,8 @@ public class CommonSheetService extends BaseService {
 				Convert.dbChar(charcode, map);
 			}
 		return list;
-	};
+	}
+	
 	public List<Map<String, Object>> getHT(ShopConnect shop,String gysid, Integer page){
 		int size = 1000;
 		if(page==null || page<1) page=1;
@@ -130,5 +126,5 @@ public class CommonSheetService extends BaseService {
 			Convert.dbChar(charcode, map);
 		}
 		return list;
-	};
+	}
 }

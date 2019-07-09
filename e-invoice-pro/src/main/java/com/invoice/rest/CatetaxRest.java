@@ -2,14 +2,10 @@ package com.invoice.rest;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import jxl.Sheet;
 import jxl.Workbook;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,17 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.alibaba.fastjson.JSONObject;
 import com.invoice.bean.db.Category;
 import com.invoice.bean.db.Catetax;
 import com.invoice.bean.db.Taxitem;
 import com.invoice.bean.ui.Token;
-
 import com.invoice.rtn.data.RtnData;
 import com.invoice.uiservice.service.CatetaxService;
 import com.invoice.uiservice.service.GoodstaxService;
-import com.invoice.util.Page;
 
 @Controller
 @RequestMapping(value = "/ui")
@@ -53,15 +46,15 @@ public class CatetaxRest {
 			e.printStackTrace();	
 			return new RtnData(-1, e.getMessage()).toString();
 		}
-
 	}
 	
 	@RequestMapping(value = "/getCatetaxById", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCatetaxById(@RequestBody String data) {
-		JSONObject returnJson = JSONObject.parseObject(data);
-		Token token = Token.getToken();
+		JSONObject returnJson = new JSONObject();
 		try {
+			returnJson = JSONObject.parseObject(data);
+			Token token = Token.getToken();
 			returnJson.put("entid",token.getEntid());
 			List<Catetax> ct = catetaxService.getCatetaxById(returnJson);
 			returnJson.put("code", "0");
@@ -71,15 +64,16 @@ public class CatetaxRest {
 			returnJson.put("msg", e.getMessage());
 			e.printStackTrace();
 		}
-    	return returnJson.toJSONString();
+		return returnJson.toJSONString();
 	}
+	
 	@RequestMapping(value = "/insertCatetax", method = RequestMethod.POST)
 	@ResponseBody
 	public String insertCatetax(@RequestBody String data) {
 		JSONObject returnJson = JSONObject.parseObject(data);
-		Catetax catetax=JSONObject.parseObject(data, Catetax.class);
-		Token token = Token.getToken();
 		try {
+			Token token = Token.getToken();
+			Catetax catetax=JSONObject.parseObject(data, Catetax.class);
 			catetax.setEntid(token.getEntid());
 			Taxitem taxitem = goodstaxService.getTaxitemById(catetax.getTaxitemid());
 			if(taxitem==null){
@@ -96,14 +90,14 @@ public class CatetaxRest {
 			e.printStackTrace();
 		}
 		return returnJson.toJSONString();
-}
+	}
 	
 	@RequestMapping(value = "/updateCatetax", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateCatetax(@RequestBody String data) {
 		JSONObject returnJson = JSONObject.parseObject(data);
-		Catetax catetax=JSONObject.parseObject(data, Catetax.class);
 		try {
+			Catetax catetax=JSONObject.parseObject(data, Catetax.class);
 			Token token = Token.getToken();
 			returnJson.put("entid",token.getEntid());
 			catetax.setEntid(token.getEntid());
@@ -122,16 +116,14 @@ public class CatetaxRest {
 			e.printStackTrace();
 		}
 		return returnJson.toJSONString();
-}
-	
+	}
 
-	
 	@RequestMapping(value = "/deleteCatetaxByid", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteCatetaxByid(@RequestBody String data) {
 		JSONObject returnJson = new JSONObject();
-		Catetax catetax=JSONObject.parseObject(data, Catetax.class);
 		try {
+			Catetax catetax=JSONObject.parseObject(data, Catetax.class);
 			Token token = Token.getToken();
 			catetax.setEntid(token.getEntid());
 			catetaxService.deleteCatetax(catetax);
@@ -161,7 +153,6 @@ public class CatetaxRest {
 
 	}
 
-	
 	/**
 	 * 导入excel（企业类目与税目关系表）
 	 * @param request

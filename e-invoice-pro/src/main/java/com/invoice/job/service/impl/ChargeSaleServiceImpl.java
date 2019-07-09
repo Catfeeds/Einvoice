@@ -143,6 +143,8 @@ public class ChargeSaleServiceImpl {
 		Map<String, String> headMap = client.getHeadMap();
 		headMap.put("shopid", shopid);
 		headMap.put("sheetname", "charge");
+		
+		client.setHeadMap(headMap);
 
 		String res = client.getMessage("getList");
 		
@@ -163,7 +165,7 @@ public class ChargeSaleServiceImpl {
 		headMap.put("shopid", shopid);
 		headMap.put("sheetname", "charge");
 		headMap.put("data", data);
-
+		client.setHeadMap(headMap);
 		String res = client.getMessage("callBackSheet");
 		log.info("callBackSheet"+res);
 		return res;

@@ -3,12 +3,10 @@ package com.einvoice.sell.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.einvoice.sell.bean.ShopConnect;
 import com.einvoice.sell.dao.NBBillDao;
@@ -46,11 +44,13 @@ public class NBBillService extends BaseService {
 		}
 		return rows;
 	}
+	
 	@Override
 	public Map<String, Object> getSheet(ShopConnect shop, String sheetid) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	@Override
 	public Map<String, String> cookParams(String sheetid) {
 		// TODO Auto-generated method stub

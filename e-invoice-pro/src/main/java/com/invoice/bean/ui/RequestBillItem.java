@@ -36,7 +36,14 @@ public class RequestBillItem {
 	private String taxprecon;//优惠政策类型
 	private String zerotax;//零税率标识：空 非零税率，0：出口退税，1：免税，2：不征收，3：普通零税率',
 	private String isInvoice;
+	private String categoryid;
 	
+	public String getCategoryid() {
+		return categoryid;
+	}
+	public void setCategoryid(String categoryid) {
+		this.categoryid = categoryid;
+	}
 	public String getIsInvoice() {
 		return isInvoice;
 	}
@@ -157,4 +164,5 @@ public class RequestBillItem {
 	public void setTradedate(Date tradedate) {
 		this.tradedate = tradedate;
 	}
+	
 }

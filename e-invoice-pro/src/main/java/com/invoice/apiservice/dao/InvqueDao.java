@@ -49,5 +49,11 @@ public interface InvqueDao {
 	
 	List<Invque> getInvqueForsheetid(Map<String, Object> p);
 	
+	Invque getInvqueHead(Invque que);
+	
 	void updateForCallGD(Invque que);
+	
+	void updateForCardGD(Invque que);
+	
+	List<Invque> getInvqueCancelCard(Map<String, String> p);
 }

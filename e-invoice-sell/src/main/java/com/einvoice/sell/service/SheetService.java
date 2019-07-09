@@ -50,6 +50,29 @@ public interface SheetService {
 	public List<Map<String, Object>> getList(ShopConnect shop);
 
 	public List<Map<String, Object>> getZH(ShopConnect shop,Integer page);
+	
 	public List<Map<String, Object>> getHT(ShopConnect shop,String gysid,Integer page);
 	
+	public List<Map<String, Object>> getgoodsinfo(int startrow,int endrow);	
+	
+	/**
+	 * 以下是阪急定制
+	 */
+	public Map<String,Object> getSheetBJ(ShopConnect shop,String syjid,String billno);
+	
+	public Map<String,Object> getSheetSum(ShopConnect shop,String syjid,String billno);
+	
+	public List<Map<String, Object>> getBillListBJ(String entid,String shopid,String sheetid,String begdate,String enddate);
+	
+	public Map<String,Object> getProvSheetBJ(ShopConnect shop,String entid,String sheetid,String sheettype);
+	
+	public Map<String,Object> getProvSheetSum(ShopConnect shop,String entid,String sheetid,String sheettype);
+	
+	public List<Map<String, Object>> getProvRetList(String entid,String shopid,String begdate,String enddate);
+	
+	public List<Map<String, Object>> getHeadRetList(String shopid,String begdate,String enddate);
+	
+	public int callProvSheetBJ(ShopConnect shop,String entid,String sheetid,String sheettype,String flag,String flagmsg,String invoicecode,String invoiceno,String invoicedate);
+	
+	public int callBackSheetBJ(ShopConnect shop,String sheetid,String status,String invoicecode,String invoiceno,String invoicedate);
 }

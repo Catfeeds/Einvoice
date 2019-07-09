@@ -116,6 +116,7 @@ function search(){
 									dataJson.data.iqfplxdm="普票";
 								}
 							});
+							if(dataJson.data.isauto=="1"){ dataJson.data.isauto ="是";}else{dataJson.data.isauto="否"; }
 							$.myRowHTML([dataJson.data],"rowmo","row1");
 						},
 						error: function (jqXHR, textStatus, errorThrown) {

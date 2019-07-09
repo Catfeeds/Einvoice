@@ -17,8 +17,7 @@
 	</insert>
 	
 	<insert id="insertInvqueListDetail" parameterType="java.util.List">
-		INSERT INTO invque_list_detail 
-		(iqseqno, serialid, sheetid, sheettype,rowno) 
+		INSERT INTO invque_list_detail(iqseqno, serialid, sheetid, sheettype,rowno) 
 		VALUES 
 		<foreach collection ="list" item="detail" index= "index" separator =",">
 		(#{detail.iqseqno}, #{detail.serialid},#{detail.sheetid},#{detail.sheettype},#{detail.rowno})
@@ -68,12 +67,13 @@
 			limit 10
 		</if>
 	</select>
+	
 	<!-- 查询未返回DPF队列数据-->
 	<select id="getInvques" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
-		select * from invque where iqstatus>=40 and iqfplxdm='026' and (LENGTH(iqpdf)=0 or iqpdf is null) and iqseqno in (
-			select iqseqno from invoice_head where status =100 and invoiceType=0
-			)
-			<if test="entid != null and entid !=''">
+		select * from invque 
+		where iqstatus>=40 and iqfplxdm='026' and (LENGTH(iqpdf)=0 or iqpdf is null) 
+		  and iqseqno in (select iqseqno from invoice_head where status=100 and invoiceType=0)
+		<if test="entid != null and entid !=''">
 			 and iqentid = #{entid}
 		</if>
 		  order by iqdate 
@@ -81,10 +81,10 @@
 
 	<!-- 查询未返回发票数据-->
 	<select id="getInvquesNoFphm" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
-		select * from invque where   iqstatus in (30) and (rtfphm is null or rtfphm='') and iqfplxdm='026'  and iqseqno not in (
-			select iqseqno from invoice_head   
-		)
-			<if test="entid != null and entid !=''">
+		select * from invque 
+		where iqstatus in (30) and (rtfphm is null or rtfphm='') and iqfplxdm='026' 
+		  and iqseqno not in (select iqseqno from invoice_head)
+		<if test="entid != null and entid !=''">
 			 and iqentid = #{entid}
 		</if>
 		  order by iqdate 
@@ -140,10 +140,10 @@
 		</if>
 	</select>
 	
-		<select id="getInvquelistForSheetid" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+	<select id="getInvquelistForSheetid" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
 		select a.iqentid,a.iqstatus,a.iqseqno,c.sheetid,c.totalAmount,a.iqtotje,a.iqtotse,a.iqdate,
-       		a.iqtype,a.iqchannel,a.rtfpdm,a.rtfphm,
-       		a.iqgmftax,a.iqgmfname,a.iqgmfadd,a.iqgmfbank,a.iqemail,a.iqmsg
+       		   a.iqtype,a.iqchannel,a.rtfpdm,a.rtfphm,
+       		   a.iqgmftax,a.iqgmfname,a.iqgmfadd,a.iqgmfbank,a.iqemail,a.iqmsg
 		from invque a,invque_list b, invoice_sale_head c
 		where a.iqseqno=b.iqseqno and b.sheetid =c.sheetid and a.iqentid=c.entid 
  			and a.iqstatus in (30,99)
@@ -186,7 +186,7 @@
 	</select>
 	
 	<select id="getInvquelistForSheetidcount" resultType="int"  parameterType="NewHashMap">
-		select   count(*)
+		select count(*)
 		from invque a,invque_list b, invoice_sale_head c
 		where a.iqseqno=b.iqseqno and b.sheetid =c.sheetid and a.iqentid=c.entid 
 		and a.iqstatus in (30,99)
@@ -215,18 +215,17 @@
 		<if test="iqseqno != null">
 			and a.iqseqno = #{iqseqno}
 		</if>
- 
 	</select>
+	
 	<!-- 查询是否已经自动开票-->
 	<select id="getInvqueForsheetid" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
 		select a.iqentid,a.iqstatus,a.iqseqno,c.sheetid,c.totalAmount,a.iqtotje,a.iqtotse,a.iqdate,
-       		a.iqtype,a.iqchannel,a.rtfpdm,a.rtfphm,
-       		a.iqgmftax,a.iqgmfname,a.iqgmfadd,a.iqgmfbank,a.iqemail,a.iqmsg
+       		   a.iqtype,a.iqchannel,a.rtfpdm,a.rtfphm,
+       		   a.iqgmftax,a.iqgmfname,a.iqgmfadd,a.iqgmfbank,a.iqemail,a.iqmsg
 		from invque a,invque_list b, invoice_sale_head c
 		where a.iqseqno=b.iqseqno and b.sheetid =c.sheetid and a.iqentid=c.entid 
- 			and a.iqstatus in (40,50) and a.iqentid = #{entid} and isauto =1 and iqtype=0
-			and c.sheetid = #{sheetid}
-
+ 		  and a.iqstatus in (40,50) and a.iqentid = #{entid} and isauto =1 and iqtype=0
+		  and c.sheetid = #{sheetid}
 	</select>
 	
 	<select id="gethcInvqueList" resultType="com.invoice.bean.db.InvqueList"  parameterType="NewHashMap">
@@ -247,6 +246,7 @@
 		update invque set iqpdf=#{iqpdf},iqstatus=50
 		where iqseqno = #{iqseqno} and iqstatus=40
 	</update>
+	
 	<!-- 银座用-->
 	<update id="updateTo50ByFp" parameterType="com.invoice.bean.db.Invque">
 		update invque set iqpdf=#{iqpdf},rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},iqstatus=50
@@ -273,11 +273,28 @@
 		where iqseqno = #{iqseqno} 
 	</update>
 	
-	<!-- For 高灯回调接口 -->
+	<!-- 根据iqseqno查出单条数据 -->
+	<select id="getInvqueHead" resultType="com.invoice.bean.db.Invque"  parameterType="com.invoice.bean.db.Invque">
+		select * from invque where iqseqno = #{iqseqno}
+	</select>
+	
+	<!-- 更新高灯卡包数据 -->
+	<update id="updateForCardGD" parameterType="com.invoice.bean.db.Invque">
+		update invque 
+		set rtewm = #{rtewm},iqinvoicetimes = #{iqinvoicetimes}
+		where iqseqno = #{iqseqno}
+	</update>
+	
+	<!-- 高灯回调接口 -->
 	<update id="updateForCallGD" parameterType="com.invoice.bean.db.Invque">
 		update invque 
 		set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqpdf=#{iqpdf},iqstatus=#{iqstatus},iqmsg=#{iqmsg}
 		where iqseqno = #{iqseqno} and iqstatus in (0,10,20,30,40)
 	</update>
 	
+	<!-- 高灯红冲时获取卡包card_code -->
+	<select id="getInvqueCancelCard" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select * from invque where iqentid = #{iqentid} and rtfphm=#{rtfphm} and rtfpdm=#{rtfpdm} and iqinvoicetimes = -1 and rtewm != null and LENGTH(rtewm) != 0
+	</select>
+
 </mapper>

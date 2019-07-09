@@ -18,13 +18,17 @@
 		<property name="username" value="congou" />
 		<property name="password" value="congou" />
 
-<!-- 		<property name="filters" value="config" />
+		<!--
+		<property name="filters" value="config" />
 		<property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK3wsjj8yliyDNgqh12pM6W71LZtRC6g83tHqLVyddHt5UtWUmSuUcck3P7kPnOZDCIsTuXkEioIo7Nlg8ajQScCAwEAAQ==" />
-		 -->
+		-->
 
-		<!--<property name="url" value="jdbc:mysql://rm-bp18qw52u2ryfj28bo.mysql.rds.aliyuncs.com:3306/einvoice_common?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" /> 
+		<!--
+		<property name="url" value="jdbc:mysql://rm-bp18qw52u2ryfj28bo.mysql.rds.aliyuncs.com:3306/einvoice_common?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" /> 
 		<property name="username" value="portal" />
-		<property name="password" value="pcwW3n9GHTZkBho" />-->
+		<property name="password" value="pcwW3n9GHTZkBho" />
+		-->
+		
 		<property name="maxActive" value="100" />
 		<property name="initialSize" value="5" />
 		<property name="maxWait" value="60000" />

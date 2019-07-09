@@ -63,7 +63,7 @@ img { pointer-events: none; }
     <div class="scan">
       <!--<van-icon @click="scanAction" class="scan-icon" name="qr" />-->
       <van-row>
-        <van-col offset="14" span="8" class="scan-p" style="color:#f44">点这里</van-col>
+        <van-col offset="14" span="8" class="scan-p" style="color:#CC3327">点这里</van-col>
       </van-row>
       <van-row>
         <div style="width:100%;" @click="scanAction">
@@ -72,7 +72,7 @@ img { pointer-events: none; }
         </van-col>
         </div>
       </van-row>
-      <p class="scan-p" style="color:#f44">点击扫描二维码</p>
+      <p class="scan-p" style="color:#CC3327">点击扫描二维码</p>
     </div>
   </div>
 

@@ -12,6 +12,7 @@
 		VALUES 
 		(#{serialid},#{entid},#{sheetid},#{sheettype},#{shopid},#{syjid},#{billno},#{totalamount},#{invoiceamount},#{totaltaxfee},#{tradedate},#{remark},#{createtime},#{gmftax},#{gmfname},#{gmfadd},#{gmfbank},#{gmfno},#{invoicelx},#{recvemail},#{recvphone},#{isauto})
 	</insert>
+	
 	<insert id="insertSaleDetail" parameterType="java.util.List">
 		INSERT INTO invoice_sale_detail 
 		(serialid, entid, sheetid, sheettype, rowno, goodsid, goodsName, taxitemid, qty, unit, spec, price, amount, taxFee, taxRate,amt,oldAmt,isinvoice,taxpre,taxprecon,zerotax,tradeDate,categoryid,fphxz,zhdyhh) 
@@ -33,9 +34,11 @@
 	<delete id="deleteSaleHead" parameterType="com.invoice.bean.db.InvoiceSaleHead">
 		delete from invoice_sale_head where serialid=#{serialid}
 	</delete>
+	
 	<delete id="deleteSaleDetail" parameterType="com.invoice.bean.db.InvoiceSaleHead">
 		delete from invoice_sale_detail where serialid=#{serialid}
 	</delete>
+	
 	<delete id="deleteSalePay" parameterType="com.invoice.bean.db.InvoiceSaleHead">
 		delete from invoice_sale_pay where serialid=#{serialid}
 	</delete>
@@ -139,6 +142,7 @@
 			and (a.invoicelx=#{fplxdm} or a.invoicelx ='' or a.invoicelx is null)
 		</if>
 	</select>
+	
 	<!-- 直接查询开票数据清单 -->
 	<select id="getInvoiceSaleHeadList" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.bean.ui.ResponseBillInfo">
 		select a.*,b.*,b.iqfplxdm invoicelx
@@ -167,7 +171,8 @@
 		</if>
 		limit 1000
 	</select>
-<!-- 银座-->
+	
+	<!-- 银座-->
 	<select id="getInvoiceSaleHeadByiqseqno" parameterType="String" resultType="com.invoice.bean.ui.ResponseBillInfo">
 		select a.*,c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd
 		from invoice_sale_head a
@@ -228,13 +233,13 @@
 			and entid = #{entid}
 			and taxno = #{taxno}
 	</select>
+	
 	<select id="getSaleDetailListByInvquelist" parameterType="NewHashMap" resultType="com.invoice.bean.db.InvoiceSaleDetail">
 		SELECT c.* from invque_list b,invoice_sale_detail c where 1=1 
 		and b.iqseqno =#{iqseqno}	
 		and b.serialid = c.serialid and b.sheetid = c.sheetid 
 		and c.entid = #{entid}
 	</select>
-	
 	
 	<select id="getInvoiceBillDetailList" parameterType="NewHashMap" resultType="NewHashMap">
 		select a.entid,a.sheetid,a.sheettype,a.serialid,a.shopid,c.SHOPNAME,
@@ -261,6 +266,7 @@
 			limit ${pagestart},${pagesize} 
 	    </if> 
 	</select>
+	
 	<select id="getInvoiceBillDetailListCount" parameterType="NewHashMap" resultType="int">
 	    select count(1)
 		from invoice_sale_head a
@@ -288,6 +294,7 @@
 		</if>
 		order by a.serialid asc
 	</select>
+	
 	<update id="resetBill" parameterType="NewHashMap">
 		update invoice_sale_head set flag=#{flag}
 		 where serialid = #{serialid}

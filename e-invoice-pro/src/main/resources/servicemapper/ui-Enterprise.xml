@@ -6,7 +6,7 @@
 <!--  -->
 <mapper namespace="com.invoice.uiservice.dao.EnterpriseDao">	
 
- <select id="getEnterprise" resultType="NewHashMap">
+ 	<select id="getEnterprise" resultType="NewHashMap">
 		select a.*,
         (select c.LOOKUP from  lookup b,lookupitem c where b.LOOKUPID = c.LOOKUPID and b.LOOKUPID = 100 and a.ARITHMETIC=c.FIELDVALUE) as lookup
         from enterprise a 
@@ -21,7 +21,7 @@
 		<if test="pagestart != null">
 			limit ${pagestart},${pagesize}
 		</if>
-  </select>
+  	</select>
 
   	<select id="getEnterpriseCount" resultType="int" parameterType="NewHashMap">
 		select count(*) from enterprise where 1=1
@@ -31,16 +31,13 @@
 		<if test="entname != null and entname != ''">
 			and entname  like CONCAT('%',#{entname},'%')
 		</if> 
-
     </select>
 
-
-  <select id="getEnterpriseById" parameterType="com.invoice.bean.db.Enterprise" resultType="com.invoice.bean.db.Enterprise">
+  	<select id="getEnterpriseById" parameterType="com.invoice.bean.db.Enterprise" resultType="com.invoice.bean.db.Enterprise">
         select * from enterprise where entid = #{entid}
     
 	</select>
-	
-	
+
 	<insert id="insertEnterprise" parameterType="com.invoice.bean.db.Enterprise">
 		insert into enterprise(entid,entname,taxid,phone,address,arithmetic)
 		values(#{entid},#{entname},#{taxid},#{phone},#{address},#{arithmetic})

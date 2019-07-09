@@ -2,17 +2,14 @@ package com.invoice.rest;
 
 import java.util.HashMap;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONObject;
 import com.invoice.bean.db.Enterprise;
-import com.invoice.bean.ui.Token;
 import com.invoice.rtn.data.RtnData;
 import com.invoice.uiservice.service.EnterpriseService;
 import com.invoice.util.Page;
@@ -23,8 +20,7 @@ public class EnterpriseRest {
 	
 	@Autowired
 	EnterpriseService enterpriseService;
-	
-	
+
 	@RequestMapping(value = "/queryEnterprise", method = RequestMethod.POST)
 	@ResponseBody
 	public String queryEnterprise(@RequestBody String data) {
@@ -37,7 +33,6 @@ public class EnterpriseRest {
 		} catch (Exception e) {
 			return new RtnData(-1, e.getMessage()).toString();
 		}
-
 	}
 	
 	@RequestMapping(value = "/addEnterprise", method = RequestMethod.POST)
@@ -53,7 +48,7 @@ public class EnterpriseRest {
 			e.printStackTrace();
 		}
 		return returnJson.toJSONString();
-}
+	}
 	
 	@RequestMapping(value = "/getEnterpriseById", method = RequestMethod.POST)
 	@ResponseBody
@@ -90,7 +85,7 @@ public class EnterpriseRest {
 			e.printStackTrace();
 		}
 		return returnJson.toJSONString();
-}
+	}
 	
 	@RequestMapping(value = "/getEnterpriseCount")
 	@ResponseBody
@@ -107,14 +102,12 @@ public class EnterpriseRest {
 
 	}
 	
-	
 	@RequestMapping(value = "/deleteEnterprise", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteEnterprise(@RequestBody String data) {
 		JSONObject returnJson = new JSONObject();
 		Enterprise enterprise=JSONObject.parseObject(data, Enterprise.class);
 		try {
-			Token token = Token.getToken();
 			enterpriseService.deleteEnterprise(enterprise);
 			returnJson.put("code", "0");
 		} catch (Exception e) {
@@ -123,6 +116,5 @@ public class EnterpriseRest {
 			e.printStackTrace();
 		}
 		return returnJson.toJSONString();
-	
 	}
 }

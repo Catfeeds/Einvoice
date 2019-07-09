@@ -24,9 +24,6 @@ public class BillService extends BaseService {
 
 	@Autowired
 	BillDao dao;
-	
-	
-	
 
 	public Map<String, Object> getSheet(ShopConnect shop, String sheetid) {
 		Map<String, String> p = cookParams(sheetid);

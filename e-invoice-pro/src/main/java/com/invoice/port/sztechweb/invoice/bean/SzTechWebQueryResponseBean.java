@@ -1,7 +1,5 @@
 package com.invoice.port.sztechweb.invoice.bean;
 
-import java.util.Date;
-
 public class SzTechWebQueryResponseBean {
 	private int code;
     private String msg;
@@ -36,7 +34,7 @@ public class SzTechWebQueryResponseBean {
 		private String fail_msg;
 		private String audit_pay_state;
 		private String audit_pay_msg;
-		private Date ticket_date;
+		private String ticket_date;
 		private String ticket_sn;
 		private String ticket_code;
 		private String ticket_total_amount_has_tax;
@@ -81,11 +79,11 @@ public class SzTechWebQueryResponseBean {
 			return audit_pay_msg;
 		}
 
-		public void setTicket_date(Date ticket_date) {
+		public void setTicket_date(String ticket_date) {
 			this.ticket_date = ticket_date;
 		}
 		
-		public Date getTicket_date() {
+		public String getTicket_date() {
 			return ticket_date;
 		}
 

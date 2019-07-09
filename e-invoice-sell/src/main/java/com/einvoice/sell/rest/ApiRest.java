@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -18,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.einvoice.dynamicdb.DBMultiDataSource;
 import com.einvoice.sell.bean.ShopConnect;
 import com.einvoice.sell.config.FConfig;
 import com.einvoice.sell.service.SheetService;
 import com.einvoice.sell.service.factory.SheetServiceFactory;
-import com.einvoice.sell.service.impl.CommonSheetService;
 import com.einvoice.sell.util.Convert;
 import com.einvoice.sell.util.RtnData;
 import com.einvoice.sell.util.SHA1;
@@ -206,7 +202,6 @@ public class ApiRest {
 		
 	}
 	
-	
 	@RequestMapping(value = "/getStat/{sheetname}/{shopid}/{sdate}")
 	@ResponseBody
 	public String getStat(@PathVariable(value = "shopid") String shopid,
@@ -317,6 +312,7 @@ public class ApiRest {
 		SheetService s = SpringContextUtil.getBean("common",SheetService.class);
 		return new RtnData(s.getZH(shop,page)).toString();
 	}
+	
 	@RequestMapping(value = "/getHT/{shopid}/{gysid}")
 	@ResponseBody
 	public String getHT(@PathVariable String shopid,@PathVariable String gysid,@RequestParam(required=false) Integer page) {

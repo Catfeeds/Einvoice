@@ -474,11 +474,12 @@ public class PullSheetServiceImpl {
 		Map<String, String> headMap = client.getHeadMap();
 		headMap.put("shopid", shopid);
 		headMap.put("sheetname", sheetservice.getSHEET_NAME());
-
+		
+		client.setHeadMap(headMap);
+		
 		String res = client.getMessage("getList");
 
-		if (StringUtils.isEmpty(res))
-			return null;
+		if (StringUtils.isEmpty(res)) return null;
 
 		JSONObject jo = JSONObject.parseObject(res);
 		if (jo.getIntValue("code") == 0) {
@@ -504,6 +505,8 @@ public class PullSheetServiceImpl {
 		}
 
 		headMap.put("data", data);
+		
+		client.setHeadMap(headMap);
 
 		String res = client.getMessage("callBackSheet");
 		log.info("callBackSheet" + res);
