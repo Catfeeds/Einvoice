@@ -233,7 +233,7 @@
 	</select>
 	
 	<update id="updateTo40" parameterType="com.invoice.bean.db.Invque">
-		update invque set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqstatus=40
+		update invque set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqstatus=40,iqmemo=#{iqmemo}
 		where iqseqno = #{iqseqno} and iqstatus not in (40,50)
 	</update>
 	
@@ -288,13 +288,18 @@
 	<!-- 高灯回调接口 -->
 	<update id="updateForCallGD" parameterType="com.invoice.bean.db.Invque">
 		update invque 
-		set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqpdf=#{iqpdf},iqstatus=#{iqstatus},iqmsg=#{iqmsg}
+		set rtfpdm=#{rtfpdm},rtfphm=#{rtfphm},rtkprq=#{rtkprq},rtskm=#{rtskm},rtjym=#{rtjym},rtewm=#{rtewm},iqpdf=#{iqpdf},iqstatus=#{iqstatus},iqmsg=#{iqmsg},iqmemo=#{iqmemo}
 		where iqseqno = #{iqseqno} and iqstatus in (0,10,20,30,40)
 	</update>
 	
 	<!-- 高灯红冲时获取卡包card_code -->
 	<select id="getInvqueCancelCard" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
 		select * from invque where iqentid = #{iqentid} and rtfphm=#{rtfphm} and rtfpdm=#{rtfpdm} and iqinvoicetimes = -1 and rtewm != null and LENGTH(rtewm) != 0
+	</select>
+	
+	<!-- 高灯获取备注内容 -->
+	<select id="getInvqueIqmemo" resultType="java.lang.String"  parameterType="NewHashMap">
+		select remark from invoice_sale_head where entid = #{entid} and iqseqno = #{iqseqno} limit 1
 	</select>
 
 </mapper>

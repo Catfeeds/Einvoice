@@ -58,17 +58,17 @@ public interface SheetService {
 	/**
 	 * 以下是阪急定制
 	 */
-	public Map<String,Object> getSheetBJ(ShopConnect shop,String syjid,String billno);
+	public Map<String,Object> getSheetBJ(ShopConnect shop,String sheetid);
 	
 	public Map<String,Object> getSheetSum(ShopConnect shop,String syjid,String billno);
 	
-	public List<Map<String, Object>> getBillListBJ(String entid,String shopid,String sheetid,String begdate,String enddate);
+	public List<Map<String, Object>> getBillListBJ(ShopConnect shop,String entid,String sheetid,String begdate,String enddate);
 	
 	public Map<String,Object> getProvSheetBJ(ShopConnect shop,String entid,String sheetid,String sheettype);
 	
 	public Map<String,Object> getProvSheetSum(ShopConnect shop,String entid,String sheetid,String sheettype);
 	
-	public List<Map<String, Object>> getProvRetList(String entid,String shopid,String begdate,String enddate);
+	public List<Map<String, Object>> getProvRetList(ShopConnect shop,String entid,String begdate,String enddate);
 	
 	public List<Map<String, Object>> getHeadRetList(String shopid,String begdate,String enddate);
 	

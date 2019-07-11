@@ -9,9 +9,11 @@ import com.invoice.port.nbbanji.invoice.bean.ResponseBillInfoBJ;
 
 public interface SheetInvqueBJDao {
 	//阪急
-	public void updateForOpenBanJI(Map<String, String> p);
+	public void updateForInvqueBanJI(Map<String, String> p);
 	
-	public void updateForCancelBanJI(Map<String, String> p);
+	public void updateForReturnBanJI(Map<String, String> p);
+	
+	public void updateForSaleHeadBanJI(Map<String, String> p);
 	
 	public Invque getInvqueBJ(Map<String, Object> p);
 	

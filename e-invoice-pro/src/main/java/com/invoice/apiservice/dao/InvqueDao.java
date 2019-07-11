@@ -56,4 +56,6 @@ public interface InvqueDao {
 	void updateForCardGD(Invque que);
 	
 	List<Invque> getInvqueCancelCard(Map<String, String> p);
+	
+	String getInvqueIqmemo(Map<String, String> p);
 }

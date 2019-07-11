@@ -67,7 +67,7 @@ public class ApiBJ {
 			}
 			
 			SheetService service = SheetServiceFactory.getInstance(sheetname);
-			List<Map<String, Object>> sheet = service.getBillListBJ(entid,shopid,sheetid,begdate,enddate);
+			List<Map<String, Object>> sheet = service.getBillListBJ(shop,entid,sheetid,begdate,enddate);
 			
 			return new RtnData(sheet).toStringDES(clientid);
 		} catch (Exception e) {
@@ -220,7 +220,7 @@ public class ApiBJ {
 			}
 			
 			SheetService service = SheetServiceFactory.getInstance(sheetname);
-			List<Map<String, Object>> sheet = service.getProvRetList(entid,shopid,begdate,enddate);
+			List<Map<String, Object>> sheet = service.getProvRetList(shop,entid,begdate,enddate);
 			
 			return new RtnData(sheet).toStringDES(clientid);
 		} catch (Exception e) {
@@ -244,8 +244,7 @@ public class ApiBJ {
 			@RequestHeader(value="password") String password,
 			@RequestHeader(value="time") String time,
 			@RequestHeader(value="shopid") String shopid,
-			@RequestHeader(value="syjid") String syjid,
-			@RequestHeader(value="billno") String billno,
+			@RequestHeader(value="sheetid") String sheetid,
 			@RequestHeader(value="sheetname") String sheetname){
 		SpringContextUtil.getBean(FConfig.class);
 		ShopConnect shop = null;
@@ -268,19 +267,19 @@ public class ApiBJ {
 				datasource.switchDataSource(shop);
 				shop.setLastActiveDate(Convert.getNowString());
 				shop.setQueryCount(shop.getQueryCount()+1);
-				shop.setLastMsg("sheetname="+sheetname+";shopid="+shopid+";syjid="+syjid+";billno="+billno);
+				shop.setLastMsg("sheetname="+sheetname+";shopid="+shopid+";sheetid="+sheetid);
 			}
 			
 			SheetService service = SheetServiceFactory.getInstance(sheetname);
-			Map<String, Object> list = service.getSheetBJ(shop,syjid,billno);
+			Map<String, Object> list = service.getSheetBJ(shop,sheetid);
 			
 			return new RtnData(list).toStringDES(clientid);
 		} catch (Exception e) {
 			log.error(e);
 			if(shop!=null){
-				shop.setLastMsg("sheetname="+sheetname+";shopid="+shopid+";syjid="+syjid+";billno="+billno+";异常："+e.getMessage());
+				shop.setLastMsg("sheetname="+sheetname+";shopid="+shopid+";sheetid="+sheetid+";异常："+e.getMessage());
 			}
-			return new RtnData(-1,e.getMessage()+"; 请求数据："+sheetname+";syjid="+syjid+";billno="+billno).toString();
+			return new RtnData(-1,e.getMessage()+"; 请求数据："+sheetname+";sheetid="+sheetid).toString();
 		}
 	}
 	
@@ -440,9 +439,13 @@ public class ApiBJ {
 			}
 			
 			SheetService service = SheetServiceFactory.getInstance(sheetname);
-			service.callProvSheetBJ(shop,entid,sheetid,sheettype,flag,flagmsg,invoiceCode,invoiceNo,invoiceDate);
 			
-			return new RtnData().toStringDES(clientid);
+			int retFlag = service.callProvSheetBJ(shop,entid,sheetid,sheettype,flag,flagmsg,invoiceCode,invoiceNo,invoiceDate);
+			
+			if (retFlag > 0)
+				return new RtnData().toStringDES(clientid);
+			else
+				return new RtnData(-1,"更新ERP已开票状态出错").toStringDES(clientid);
 		} 
 		catch (ParseException ex) {
 			log.error(ex.toString());
@@ -504,9 +507,14 @@ public class ApiBJ {
 			}
 			
 			SheetService service = SheetServiceFactory.getInstance(sheetname);
-			service.callBackSheetBJ(shop,sheetid,status,invoiceCode,invoiceNo,invoiceDate);
 			
-			return new RtnData().toStringDES(clientid);
+			int retFlag = service.callBackSheetBJ(shop,sheetid,status,invoiceCode,invoiceNo,invoiceDate);
+
+			if (retFlag > 0)
+				return new RtnData().toStringDES(clientid);
+			else
+				return new RtnData(-1,"更新ERP已开票状态出错").toStringDES(clientid);
+			
 		} catch (Exception e) {
 			log.error(e);
 			if(shop!=null){

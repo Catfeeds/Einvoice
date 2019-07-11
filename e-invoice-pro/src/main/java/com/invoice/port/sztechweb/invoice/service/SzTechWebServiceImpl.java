@@ -272,6 +272,13 @@ public class SzTechWebServiceImpl implements PortService {
 		{
 			String callback = "/techweb/billcallback"; //让高灯回调地址
 			
+			//获取开票备注内容
+			Map<String,String> memo = new NewHashMap<String,String>();
+			memo.put("entid",invque.getIqentid());
+			memo.put("iqseqno", invque.getIqseqno());
+			String remark = inqueDao.getInvqueIqmemo(memo);
+			if (remark==null) remark = ""; invque.setIqmemo(remark);
+			
 			RtInvoiceBean invoiceBean = new RtInvoiceBean();
 		
 			//调用高灯SDK
@@ -312,7 +319,7 @@ public class SzTechWebServiceImpl implements PortService {
                        .setBuyerBankName(invque.getIqgmfbank()) //开户银行
                        .setSellerBankName(taxinfo.getTaxbank())
                        .setSellerAddress(taxinfo.getTaxadd())
-                       .setExtra(invque.getIqmemo()) //备注内容
+                       .setExtra(remark) //备注内容
                        .setCashier(invque.getIqpayee()) //收款人
                        .setChecker(invque.getIqchecker()) //复核人
                        .setInvoicer(invque.getIqadmin()) //开票人

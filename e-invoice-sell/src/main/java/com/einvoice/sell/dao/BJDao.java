@@ -19,6 +19,8 @@ public interface BJDao{
 	
 	public List<Map<String, Object>> getHead(Map<String, String> p);
 	
+	public List<Map<String, Object>> getSheet(Map<String, String> p);
+	
 	public List<Map<String, Object>> getDetail(Map<String, String> p);
 	
 	public List<Map<String, Object>> getPayment(Map<String, String> p);

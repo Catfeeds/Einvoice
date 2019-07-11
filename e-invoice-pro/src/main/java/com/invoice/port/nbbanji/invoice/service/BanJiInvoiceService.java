@@ -41,24 +41,37 @@ public class BanJiInvoiceService {
 		map.put("iqgmfbank",bill.getGFYHZH()); //购方银行、账号
 		map.put("iqfplxdm",bill.getFPZL()); //发票种类
 		map.put("iqtype",bill.getKPLX()); //开票类型
-		map.put("iqstatus",bill.getKPZT()); //开票状态
 		map.put("iqmsg",bill.getKPJG()); //开票结果
 		map.put("zsfs",bill.getFPZT()); // 发票状态;
 		map.put("entid",bill.getQYH()); //企业号
 		map.put("sheetid",bill.getFPQQLSH()); //小票流水号
-		map.put("shoptid", bill.getMDBH()); //门店
+		map.put("shopid", bill.getMDBH()); //门店
 		map.put("sheettype", bill.getDPZPBZ().equals("电票")?"1":"7"); //发票类型
 		
+		//开票状态
+		if (bill.getKPZT().equals("0"))
+			map.put("iqstatus","10"); //申请
+		else if (bill.getKPZT().equals("1"))
+			map.put("iqstatus","40"); //开票中
+		else if (bill.getKPZT().equals("2"))
+			map.put("iqstatus","50"); //成功
+		else
+			map.put("iqstatus","30"); //失败
+
 		try {
 			if (bill.getKPLX().equals("0")) 
 			{
 				//保存到开具表(INVQUE)
-				inqueDao.updateForOpenBanJI(map);
+				inqueDao.updateForInvqueBanJI(map);
+				map.put("flag","1");
+				map.put("invoicelx",bill.getFPZL());
+				inqueDao.updateForSaleHeadBanJI(map);
 			}
 			else
 			{
 				//保存到退货表(invoice_invque_head_return)
-				inqueDao.updateForCancelBanJI(map);
+				map.put("status","1");
+				inqueDao.updateForReturnBanJI(map);
 			}
 			
 			// 初始化远程连接
@@ -104,7 +117,7 @@ public class BanJiInvoiceService {
 				headMap.put("entid", bill.getQYH());
 				headMap.put("shopid", bill.getMDBH());
 				headMap.put("sheetid", bill.getFPQQLSH());
-				headMap.put("sheettype",bill.getDPZPBZ().equals("电票")?"1":"7");
+				headMap.put("sheettype","7");
 				headMap.put("flagmsg",bill.getKPJG());
 				headMap.put("invoicecode",bill.getFPDM());
 				headMap.put("invoiceno",bill.getFPHM());

@@ -62,6 +62,11 @@
 		where shopid = #{shopid} and syjid = #{syjid} and billno = #{billno}
 	</select>
 	
+	<select id="getSheet" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellhead 
+		where sheetid = #{sheetid}
+	</select>
+	
 	<select id="getDetail" resultType="NewHashMap" parameterType="NewHashMap">
 		select * from v_selldetail where sheetid = #{sheetid}
 	</select>
@@ -101,8 +106,8 @@
 		       <if test="invoicedate!=null and invoicedate!=''">
 		       invoicedate = to_date(#{invoicedate},'yyyyMMdd'),
 		       </if>
-		       flag=#{flag},
-		       createtime=now()
+		       flag = #{flag},
+		       createtime = sysdate
 		 where entid = #{entid} and sheetid = #{sheetid} and sheettype = #{sheettype} and shopid = #{shopid}
 	</update>
 	
@@ -110,16 +115,16 @@
 		update v_sellhead
 		   set 
 		   	   <if test="invoicecode!=null and invoicecode!=''">
-		       invoiccCode=#{invoicecode},
+		       invoicecode = #{invoicecode},
 		       </if>
 		       <if test="invoiceno!=null and invoiceno!=''">
-		       invoiceno=#{invoiceno},
+		       invoiceno = #{invoiceno},
 		       </if>
 		       <if test="invoicedate!=null and invoicedate!=''">
-		       invoicedate=to_date(#{invoicedate},'yyyyMMdd'),
+		       invoicedate = to_date(#{invoicedate},'yyyyMMdd'),
 		       </if>
-		       status=#{status},
-		       createtime=now()
+		       status = #{status},
+		       createtime = sysdate
 		 where sheetid = #{sheetid} and shopid = #{shopid}
 	</update>
 	

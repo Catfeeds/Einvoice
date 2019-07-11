@@ -83,7 +83,7 @@ public class BanJiSheetService {
 			// 初始化远程连接
 			CClient client =  privateparaService.getClientUrlByShopid(entid, shopid);
 			
-			if(client==null){
+			if(client == null){
 				if (shopid == null || shopid.isEmpty())
 					logInfo = "阪急－数据不存在entid:"+entid;
 				else
@@ -122,13 +122,13 @@ public class BanJiSheetService {
 				
 				// 本地没有则向小票服务查询
 				if (head == null) {
-					Map<String, String> sheetMap = client.getHeadMap();
-					sheetMap.put("shopid", myReqDP.getShopid());
-					sheetMap.put("syjid", myReqDP.getSyjid());
-					sheetMap.put("billno", myReqDP.getBillno());
-					sheetMap.put("sheetname", "NBBJ");
+					Map<String, String> dpMap = client.getHeadMap();
+					dpMap.put("shopid", myReqDP.getShopid());
+					dpMap.put("syjid", myReqDP.getSyjid());
+					dpMap.put("billno", myReqDP.getBillno());
+					dpMap.put("sheetname", "NBBJ");
 					
-					client.setHeadMap(sheetMap);
+					client.setHeadMap(dpMap);
 					
 					String res = client.getMessage("getSheetSum");
 					
@@ -145,7 +145,7 @@ public class BanJiSheetService {
 					
 					SheetHead sheetSell = JSONObject.parseObject(sheetJO.getString("data"), SheetHead.class);
 					
-					if(sheetSell==null){
+					if(sheetSell== null){
 						logInfo = "阪急－远程数据未找到:" + myReqDP.getSheetid();
 						log.info(logInfo);
 						return null;
@@ -164,6 +164,7 @@ public class BanJiSheetService {
 					InvoiceSaleHead saleHead = calculateSheet(sheetSell, serialId, myReqDP.getSheettype());
 					saleHead.setCreatetime(new Date());
 					saleHead.setFlag(0);
+					saleHead.setIsauto(0);
 					saleHead.setInvoicelx("10");
 					saleHead.setIqseqno(Serial.getInvqueSerial());
 					
@@ -181,7 +182,7 @@ public class BanJiSheetService {
 					return null;
 				}
 				
-				if(head.getTaxno()==null||head.getTaxno().isEmpty()){
+				if(head.getTaxno() == null||head.getTaxno().isEmpty()){
 					logInfo = "阪急－门店纳税信息不存在:"+ head.getShopid();
 					log.info(logInfo);
 					return null;
@@ -221,18 +222,18 @@ public class BanJiSheetService {
 				
 				String billList =  client.getMessage("getBillList");
 				
-				JSONObject zbJO = JSONObject.parseObject(billList);
+				JSONObject zpJO = JSONObject.parseObject(billList);
 				
-				if(zbJO.getIntValue("code") !=0 ){
+				if(zpJO.getIntValue("code") !=0 ){
 
-					logInfo = "阪急－获取数据异常:"+client.getClientid() + "," + zbJO.getString("message");
+					logInfo = "阪急－获取数据异常:"+client.getClientid() + "," + zpJO.getString("message");
 					
 					log.info(logInfo);
 					
 					return null;
 				}
 				
-				List<ResponseBillInfoBJ> provBill = JSONObject.parseArray(zbJO.getString("data"), ResponseBillInfoBJ.class);
+				List<ResponseBillInfoBJ> provBill = JSONObject.parseArray(zpJO.getString("data"), ResponseBillInfoBJ.class);
 				
 				List<ResponseBillInfoBJ> provBJ = new ArrayList<ResponseBillInfoBJ>();
 				
@@ -286,7 +287,7 @@ public class BanJiSheetService {
 						
 						SheetHead provSell = JSONObject.parseObject(provJO.getString("data"), SheetHead.class);
 						
-						if(provSell==null){
+						if(provSell== null){
 							logInfo = "阪急－远程数据未找到:" + myReqZP.getSheetid();
 							log.info(logInfo);
 							return null;
@@ -302,21 +303,22 @@ public class BanJiSheetService {
 						provSell.setEntid(myReqZP.getEntid());
 						
 						// 查到小票后，对小票进行运算
-						InvoiceSaleHead saleHead = calculateSheet(provSell, serialId, myReqZP.getSheettype());
+						InvoiceSaleHead provHead = calculateSheet(provSell, serialId, myReqZP.getSheettype());
 						
-						saleHead.setCreatetime(new Date());
-						saleHead.setFlag(0);
-						saleHead.setSyjid("1");
-						saleHead.setBillno(provSell.getSheetid());
-						saleHead.setInvoicelx(myres.getInvoicelx());
-						saleHead.setIqseqno(Serial.getInvqueSerial());						
+						provHead.setCreatetime(new Date());
+						provHead.setFlag(0);
+						provHead.setSyjid("1");
+						provHead.setIsauto(0);
+						provHead.setBillno(provSell.getSheetid());
+						provHead.setInvoicelx(myres.getInvoicelx());
+						provHead.setIqseqno(Serial.getInvqueSerial());
 						SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd");
-						saleHead.setTradedate(f.format(provSell.getTradedate()));
+						provHead.setTradedate(f.format(provSell.getTradedate()));
 
 						// 写入小票表
-						saleInvoice2Insert(saleHead);
+						saleInvoice2Insert(provHead);
 						// 写入发票队列表
-						insertInvque(saleHead,bill.getTaxNo());
+						insertInvque(provHead,bill.getTaxNo());
 
 						head = sheetInvqueBJDao.getSheetSaleHeadBJ(myReqZP);
 					}
@@ -327,7 +329,7 @@ public class BanJiSheetService {
 						return null;
 					}
 					
-					if(head.getTaxno()==null||head.getTaxno().isEmpty()){
+					if(head.getTaxno()== null||head.getTaxno().isEmpty()){
 						logInfo = "阪急－门店纳税信息不存在:"+ head.getShopid();
 						log.info(logInfo);
 						return null;
@@ -350,32 +352,25 @@ public class BanJiSheetService {
 			// 电票+纸票的退货统一处理
 			if (bill.getRetFlag().equals("1"))
 			{
-				//先根据条件从ERP获取退货清单
-				Map<String, String> headMap = client.getHeadMap();
-				headMap.put("shopid", bill.getShopId());
-				headMap.put("begdate", bill.getDdRQq());
-				headMap.put("enddate", bill.getDdRQz());
-				headMap.put("sheetname", "NBBJ");
-				
-				client.setHeadMap(headMap);
-				
 				String res = "";
 				
-				// 小票退货
-				if (bill.getDpType().equals("电票"))
-				{
-					res = client.getMessage("getHeadRetList");
-				}
+				//先根据条件从ERP获取退货清单
+				Map<String, String> retMap = client.getHeadMap();
+				retMap.put("shopid", bill.getShopId());
+				retMap.put("begdate", bill.getDdRQq());
+				retMap.put("enddate", bill.getDdRQz());
+				retMap.put("sheetname", "NBBJ");
 				
-				// 费用退货
-				if (bill.getDpType().equals("纸票"))
-				{
-					res = client.getMessage("getProvRetList");
-				}
+				client.setHeadMap(retMap);
+
+				if (bill.getDpType().equals("电票"))
+					res = client.getMessage("getHeadRetList"); // 小票退货清单
+				else
+					res = client.getMessage("getProvRetList"); // 费用退货清单
 				
 				JSONObject returnJO = JSONObject.parseObject(res);
 				
-				if(returnJO.getIntValue("code") !=0 ){
+				if(returnJO.getIntValue("code") != 0 ){
 
 					logInfo = "阪急－获取数据异常:"+client.getClientid() + "," + returnJO.getString("message");
 					
@@ -386,7 +381,7 @@ public class BanJiSheetService {
 
 				List<ResponseBillInfoBJ> retSell = JSONObject.parseArray(returnJO.getString("data"), ResponseBillInfoBJ.class);
 				
-				if (retSell == null || retSell.size() ==0 )
+				if (retSell == null || retSell.size() == 0 )
 				{
 					logInfo = "阪急－没有获取到数据:" + bill.getDdRQq() + "," + bill.getDdRQz();
 					
@@ -411,80 +406,146 @@ public class BanJiSheetService {
 					
 					// 先找一下原小票是否已经同步过来
 					ResponseBillInfoBJ myOrig = sheetInvqueBJDao.getSheetHeadOriginal(returnMap);
+					
+					// 同步原小票数据
+					if (myOrig == null) {
+						//先根据条件从ERP获取退货清单
+						Map<String, String> syMap = client.getHeadMap();
+						syMap.put("shopid", myres.getShopid());
+						syMap.put("sheetid", myres.getRefsheetid());
+						syMap.put("sheetname", "NBBJ");
 
-					if (myOrig != null)
-					{
-						//先查查退货表中有没有数据，如没有则进行保存
-						InvoiceInvqueReturn myReturn = sheetInvqueBJDao.getSheetHeadReturn(returnMap);
+						if (bill.getDpType().equals("电票"))
+							res = client.getMessage("getSheetBJ");
+						else
+							res = client.getMessage("getProvSheetBJ");			
+
+						JSONObject syncJO = JSONObject.parseObject(res);
 						
-						if (myReturn == null)
-						{
-							myReturn = new InvoiceInvqueReturn();
+						if(syncJO.getIntValue("code") != 0 ){
+
+							logInfo = "阪急－获取原小票数据异常:"+client.getClientid() + "," + syncJO.getString("message");
 							
-							myReturn.setBillno(myres.getBillno());
-							myReturn.setEntid(myOrig.getEntid());
-							myReturn.setSheetid(myres.getSheetid());
-							myReturn.setSheettype(myOrig.getSheettype());
-							myReturn.setHzfpxxbbh(myres.getHzfpxxbbh());
-							myReturn.setInvoicelx(myOrig.getInvoicelx());
-							myReturn.setIqfplxdm(myOrig.getInvoicelx());
-							myReturn.setIqgmfadd(myOrig.getGmfadd() );
-							myReturn.setIqgmfbank(myOrig.getGmfbank());
-							myReturn.setIqgmfname(myOrig.getGmfname());
-							myReturn.setIqgmftax(myOrig.getGmftax());
-							myReturn.setIqstatus("10");
-							myReturn.setIqtype("1");
-							myReturn.setRefbillno(myOrig.getBillno());
-							myReturn.setRefinvoicecode(myOrig.getRtfpdm());
-							myReturn.setRefinvoicedate(myOrig.getRtkprq());
-							myReturn.setRefinvoiceno(myOrig.getRtfphm());
-							myReturn.setRefsheetid(myOrig.getSheetid());
-							myReturn.setRefshopid(myOrig.getShopid());
-							myReturn.setRefsyjid(myOrig.getSyjid());
-							myReturn.setSdate(myres.getTradedate()==null?stampToDate(myOrig.getTradedate()):stampToDate(myres.getTradedate()));
-							myReturn.setShopid(myres.getShopid());
-							myReturn.setStatus("0");
-							myReturn.setSyjid(myres.getSyjid());
-							myReturn.setZsfs("0");
-						
-							sheetInvqueBJDao.insertInvoiceInvqueReturn(myReturn);	
+							log.info(logInfo);
+							
+							return null;
 						}
 						
-						myres.setTaxno(myOrig.getTaxno());
-						myres.setTaxadd(myOrig.getTaxadd());
-						myres.setTaxbank(myOrig.getTaxbank());
-						myres.setTaxname(myOrig.getTaxname());
-						myres.setGmfadd(myOrig.getGmfadd());
-						myres.setGmfbank(myOrig.getGmfbank());
-						myres.setGmfname(myOrig.getGmfname());
-						myres.setGmftax(myOrig.getGmftax());
-						myres.setGmfno(myres.getHzfpxxbbh());
-						myres.setKpr(myOrig.getKpr());
-						myres.setFhr(myOrig.getFhr());
-						myres.setSkr(myOrig.getSkr());
-						myres.setYskt(myOrig.getSyjid());
-						myres.setYmdbh(myOrig.getShopid());
-						myres.setYfpdm(myOrig.getRtfpdm());
-						myres.setYfphm(myOrig.getRtfphm());
-						myres.setRefsheetid(myOrig.getSheetid());
+						SheetHead syncSell = JSONObject.parseObject(syncJO.getString("data"), SheetHead.class);
+						
+						if(syncSell == null){
+							logInfo = "阪急－远程原小票数据未找到:" + myres.getRefsheetid();
+							log.info(logInfo);
+							return null;
+						}
+						
+						// 远端门店必须和请求的门店信息一致
+						if(!syncSell.getShopid().equals(myres.getShopid())){
+							logInfo = "阪急－数据门店信息异常 ，要求门店" + syncSell.getShopid()+"与返回门店" + myres.getShopid() + "不一样";
+							log.info(logInfo);
+							return null;
+						}
+						
+						syncSell.setEntid(myres.getEntid());
+						
+						// 查到小票后，对小票进行运算
+						InvoiceSaleHead syncHead = calculateSheet(syncSell, serialId, returnMap.get("sheettype"));
+						syncHead.setCreatetime(new Date());
+						syncHead.setFlag(0);
+						syncHead.setIsauto(0);
+						syncHead.setInvoicelx("10");
+						syncHead.setIqseqno("");
+						
+						// 写入小票表
+						saleInvoice2Insert(syncHead);
 
-						RequestBillInfo myReqZP = new RequestBillInfo();
-						myReqZP.setSyjid(myOrig.getSyjid());
-						myReqZP.setEntid(myOrig.getEntid());
-						myReqZP.setSheetid(myOrig.getSheetid());
-						myReqZP.setSheettype(myOrig.getSheettype());
-						myReqZP.setShopid(myOrig.getShopid());
-						myReqZP.setBillno(myOrig.getSheetid());
-						myReqZP.setGmfno(bill.getTaxNo());
-						
-						List<InvoiceSaleDetail> detail = invoiceSaleDao.getInvoiceSaleDetail(myReqZP);
-						
-						myres.setInvoiceSaleDetail(detail);
-						
-						sellRes.add(myres);
+						myOrig = sheetInvqueBJDao.getSheetHeadOriginal(returnMap);
 					}
+
+					//先查退货表中有没有数据，如没有则进行保存
+					returnMap.put("sheetid",myres.getSheetid());
+					
+					InvoiceInvqueReturn myReturn = sheetInvqueBJDao.getSheetHeadReturn(returnMap);
+
+					if (myReturn == null)
+					{
+						myReturn = new InvoiceInvqueReturn();
+						
+						myReturn.setBillno(myres.getBillno());
+						myReturn.setEntid(myOrig.getEntid());
+						myReturn.setSheetid(myres.getSheetid());
+						myReturn.setSheettype(myOrig.getSheettype());
+						myReturn.setHzfpxxbbh(myres.getHzfpxxbbh());
+						myReturn.setInvoicelx(myOrig.getInvoicelx());
+						myReturn.setIqfplxdm(myOrig.getInvoicelx());
+						myReturn.setIqgmfadd(myOrig.getGmfadd() );
+						myReturn.setIqgmfbank(myOrig.getGmfbank());
+						myReturn.setIqgmfname(myOrig.getGmfname());
+						myReturn.setIqgmftax(myOrig.getGmftax());
+						myReturn.setIqstatus("10");
+						myReturn.setIqtype("1");
+						myReturn.setRefbillno(myOrig.getBillno());
+						myReturn.setRefinvoicecode(myOrig.getRtfpdm());
+						myReturn.setRefinvoicedate(myOrig.getRtkprq());
+						myReturn.setRefinvoiceno(myOrig.getRtfphm());
+						myReturn.setRefsheetid(myOrig.getSheetid());
+						myReturn.setRefshopid(myOrig.getShopid());
+						myReturn.setRefsyjid(myOrig.getSyjid());
+						myReturn.setSdate(myres.getTradedate()== null?stampToDate(myOrig.getTradedate()):stampToDate(myres.getTradedate()));
+						myReturn.setShopid(myres.getShopid());
+						myReturn.setStatus("0");
+						myReturn.setSyjid(myres.getSyjid());
+						myReturn.setZsfs("0");
+					
+						sheetInvqueBJDao.insertInvoiceInvqueReturn(myReturn);	
+					}
+
+					myres.setTaxno(myOrig.getTaxno());
+					myres.setTaxadd(myOrig.getTaxadd());
+					myres.setTaxbank(myOrig.getTaxbank());
+					myres.setTaxname(myOrig.getTaxname());
+					myres.setGmfadd(myOrig.getGmfadd());
+					myres.setGmfbank(myOrig.getGmfbank());
+					myres.setGmfname(myOrig.getGmfname());
+					myres.setGmftax(myOrig.getGmftax());
+					myres.setGmfno(myres.getHzfpxxbbh());
+					myres.setKpr(myOrig.getKpr());
+					myres.setFhr(myOrig.getFhr());
+					myres.setSkr(myOrig.getSkr());
+					myres.setYskt(myOrig.getSyjid());
+					myres.setYmdbh(myOrig.getShopid());
+					myres.setYfpdm(myOrig.getRtfpdm());
+					myres.setYfphm(myOrig.getRtfphm());
+					myres.setRefsheetid(myOrig.getSheetid());
+					myres.setTotalamount(-1*myOrig.getTotalamount());
+					myres.setInvoiceamount(-1*myOrig.getInvoiceamount());
+					myres.setTotaltaxfee(-1*myOrig.getTotaltaxfee());
+					
+					RequestBillInfo myReqZP = new RequestBillInfo();
+					myReqZP.setSyjid(myOrig.getSyjid());
+					myReqZP.setEntid(myOrig.getEntid());
+					myReqZP.setSheetid(myOrig.getSheetid());
+					myReqZP.setSheettype(myOrig.getSheettype());
+					myReqZP.setShopid(myOrig.getShopid());
+					myReqZP.setBillno(myOrig.getSheetid());
+					myReqZP.setGmfno(bill.getTaxNo());
+					
+					List<InvoiceSaleDetail> detail = invoiceSaleDao.getInvoiceSaleDetail(myReqZP);
+					
+					for (InvoiceSaleDetail myDetl : detail)
+					{
+						myDetl.setQty(-1*(myDetl.getQty()==null?0.00:myDetl.getQty()));
+						myDetl.setOldamt(-1*(myDetl.getOldamt()==null?0.00:myDetl.getOldamt()));
+						myDetl.setAmount(-1*(myDetl.getAmount()==null?0.00:myDetl.getAmount()));
+						myDetl.setAmt(-1*(myDetl.getAmt()==null?0.00:myDetl.getAmt()));
+						myDetl.setTaxfee(-1*(myDetl.getTaxfee()==null?0.00:myDetl.getTaxfee()));
+					}
+					
+					myres.setInvoiceSaleDetail(detail);
+					
+					sellRes.add(myres);
 				}
-				
+
 				return sellRes;
 			}
 			
@@ -515,7 +576,7 @@ public class BanJiSheetService {
 				return null;
 			}
 			
-			if(serialid==null) serialid = Serial.getSheetSerial();
+			if(serialid== null) serialid = Serial.getSheetSerial();
 			
 			String shopid = sell.getShopid();
 			String syjid = sell.getSyjid();
@@ -536,14 +597,6 @@ public class BanJiSheetService {
 			invoiceSaleHead.setGmfname(sell.getGmfname());
 			invoiceSaleHead.setGmftax(sell.getGmftax());
 			invoiceSaleHead.setRecvemail(sell.getRecvemail());
-			
-			if(sell.getIsauto()==null) {
-				sell.setIsauto(0);
-			}
-			
-			invoiceSaleHead.setIsauto(sell.getIsauto());
-			
-			Date tradeDate = sell.getSdate();
 
 			// 小票明细信息
 			List<SheetDetail> detail = sell.getSheetdetail();
@@ -582,9 +635,8 @@ public class BanJiSheetService {
 				String goodsName = sheetDetail.getItemname();
 				goodsName = cookString(goodsName);
 				invoiceDetail.setGoodsname(goodsName);
-				invoiceDetail.setRowno(sheetDetail.getRowno()==null||sheetDetail.getRowno()==0?rows++ : sheetDetail.getRowno());
-				invoiceDetail.setTradedate(tradeDate);
-				
+				invoiceDetail.setRowno(sheetDetail.getRowno()== null||sheetDetail.getRowno()==0?rows++ : sheetDetail.getRowno());
+				invoiceDetail.setTradedate(sell.getSdate());
 				
 				// 销售数量
 				invoiceDetail.setQty(sheetDetail.getQty());
@@ -644,7 +696,7 @@ public class BanJiSheetService {
 							taxitemid = taxitem.getTaxitemid();
 						}
 						
-						invoiceDetail.setTaxpre(taxitem.getTaxpre()==null?"0":taxitem.getTaxpre());
+						invoiceDetail.setTaxpre(taxitem.getTaxpre()== null?"0":taxitem.getTaxpre());
 						invoiceDetail.setTaxprecon(taxitem.getTaxprecon());
 						invoiceDetail.setZerotax(taxitem.getZerotax());
 					}
@@ -658,7 +710,7 @@ public class BanJiSheetService {
 					}
 				}
 				
-				if (invoiceDetail.getTradedate()==null) invoiceDetail.setTradedate(sell.getTradedate());
+				if (invoiceDetail.getTradedate()== null) invoiceDetail.setTradedate(sell.getTradedate());
 				
 				invoiceSaleDetailList.add(invoiceDetail);
 			}
@@ -695,7 +747,7 @@ public class BanJiSheetService {
 				pay.setPayid(payid);
 				pay.setSheettype(sheettype);
 				pay.setAmt(amt);
-				pay.setRowno(sheetPayment.getRowno()==null||sheetPayment.getRowno()==0? rows++ : sheetPayment.getRowno());
+				pay.setRowno(sheetPayment.getRowno()== null||sheetPayment.getRowno()==0? rows++ : sheetPayment.getRowno());
 
 				totalPayAmount = MathCal.add(totalPayAmount, amt, 2);
 				
@@ -718,7 +770,7 @@ public class BanJiSheetService {
 					pay.setIsinvoice("Y");
 					String tmp = sheetPayment.getPayname();
 					
-					if(tmp==null||tmp.isEmpty()) tmp=payid;
+					if(tmp== null||tmp.isEmpty()) tmp=payid;
 					pay.setPayname(tmp);
 				}
 				
@@ -726,7 +778,7 @@ public class BanJiSheetService {
 			}
 
 			//如果没有指定 合计金额，则从明细汇总
-			if(invoiceSaleHead.getTotalamount()==null){
+			if(invoiceSaleHead.getTotalamount()== null){
 				invoiceSaleHead.setTotalamount(totalGooodsAmount);
 			}
 			
@@ -770,7 +822,7 @@ public class BanJiSheetService {
 					d.setTaxfee(0.00);
 					d.setAmt(0.00);
 					d.setTaxpre("0");
-					if(d.getTaxitemid()==null) d.setTaxitemid("");
+					if(d.getTaxitemid()== null) d.setTaxitemid("");
 					continue;
 				}
 
@@ -873,7 +925,7 @@ public class BanJiSheetService {
 	
 	// 去除特殊字符或半角汉字
 	public String cookString(String s){
-		if(s==null) return "";
+		if(s== null) return "";
 		String res = "";
 		char[] chars = s.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
@@ -978,7 +1030,7 @@ public class BanJiSheetService {
 		}
 		
 		//如果按税率无法匹配到则取第一条
-		if(catetax==null) {
+		if(catetax== null) {
 			catetax = cateList.get(0);
 		}
 		
@@ -1050,7 +1102,7 @@ public class BanJiSheetService {
 			myQue.setIqtaxno(taxNo);
 			myQue.setIqdate(new Date());
 			myQue.setIqgmftax(p.getGmftax());
-			myQue.setIqgmfname(p.getGmfname()==null||p.getGmfname().trim().length()==0?"个人":p.getGmfname());
+			myQue.setIqgmfname(p.getGmfname() == null||p.getGmfname().trim().length()==0?"个人":p.getGmfname());
 			myQue.setIqgmfadd(p.getGmfadd());
 			myQue.setIqgmfbank(p.getGmfbank());
 			myQue.setIqtaxzdh("");

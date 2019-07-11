@@ -92,8 +92,19 @@
 		values(#{entid},#{sheetid},#{sheettype},#{invoicelx},#{status},#{shopid},#{syjid},#{billno},#{sdate},#{iqgmftax},#{iqgmfname},#{iqgmfadd},#{iqgmfbank},#{iqfplxdm},#{iqtype},#{iqstatus},#{zsfs},#{refsheetid},#{refshopid},#{refsyjid},#{refbillno},#{refinvoicecode},#{refinvoiceno},#{refinvoicedate},now())
 	</insert>
 	
-	<!-- 阪急开具回写 -->
-	<update id="updateForOpenBanJI" parameterType="NewHashMap">
+	<!-- 阪急开具回写(invoice_sale_head) -->
+	<update id="updateForSaleHeadBanJI" parameterType="NewHashMap">
+		update invoice_sale_head a
+		set flag = #{flag},
+			invoicelx = #{invoicelx}
+		where a.entid = #{entid}
+		  and a.sheetid = #{sheetid}
+		  and a.sheettype = #{sheettype}
+		  and a.shopid = #{shopid}
+	</update>
+	
+	<!-- 阪急开具回写(invque) -->
+	<update id="updateForInvqueBanJI" parameterType="NewHashMap">
 		update invque a,invque_list b
 		set a.rtfpdm = #{rtfpdm},
 		    a.rtfphm = #{rtfphm},
@@ -107,7 +118,7 @@
 		    a.iqstatus = #{iqstatus},
 		    a.iqmsg = #{iqmsg},
 		    a.zsfs = #{zsfs}
-		where a.iqseqno = a.iqseqno
+		where a.iqseqno = b.iqseqno
 		  and a.iqentid = #{entid}
 		  and b.sheetid = #{sheetid}
 		  and b.sheettype = #{sheettype}
@@ -115,7 +126,7 @@
 	</update>
 	
 	<!-- 阪急红冲回写 -->
-	<update id="updateForCancelBanJI" parameterType="NewHashMap">
+	<update id="updateForReturnBanJI" parameterType="NewHashMap">
 		update invoice_invque_head_return a
 		set a.rtfpdm = #{rtfpdm},
 		    a.rtfphm = #{rtfphm},
@@ -128,7 +139,8 @@
 		    a.iqtype = #{iqtype},
 		    a.iqstatus = #{iqstatus},
 		    a.iqmsg = #{iqmsg},
-		    a.zsfs = #{zsfs}
+		    a.zsfs = #{zsfs},
+		    a.status = #{status}
 		where a.entid = #{entid}
 		  and a.sheetid = #{sheetid}
 		  and a.sheettype = #{sheettype}

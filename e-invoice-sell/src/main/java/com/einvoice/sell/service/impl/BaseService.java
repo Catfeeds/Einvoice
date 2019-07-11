@@ -70,13 +70,13 @@ public abstract class BaseService implements SheetService {
 	 * 以下是阪急定制
 	 */
 	@Override
-	public Map<String,Object> getSheetBJ(ShopConnect shop,String syjid,String billno){return null;}
+	public Map<String,Object> getSheetBJ(ShopConnect shop,String sheetid){return null;}
 	
 	@Override
 	public Map<String,Object> getSheetSum(ShopConnect shop,String syjid,String billno){return null;}
 	
 	@Override
-	public List<Map<String, Object>> getBillListBJ(String entid,String shopid,String sheetid,String begdate,String enddate){return null;}
+	public List<Map<String, Object>> getBillListBJ(ShopConnect shop,String entid,String sheetid,String begdate,String enddate){return null;}
 	
 	@Override
 	public Map<String,Object> getProvSheetBJ(ShopConnect shop,String entid,String sheetid,String sheettype){return null;}
@@ -85,7 +85,7 @@ public abstract class BaseService implements SheetService {
 	public Map<String,Object> getProvSheetSum(ShopConnect shop,String entid,String sheetid,String sheettype){return null;}
 	
 	@Override
-	public List<Map<String, Object>> getProvRetList(String entid,String shopid,String begdate,String enddate){return null;}
+	public List<Map<String, Object>> getProvRetList(ShopConnect shop,String entid,String begdate,String enddate){return null;}
 	
 	@Override
 	public List<Map<String, Object>> getHeadRetList(String shopid,String begdate,String enddate){return null;}

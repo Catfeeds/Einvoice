@@ -1,6 +1,5 @@
 package com.einvoice.sell.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +27,50 @@ public class BJService extends BaseService {
 	 * 获取费用单据列表
 	 */
 	@Override
-	public List<Map<String, Object>> getBillListBJ(String entid,String shopid,String sheetid,String begdate,String enddate) {
+	public List<Map<String, Object>> getBillListBJ(ShopConnect shop,String entid,String sheetid,String begdate,String enddate) {
 		NewHashMap<String, String> p = new NewHashMap<String, String>();
 		p.put("entid", entid);
-		p.put("shopid", shopid);
+		p.put("shopid", shop.getShopid());
 		p.put("sheetid", sheetid);
 		p.put("begdate", begdate);
 		p.put("enddate", enddate);
 		
-		List<Map<String, Object>> list = dao.getProvHead(p);
+		List<Map<String, Object>> headList = dao.getProvHead(p);
+		
+		// 字符集处理
+		try {
+			String charcode = shop.getDbcharcode();Object obj = null;
+			if (!StringUtils.isEmpty(charcode) && !"GBK".equalsIgnoreCase(charcode) && !"UTF-8".equalsIgnoreCase(charcode)) {
+				for (Map<String, Object> map : headList) {
+					obj = map.get("gmfname");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("gmfname", new String(obj.toString().getBytes(charcode), "GBK"));
+					}
+	
+					obj = map.get("gmfadd");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("gmfadd", new String(obj.toString().getBytes(charcode), "GBK"));
+	
+					}
+	
+					obj = map.get("gmfbank");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("gmfbank", new String(obj.toString().getBytes(charcode), "GBK"));
+					}
+	
+					obj = map.get("remark");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("remark", new String(obj.toString().getBytes(charcode), "GBK"));
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			log.error(ex.toString());
+		}
 
-		return list;
+		return headList;
 	}
 	
 	/**
@@ -320,17 +352,50 @@ public class BJService extends BaseService {
 	 * 获取费用单退货列表
 	 */
 	@Override
-	public List<Map<String, Object>> getProvRetList(String entid,String shopid,String begdate,String enddate)
+	public List<Map<String, Object>> getProvRetList(ShopConnect shop,String entid,String begdate,String enddate)
 	{
 		NewHashMap<String, String> p = new NewHashMap<String, String>();
 		p.put("entid", entid);
-		p.put("shopid", shopid);
+		p.put("shopid", shop.getShopid());
 		p.put("begdate", begdate);
 		p.put("enddate", enddate);
 		
-		List<Map<String, Object>> list = dao.getProvRet(p);
+		List<Map<String, Object>> headList = dao.getProvRet(p);
+		
+		// 字符集处理
+		try {
+			String charcode = shop.getDbcharcode();Object obj = null;
+			if (!StringUtils.isEmpty(charcode) && !"GBK".equalsIgnoreCase(charcode) && !"UTF-8".equalsIgnoreCase(charcode)) {
+				for (Map<String, Object> map : headList) {
+					obj = map.get("gmfname");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("gmfname", new String(obj.toString().getBytes(charcode), "GBK"));
+					}
+	
+					obj = map.get("gmfadd");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("gmfadd", new String(obj.toString().getBytes(charcode), "GBK"));
+	
+					}
+	
+					obj = map.get("gmfbank");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("gmfbank", new String(obj.toString().getBytes(charcode), "GBK"));
+					}
+	
+					obj = map.get("remark");
+					if (!StringUtils.isEmpty(obj)) {
+						map.put("remark", new String(obj.toString().getBytes(charcode), "GBK"));
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			log.error(ex.toString());
+		}
 
-		return list;
+		return headList;
 	}
 	
 	/**
@@ -525,17 +590,15 @@ public class BJService extends BaseService {
 	 * 获取小票明细数据，不合并退货数据
 	 */
 	@Override
-	public Map<String,Object> getSheetBJ(ShopConnect shop,String syjid,String billno)
+	public Map<String,Object> getSheetBJ(ShopConnect shop,String sheetid)
 	{
 		NewHashMap<String, String> p = new NewHashMap<String, String>();
-		p.put("shopid", shop.getShopid());
-		p.put("syjid", syjid);
-		p.put("billno", billno);
+		p.put("sheetid", sheetid);
 		
-		List<Map<String, Object>> headList = dao.getHead(p);
+		List<Map<String, Object>> headList = dao.getSheet(p);
 
 		if (headList == null || headList.isEmpty()) {
-			loginfo = "阪急－没有找到小票数据:" + shop.getShopid() + "-" + syjid + "-" + billno;
+			loginfo = "阪急－没有找到小票数据:" + shop.getShopid() + "-" + sheetid;
 			log.info(loginfo);
 			throw new RuntimeException(loginfo);
 		}
@@ -545,17 +608,15 @@ public class BJService extends BaseService {
 		head = headList.get(0);
 
 		if (head == null) {
-			loginfo = "阪急－小票头数据为空:" + shop.getShopid() + "-" + syjid + "-" + billno;
+			loginfo = "阪急－小票头数据为空:" + shop.getShopid() + "-" + sheetid;
 			log.info(loginfo);
 			throw new RuntimeException(loginfo);
 		}
-
-		p.put("sheetid", head.get("sheetid").toString());
 		
 		List<Map<String, Object>> selldetail = dao.getDetail(p);
 		
 		if (selldetail == null){
-			loginfo = "阪急－小票明细数据缺失:" + shop.getShopid() + "-" + syjid + "-" + billno;
+			loginfo = "阪急－小票明细数据缺失:" + shop.getShopid() + "-" + sheetid;
 			log.info(loginfo);
 			throw new RuntimeException(loginfo);
 		}
@@ -563,7 +624,7 @@ public class BJService extends BaseService {
 		List<Map<String, Object>> sellpayment = dao.getPayment(p);
 		
 		if (sellpayment == null){
-			loginfo = "阪急－小票支付数据缺失:" + shop.getShopid() + "-" + syjid + "-" + billno;
+			loginfo = "阪急－小票支付数据缺失:" + shop.getShopid() + "-" + sheetid;
 			log.info(loginfo);
 			throw new RuntimeException(loginfo);
 		}
@@ -600,23 +661,18 @@ public class BJService extends BaseService {
 	public int callBackSheetBJ(ShopConnect shop,String sheetid,String status,String invoicecode,String invoiceno,String invoicedate) {
 		try {
 			Map<String, Object> map = new NewHashMap<String, Object>();
-			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+
 			map.put("shopid", shop.getShopid());
 			map.put("sheetid", sheetid);
 			map.put("invoicecode", invoicecode);
 			map.put("invoiceno", invoiceno);
+			map.put("invoicedate", invoicedate);
 			map.put("status", status);
 
-			if (invoicedate != null && invoicedate.trim().length() != 0) {
-				map.put("invoicedate", sf.parse(invoicedate));
-			}
-			
 			int rows = dao.callBackSheetBJ(map);
 			
-			if (rows == 0) {
-				throw new RuntimeException("阪急－更新传输状态出错：" + JSONObject.toJSON(map));
-			}
-			
+			if (rows == 0) throw new RuntimeException("阪急－更新传输状态出错：" + JSONObject.toJSON(map));
+
 			return rows;
 		}
 		catch(Exception ex)
@@ -632,25 +688,21 @@ public class BJService extends BaseService {
 	public int callProvSheetBJ(ShopConnect shop,String entid,String sheetid,String sheettype,String flag,String flagmsg,String invoicecode,String invoiceno,String invoicedate) {
 		try {
 			Map<String, Object> map = new NewHashMap<String, Object>();
-			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+
 			map.put("entid", entid);
+			map.put("shopid", shop.getShopid());
 			map.put("sheetid", sheetid);
 			map.put("sheettype", sheettype);
 			map.put("invoicecode", invoicecode);
 			map.put("invoiceno", invoiceno);
+			map.put("invoicedate", invoicedate);
 			map.put("flag", flag);
 			map.put("flagmsg", flagmsg);
-
-			if (invoicedate != null && invoicedate.trim().length() != 0) {
-				map.put("invoicedate", sf.parse(invoicedate));
-			}
 			
 			int rows = dao.callProvSheetBJ(map);
 			
-			if (rows == 0) {
-				throw new RuntimeException("阪急－更新传输状态出错：" + JSONObject.toJSON(map));
-			}
-			
+			if (rows == 0) throw new RuntimeException("阪急－更新传输状态出错：" + JSONObject.toJSON(map));
+
 			return rows;
 		}
 		catch(Exception ex)
