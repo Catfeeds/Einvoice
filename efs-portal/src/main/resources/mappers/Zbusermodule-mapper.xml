@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.efuture.portal.dao.db.one.ZbUsermoduleDao">
+
+
+	<select id="findShop" parameterType="NewHashMap" resultType="NewHashMap">
+		select CompanyID,ShopID,ShopName,ShopType from shop where ShopID=#{shopid} 
+		 and CompanyID in (select CompanyID from company where entid=#{entid} )
+	</select>
+
+	
+	<insert id="insertShop" parameterType="NewHashMap">
+		insert into shop (CompanyID,ShopID,ShopName,ShopType)
+		select CompanyID,#{shopid},#{shopname},#{shoptype} from company where entid= #{entid}
+	</insert>
+	
+	<update id="updateShop" parameterType="NewHashMap">
+		update Shop set shopname =#{shopname},  shoptype =#{shoptype} where  shopid =#{shopid} and companyid in (select companyid from company where entid= #{entid})
+	</update>
+	
+ 	<delete id="deleteShop" parameterType="NewHashMap">
+		delete from shop where  shopid=#{shopid} and companyid in (select companyid from company where entid= #{entid})
+	</delete>
+	
+	<select id="getcountShop" resultType="int" parameterType="NewHashMap">
+		select count(*) from Shop where companyid in (select companyid from company where entid= #{entid})
+    </select>
+ 	
+ 	
+ 	
+ 	<select id="getloginrole" resultType="NewHashMap" parameterType="NewHashMap">
+		select loginid,count(ShopID) as count from login_nx_shop where companyid in (select companyid from company where entid= #{entid})
+		GROUP BY loginid 
+	</select>
+	
+	<insert id="insertrole" parameterType="NewHashMap">
+		insert into login_nx_shop (CompanyID,loginid,shopid)
+		select CompanyID,#{loginid},#{shopid} from company where entid= #{entid}
+	</insert>
+	
+	<delete id="deleterole" parameterType="NewHashMap">
+		delete from login_nx_shop where  shopid=#{shopid} and companyid in (select companyid from company where entid= #{entid})
+	</delete>
+	
+	
+	<select id="adminmodifyPassword" parameterType="Map" resultType="NewHashMap">						
+		update login
+		set password=#{newpwd} 
+		where companyid=#{companyid}
+		and loginid=#{loginid}
+	</select>
+	
+</mapper>

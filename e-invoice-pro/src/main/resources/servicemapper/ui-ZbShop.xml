@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.ZbShopDao">	
+
+ <select id="queryShop" resultType="NewHashMap">
+		select entid,shopid,shopname,
+				case when shopstatus=1 then '启用' else '禁用' END as shopstatus,
+				case when SHOPTYPE=0 then '门店' when SHOPTYPE=1 then '仓库' else '总部' end as shoptype,
+				taxno,
+				manager,
+				telephone,
+				case when iseinvoice =1 then '开通' else '不开通' end as iseinvoice
+        from Shop 
+        WHERE entid = #{entid}
+        <if test="shopid != null and shopid != ''">
+			and shopid = #{shopid}
+		</if>
+		<if test="shopname != null and shopname != ''">
+			and shopname like CONCAT('%',#{shopname},'%') 
+		</if>
+		<if test="iseinvoice != null and iseinvoice != ''">
+			and iseinvoice = #{iseinvoice}
+		</if>
+        order by entid desc 
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+	    </if> 
+
+  </select>
+	
+  <select id="getShopById" parameterType="com.invoice.bean.db.Shop" resultType="com.invoice.bean.db.Shop">
+        select * from Shop where shopid = #{shopid} and entid = #{entid}
+   </select>
+   
+    <select id="getClientById" parameterType="com.invoice.bean.db.CClient" resultType="com.invoice.bean.db.CClient">
+        select * from c_client where  entid = #{entid} and clientid=#{clientid}
+   </select>
+    <select id="getConnentById" parameterType="com.invoice.bean.db.CConnect" resultType="com.invoice.bean.db.CConnect">
+        select * from c_connect where  entid = #{entid} and connectid=#{connectid}
+   </select>
+    <select id="getCShopById" parameterType="com.invoice.bean.db.CShopconnect" resultType="com.invoice.bean.db.CShopconnect">
+        select * from c_shopconnect where shopid = #{shopid} and entid = #{entid}
+   </select>
+   
+   	<select id="getShops" parameterType="com.invoice.bean.db.Shop" resultType="com.invoice.bean.db.Shop">
+        select * from Shop where entid = #{entid} 
+   </select>
+
+
+	<insert id="insertShop" parameterType="com.invoice.bean.db.Shop">
+		insert into Shop(entid,shopid,shopname,shopstatus,shoptype,taxno,manager,telephone,isEinvoice)
+		values(#{entid},#{shopid},#{shopname},#{shopstatus},#{shoptype},#{taxno},#{manager},#{telephone},#{isEinvoice})
+	</insert>
+	
+	<delete id="deleteShop" parameterType="com.invoice.bean.db.Shop" >	
+		delete from Shop where shopid = #{shopid} and entid = #{entid}
+	</delete>	
+	
+	<update id="updateShop" parameterType="com.invoice.bean.db.Shop">
+		update Shop set  entid =#{entid}, shopid =#{shopid},  shopname =#{shopname},  shopstatus =#{shopstatus},  shoptype =#{shoptype},  taxno =#{taxno},  manager =#{manager},  telephone =#{telephone}, isEinvoice=#{isEinvoice}  where  shopid =#{shopid} and entid = #{entid}
+	</update>
+
+    <select id="getShopCount" resultType="int" parameterType="NewHashMap">
+		select count(*) from Shop where entid= #{entid}
+        <if test="shopid != null and shopid != ''">
+			and shopid = #{shopid}
+		</if>
+		<if test="shopname != null and shopname != ''">
+			and shopname like CONCAT('%',#{shopname},'%') 
+		</if>
+		<if test="isEinvoice != null and isEinvoice != ''">
+			and iseinvoice = #{iseinvoice}
+		</if>
+    </select>
+    
+    <update id="updateConnent" parameterType="com.invoice.bean.db.CConnect">
+		update c_connect set url =#{url},username =#{username},password =#{password},driver =#{driver},dbcharcode =#{dbcharcode},memo =#{memo} 
+		 where entid =#{entid} and connectid =#{connectid}
+	</update>
+	
+	<update id="updateCshop" parameterType="com.invoice.bean.db.CShopconnect">
+		update c_shopconnect set shoptype ='101',clientid =#{clientid},connectid =#{connectid},memo =#{memo} 
+		 where entid =#{entid} and shopid =#{shopid}
+	</update>
+	
+	<update id="updateClient" parameterType="com.invoice.bean.db.CClient">
+		update c_client set clientname =#{clientname},mac =#{mac},ip =#{ip},password =#{password} ,url =#{url}
+		 where entid =#{entid} and clientid =#{clientid}
+	</update>
+	<insert id="insertClient" parameterType="com.invoice.bean.db.CClient">
+		insert into c_client(entid,clientid,clientname,mac,ip,password,url)
+		values(#{entid},#{clientid},#{clientname},#{mac},#{ip},#{password},#{url})
+	</insert>
+	
+	<insert id="insertConnent" parameterType="com.invoice.bean.db.CConnect">
+		insert into c_connect(entid,connectid,url,username,password,driver,dbcharcode,memo)
+		values(#{entid},#{connectid},#{url},#{username},#{password},#{driver},#{dbcharcode},#{memo})
+	</insert>
+	
+	<insert id="insertCshop" parameterType="com.invoice.bean.db.CShopconnect">
+		insert into c_shopconnect(entid,shopid,shoptype,clientid,connectid,memo)
+		values(#{entid},#{shopid},'101',#{clientid},#{connectid},#{memo})
+	</insert>
+</mapper>

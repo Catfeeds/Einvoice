@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.BJDao">
+
+	<select id="test" resultType="NewHashMap">
+		select * from invoice_sheet_head where 1=2
+	</select>
+	
+	<select id="getProvHead" resultType="NewHashMap" parameterType="NewHashMap">
+		SELECT * FROM invoice_sheet_head
+		where entid = #{entid}
+		  and shopid = #{shopid} 
+		  and flag = 0
+		  and refsheetid is null
+		  <if test="sheetid!=null and sheetid!=''">
+		  	and sheetid = #{sheetid}
+		  </if>
+		  <if test="sheettype!=null and sheettype!=''">
+		  	and sheettype = #{sheettype}
+		  </if>
+		  <if test="begdate!=null and begdate!=''">
+		  	<![CDATA[and tradedate >= to_date(#{begdate},'yyyyMMdd')]]>
+		  </if>
+		  <if test="enddate!=null and enddate!=''">
+		  	<![CDATA[and tradedate <= to_date(#{enddate},'yyyyMMdd')]]>
+		  </if>
+	</select>
+	
+	<select id="getProvDetail" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from invoice_sheet_detail 
+		where entid = #{entid} 
+		  and sheetid = #{sheetid} 
+		  and sheettype = #{sheettype}
+	</select>
+	
+	<select id="getProvRet" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from invoice_sheet_head
+		where entid = #{entid}
+		  and shopid = #{shopid}
+		  and (refsheetid is not null)
+		  and flag = 0
+		  <if test="sheettype!=null and sheettype!=''">
+		  	and sheettype = #{sheettype}
+		  </if>
+		  <if test="refsheetid!=null and refsheetid!=''">
+		  	and refsheetid = #{refsheetid}
+		  </if>
+		  <if test="begdate!=null and begdate!=''">
+		  	<![CDATA[and tradedate >= to_date(#{begdate},'yyyyMMdd')]]>
+		  </if>
+		  <if test="enddate!=null and enddate!=''">
+		  	<![CDATA[and tradedate <= to_date(#{enddate},'yyyyMMdd')]]>
+		  </if>
+	</select>
+	
+	<select id="getHead" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellhead 
+		where shopid = #{shopid} and syjid = #{syjid} and billno = #{billno}
+	</select>
+	
+	<select id="getDetail" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_selldetail where sheetid = #{sheetid}
+	</select>
+	
+	<select id="getPayment" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellpayment where sheetid = #{sheetid}
+	</select>
+	
+	<select id="getHeadRet" resultType="NewHashMap" parameterType="NewHashMap">
+		select * from v_sellhead 
+		where shopid = #{shopid} 
+		  and (refsheetid is not null)
+		  and status = 0
+		   <if test="refsheetid!=null and refsheetid!=''">
+		  	and refsheetid = #{refsheetid}
+		  </if>
+		  <if test="begdate!=null and begdate!=''">
+		  	<![CDATA[and sdate >= to_date(#{begdate},'yyyyMMdd')]]>
+		  </if>
+		  <if test="enddate!=null and enddate!=''">
+		  	<![CDATA[and sdate <= to_date(#{enddate},'yyyyMMdd')]]>
+		  </if>
+	</select>
+	
+	<update id="callProvSheetBJ" parameterType="NewHashMap">
+		update invoice_sheet_head
+		   set 
+		   	   <if test="flagmsg!=null and flagmsg!=''">
+		   	   flagmsg = #{flagmsg),
+		   	   </if>
+		   	   <if test="invoicecode!=null and invoicecode!=''">
+		       invoicecode = #{invoicecode},
+		       </if>
+		       <if test="invoiceno!=null and invoiceno!=''">
+		       invoiceno = #{invoiceno},
+		       </if>
+		       <if test="invoicedate!=null and invoicedate!=''">
+		       invoicedate = to_date(#{invoicedate},'yyyyMMdd'),
+		       </if>
+		       flag=#{flag},
+		       createtime=now()
+		 where entid = #{entid} and sheetid = #{sheetid} and sheettype = #{sheettype} and shopid = #{shopid}
+	</update>
+	
+	<update id="callBackSheetBJ" parameterType="NewHashMap">
+		update v_sellhead
+		   set 
+		   	   <if test="invoicecode!=null and invoicecode!=''">
+		       invoiccCode=#{invoicecode},
+		       </if>
+		       <if test="invoiceno!=null and invoiceno!=''">
+		       invoiceno=#{invoiceno},
+		       </if>
+		       <if test="invoicedate!=null and invoicedate!=''">
+		       invoicedate=to_date(#{invoicedate},'yyyyMMdd'),
+		       </if>
+		       status=#{status},
+		       createtime=now()
+		 where sheetid = #{sheetid} and shopid = #{shopid}
+	</update>
+	
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.ZBfplogDao">
+
+    <select id="getAllZBfplog" parameterType="map" resultType="map">
+        SELECT
+        date_format(a.iqdate, '%Y-%c-%d %H:%i') AS iqdate,
+        CASE
+        WHEN c.invoiceType = '0' THEN
+        '蓝票'
+        WHEN c.invoiceType = '1' THEN
+        '红票'
+        END AS invoiceType,
+        a.iqshop as shopid,
+        b.syjid AS syjid,
+        b.sheetid AS sheetid,
+        a.iqtotje AS totalAmount,
+        a.iqadmin AS iqadmin
+        FROM
+        invque a,
+        invque_list b,
+        invoice_head c
+        where a.iqseqno=b.iqseqno
+        and b.iqseqno=c.iqseqno
+        and a.iqentid=#{entid}
+        and a.iqshop=#{shopid}
+        <if test="startdate != null and startdate !=''">
+            and a.iqdate &gt;= #{startdate}
+        </if>
+        <if test="enddate != null and enddate !=''">
+            and a.iqdate &lt; (#{enddate}+1)
+        </if>
+        <if test="sheetid != null and sheetid !=''">
+            and b.sheetid =#{sheetid}
+        </if>
+        <if test="invoicetype != null and invoicetype !=''">
+            and invoiceType =#{invoicetype}
+        </if>
+        order by a.iqdate desc
+        <if test="pagestart != null">
+            limit ${pagestart},${pagesize}
+        </if>
+    </select>
+
+    <select id="getAllZBfplogCount" resultType="int" parameterType="NewHashMap">
+        SELECT
+        count(*)
+        FROM
+        invque a,
+        invque_list b,
+        invoice_head c
+        where a.iqseqno=b.iqseqno
+        and b.iqseqno=c.iqseqno
+        and a.iqentid=#{entid}
+        and a.iqshop=#{shopid}
+        <if test="startdate != null and startdate !=''">
+            and a.iqdate &gt;= #{startdate}
+        </if>
+        <if test="enddate != null and enddate !=''">
+            and a.iqdate &lt; (#{enddate}+1)
+        </if>
+        <if test="sheetid != null and sheetid !=''">
+            and b.sheetid =#{sheetid}
+        </if>
+        <if test="invoicetype != null and invoicetype !=''">
+            and invoiceType =#{invoicetype}
+        </if>
+    </select>
+
+</mapper>
+

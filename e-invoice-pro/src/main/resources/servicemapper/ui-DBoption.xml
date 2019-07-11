@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.DBoptionDao">
+
+    <select id="getAllByshopid" parameterType="com.invoice.bean.db.Shop" resultType="map">
+       SELECT
+	aa.clientid AS clientid,
+	aa.url AS clienturl,
+	aa.clientname AS clientname,
+	aa.`password` AS clientpassword,
+	bb.connectid AS connectid,
+	bb.dbcharcode AS connectbdcode,
+	bb.driver AS connectdriver,
+	bb.url AS connecturl,
+	bb.username AS connectusername,
+	bb.`password` AS connectpassword,
+	aa.MAC AS mac,
+	aa.IP AS ip 
+FROM
+	(
+	SELECT
+		a.ENTID,
+		a.shopid,
+		b.clientid,
+		b.clientname,
+		b.`password`,
+		b.url,
+		b.MAC,
+		b.IP 
+	FROM
+		c_shopconnect a
+		LEFT JOIN c_client b ON a.clientid = b.clientid 
+		AND a.ENTID = b.entid 
+	) aa,
+	(
+	SELECT
+		c.ENTID,
+		c.shopid,
+		d.connectid,
+		d.dbcharcode,
+		d.driver,
+		d.`password`,
+		d.url,
+		d.username 
+	FROM
+		c_shopconnect c
+		LEFT JOIN c_connect d ON c.connectid = d.connectid 
+		AND c.ENTID = d.entid 
+	) bb 
+WHERE
+	aa.ENTID = bb.ENTID 
+	AND aa.shopid = bb.shopid
+        <if test="entid!='' and entid!=null">
+            and aa.ENTID =#{entid}
+        </if>
+        <if test="shopid!='' and shopid!=null">
+            and bb.shopid =#{shopid}
+        </if>
+  </select>
+    
+    <select id="getClientinfoByshopid" parameterType="com.invoice.bean.db.CClient" resultType="com.invoice.bean.db.CClient">
+        select clientid as clientid from c_client
+        where 1=1
+        <if test="entid!='' and entid!=null">
+            and entid =#{entid}
+        </if>
+    </select>
+
+    <select id="getClientAllinfoByshopid" parameterType="com.invoice.bean.db.CClient" resultType="com.invoice.bean.db.CClient">
+        select clientname as clientname,`password` as password,url as url,MAC as mac,IP as ip from c_client
+        where 1=1
+        <if test="entid!='' and entid!=null">
+            and entid =#{entid}
+        </if>
+        <if test="clientid!='' and clientid!=null">
+            and clientid =#{clientid}
+        </if>
+    </select>
+
+    <select id="getCconectinfoByshopid" parameterType="com.invoice.bean.db.CConnect" resultType="com.invoice.bean.db.CConnect">
+        select connectid as connectid from c_connect
+        where 1=1
+        <if test="entid!='' and entid!=null">
+            and entid =#{entid}
+        </if>
+    </select>
+
+    <select id="getCconectAllinfoByshopid" parameterType="com.invoice.bean.db.CConnect" resultType="com.invoice.bean.db.CConnect">
+        select url as url,username as username,`password` as password,dbcharcode as dbcharcode,driver as driver from c_connect
+        where 1=1
+        <if test="entid!='' and entid!=null">
+            and entid =#{entid}
+        </if>
+        <if test="connectid!='' and connectid!=null">
+            and connectid =#{connectid}
+        </if>
+    </select>
+</mapper>
+  

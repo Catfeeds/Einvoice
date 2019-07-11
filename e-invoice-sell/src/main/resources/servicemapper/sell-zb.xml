@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<mapper namespace="com.einvoice.sell.dao.ZBDao">
+
+	<select id="test" resultType="NewHashMap">
+		select * from test where 1=2
+	</select>
+	
+	<select id="getgoodsinfo" resultType="NewHashMap" parameterType="NewHashMap">
+	SELECT VID,VBARCODE,VUNIT,VCNAME,VJXTAX,VCATCODE FROM  
+			(  
+				SELECT A.*, ROWNUM RN  
+				FROM (SELECT * FROM view_goodsbaseunit order by VBARCODE) A  
+			)  
+			where RN BETWEEN #{startrow} AND #{endrow}   
+	</select>
+
+</mapper>

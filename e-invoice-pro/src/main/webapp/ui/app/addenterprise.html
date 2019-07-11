@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title></title>
+    <link rel="stylesheet" href="../assets/css/core.css" />
+    <link rel="stylesheet" href="../assets/css/menu.css" />
+    <link rel="stylesheet" href="../assets/css/amazeui.css" />
+    <link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+    <link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+    <link rel="stylesheet" href="../assets/css/app.css" />
+
+    <script src="../assets/js/jquery.min.2.2.2.js"></script>
+    <script src="../assets/js/amazeui.min.js"></script>
+    <script src="../assets/js/amazeui.switch.js"></script>
+    <script src="../assets/js/amazeui.page.js"></script>
+    <script src="../js/myJq.js"></script>
+    <script src="../js/route.js"></script>
+    <script src="js/addenterprise.js"></script>
+</head>
+<body>
+<div class="am-g">
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+        <li><a href="#">主档数据</a></li>
+        <li class="am-active">企业机构信息</li>
+    </ol>
+    <div class="am-portlet-components">
+        <div class="am-portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-list"></span> 企业机构信息管理
+            </div>
+        </div>
+        <div class="am-app-block">
+            <div class="am-g">
+                <div class="am-u-sm-2">
+                    <div class="am-btn-toolbar">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button type="button" class="am-btn am-btn-default am-btn-success" id="btnNew"><span class="am-icon-plus"></span> 新增</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="am-u-sm-10 am-fr">
+                    <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4">
+                        <li>
+                            <label class="am-u-sm-6 am-u-lg-4 am-app-form-lable">机构编码</label>
+                            <div class="am-u-sm-6 am-u-lg-8"><input type="text" id="shopId" class="am-form-field"></div>
+                        </li>
+                        <li>
+                            <label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">机构简称</label>
+                            <div class="am-u-sm-6 am-u-lg-8"><input type="text" id="ShopName" class="am-form-field"></div>
+                        </li>
+                        <li style="width:400px;">
+                            <label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">是否开通电票</label>
+                            <div class="am-u-sm-6 am-u-lg-8"  id="selectG"></div>
+                        </li>
+                        <li style="width:60px;"><span class="am-input-group-btn"><button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch"></button></span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="am-g  am-scrollable-horizontal" >
+                <div class="am-u-sm-12">
+                    <form class="am-form">
+                        <table class="am-table am-table-striped am-table-hover table-main" style="width: 2000px;">
+                            <thead>
+                            <tr>
+                                <th width="15%">操作</th>
+                                <th>企业编码</th>
+                                <th>机构编码</th>
+                                <th>机构简称</th>
+                                <th>机构状态</th>
+                                <th>机构类型</th>
+                                <th>对应税号</th>
+                                <th>负责人</th>
+                                <th>联系电话</th>
+                                <th>是否开通电票</th>
+                            </tr>
+                            </thead>
+                            <tbody id="rowTraget">
+
+                            </tbody>
+                        </table>
+                        <div class="am-cf">
+                            <div class="am-fr">
+                                <div id="page"></div>
+                            </div>
+                        </div>
+                        <hr>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table  style="display:none;">
+    <tbody id="rowSample">
+    <tr>
+        <td>
+            <div class="">
+                <div class="am-btn-group am-btn-group-xs">
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="dataEdit('||shopid||')"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="dataOption('||shopid||')"><span class="am-icon-pencil-square-o"></span>小票提取配置</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="dataDelete('||shopid||','||taxno||')"><span class="am-icon-trash-o"></span> 删除</button>
+                </div>
+            </div>
+        </td>
+        <td>||entid||</td>
+        <td>||shopid||</td>
+        <td>||shopname||</td>
+        <td>||shopstatus||</td>
+        <td>||shoptype||</td>
+        <td>||taxno||</td>
+        <td>||manager||</td>
+        <td>||telephone||</td>
+        <td>||iseinvoice||</td>
+    </tr>
+    </tbody>
+</table>
+
+<!--    弹出表单 -->
+<div class="am-popup am-modal-active" id="my-add" style="width: 50%;left: 40%;">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title">新增</h4>
+        </div>
+        <div class="am-popup-bd">
+            <form class="am-form am-form-horizontal" data-am-validator>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">机构编码</label>
+                    <div class="am-u-sm-9">
+                        <input type="text" id="shopid" placeholder="输入机构编码（必填）" required="required">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">机构简称</label>
+                    <div class="am-u-sm-9">
+                        <input type="text" id="shopname" placeholder="输入机构名（必填）" required="required">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">机构状态</label>
+                    <div class="am-u-sm-9" id="selectA">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">机构类型</label>
+					<div class="am-u-sm-9" id="selectshoptype">
+					</div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">对应税号</label>
+                    <div class="am-u-sm-9" id="selectC">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">负责人</label>
+                    <div class="am-u-sm-9">
+                        <input type="text" id="manager">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">联系电话</label>
+                    <div class="am-u-sm-9">
+                        <input type="text" id="telephone">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-3 am-form-label">是否开通电票</label>
+                    <div class="am-u-sm-9" id="selectE">
+                    </div>
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn" id="quxaio" onclick="QuXiao()">取消</span>
+                    <span class="am-modal-btn" id="tijiao" onclick="TiJiao()">提交</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 弹出编辑框 -->
+<div class="am-popup" id="my-edit">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title">编辑</h4>
+            <span data-am-modal-close
+                  class="am-close">&times;</span>
+        </div>
+        <div class="am-popup-bd">
+            <form class="am-form am-form-horizontal">
+
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">机构编码</label>
+                    <div class="am-u-sm-10">
+                        <input type="text" id="shopid2" disabled>
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">机构简称</label>
+                    <div class="am-u-sm-10">
+                        <input type="text" id="shopname2">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">机构状态</label>
+                    <div class="am-u-sm-10" id="selectB">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">机构类型</label>
+                    <div class="am-u-sm-10" id="selectshoptypeB">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">对应税号</label>
+                    <div class="am-u-sm-10" id="selectD">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">负责人</label>
+                    <div class="am-u-sm-10">
+                        <input type="text" id="manager2">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">联系电话</label>
+                    <div class="am-u-sm-10">
+                        <input type="text" id="telephone2">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">是否开通电票</label>
+                    <div class="am-u-sm-10" id="selectF">
+                    </div>
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                    <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--数据库配置-->
+<div class="am-popup am-modal-active" id="my-option" style="width: 50%;left: 41%;">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title">编辑</h4>
+        </div>
+        <div class="am-popup-inner" style="margin-top:-3%">
+            <form class="am-form am-form-horizontal" id="form-div">
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">数据库连接编码</label>
+                    <div class="am-u-sm-7" style="float: left">
+                        <input type="text" id="connectid" list="connectidlist" placeholder="请输入或选择" oninput="GetCconectinfoByshopid()" autocomplete="off"/>
+                        <datalist id="connectidlist">
+                        </datalist>
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">数据库链接地址</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="connecturl">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">数据库用户名</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="connectusername">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">数据库密码</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="connectpassword">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">数据库驱动名</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text"  id="connectdriver">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">数据库编码</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="connectbdcode">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">小票提取服务编码</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="clientid" list="clientidcodelist" placeholder="请输入或选择" oninput="GetClientinfoByshopid()" autocomplete="off"/>
+                        <datalist id="clientidcodelist">
+
+                        </datalist>
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">小票提取服务用户名</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text"  id="clientname">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">小票提取服务密码</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text"  id="clientpassword">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">小票提取服务数据库连接地址</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text"  id="clienturl">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">MAC</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="mac">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="doc-ipt-3" class="am-u-sm-4 am-form-label">IP</label>
+                    <div class="am-u-sm-7"  style="float: left">
+                        <input type="text" id="ip">
+                    </div>
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn" id="quxaio2" data-am-modal-cancel onclick="clear2()">取消</span>
+                    <span class="am-modal-btn" id="tijiao2" data-am-modal-confirm onclick="clickTiJiao()">提交</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="am-dimmer am-active" data-am-dimmer style="display: none;" id="bgcolor"></div>
+</body>
+</html>

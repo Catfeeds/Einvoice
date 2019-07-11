@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.ZBGoodInfoDao">
+
+
+	<insert id="insertGoodsInfo" parameterType="java.util.List">
+		INSERT INTO zbgoodsinfo 
+		(goodsBarcode, goodsname, unit, taxrate, categoryid, goodsid) 
+		VALUES 
+		<foreach collection ="list" item="detail" index= "index" separator =",">
+		(#{detail.VBARCODE}, #{detail.VCNAME},#{detail.VUNIT},#{detail.VJXTAX},#{detail.VCATCODE},#{detail.VID})
+		</foreach >
+		ON DUPLICATE KEY UPDATE 
+		goodsname=VALUES(goodsname),
+  		unit=VALUES(unit),
+		taxrate=VALUES(taxrate),
+  		categoryid=VALUES(categoryid),
+		goodsid=VALUES(goodsid)
+	</insert>
+</mapper>
+

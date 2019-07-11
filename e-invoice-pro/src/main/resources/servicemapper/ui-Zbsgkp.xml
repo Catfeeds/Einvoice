@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.ZbgoodstaxDao">
+
+    <select id="getZbGoodsBarcodes" resultType="com.invoice.bean.db.Zbgoodstax" parameterType="com.invoice.bean.db.Zbgoodstax">
+     select goodsBarcode as goodsBarcode from zbgoodsinfo
+     where 1=1
+     <if test="goodsBarcode!='' and goodsBarcode!=null">
+        and goodsBarcode like concat('%',#{goodsBarcode},'%')
+     </if>
+        limit 10
+  </select>
+
+    <select id="getZbGoodsNames" resultType="com.invoice.bean.db.Zbgoodstax" parameterType="com.invoice.bean.db.Zbgoodstax">
+        select goodsname as goodsName from zbgoodsinfo
+        where 1=1
+        <if test="goodsName!='' and goodsName!=null">
+            and goodsname like concat('%',#{goodsName},'%')
+        </if>
+        limit 10
+    </select>
+
+    <select id="getGoodsInfoByBarcode" resultType="com.invoice.bean.db.Zbgoodstax" parameterType="com.invoice.bean.db.Zbgoodstax">
+        select goodsBarcode as goodsBarcode,goodsname as goodsName,unit as unit,taxrate as taxrate,SUBSTRING(categoryid,1,6) as categateId,goodsid as goodsId from zbgoodsinfo
+         where goodsBarcode=#{goodsBarcode} limit 0,1
+    </select>
+
+    <select id="getGoodsInfoByName" resultType="com.invoice.bean.db.Zbgoodstax" parameterType="com.invoice.bean.db.Zbgoodstax">
+        select goodsBarcode as goodsBarcode,goodsname as goodsName,unit as unit,taxrate as taxrate from zbgoodsinfo
+        where goodsname=#{goodsName} limit 0,1
+    </select>
+    
+      <select id="gettaxitemid" resultType="com.invoice.bean.db.Zbgoodstax" parameterType="com.invoice.bean.db.Zbgoodstax">
+        select ENTID,taxitemid from catetax where entid=#{entid} and cateid=#{categateId}
+    </select>
+
+
+</mapper>
+  

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!-- -->
+<mapper namespace="com.invoice.apiservice.dao.SheetInvqueBJDao">
+	
+	<select id="getSheetSaleHeadBJ" parameterType="com.invoice.bean.ui.RequestBillInfo" resultType="com.invoice.port.nbbanji.invoice.bean.ResponseBillInfoBJ">
+		select a.*,c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd,b.shopname
+		from invoice_sale_head a
+		left join shop b on b.ENTID=a.entid and b.SHOPID=a.shopid
+		left join taxinfo c on c.ENTID=a.entid and c.TAXNO=b.TAXNO
+		where a.entid = #{entid}
+		  and a.sheettype = #{sheettype}
+		<if test="shopid != null and shopid != ''">
+			and a.shopid=#{shopid}
+		</if>	
+		<if test="syjid != null and syjid != ''">
+		  and a.syjid = #{syjid}
+		</if>
+		<if test="billno != null and billno != ''">
+		  and a.billno = #{billno}
+		</if>
+		<if test="sheetid != null and sheetid != ''">
+		  and a.sheetid = #{sheetid}
+		</if>
+	</select>
+	
+	<select id="getSheetHeadOriginal" resultType="com.invoice.port.nbbanji.invoice.bean.ResponseBillInfoBJ" parameterType="NewHashMap">
+		select a.*,
+		       c.TAXNO,c.TAXNAME,c.TAXADD,c.TAXPERSON,c.taxbank,c.TAXMODE,c.ITFKPD kpd,
+		       b.shopname,
+		       d.rtfpdm,
+		       d.rtfphm,
+		       d.rtkprq,
+		       d.iqpdf pdf,
+		       d.iqadmin kpr,
+		       d.iqpayee skr,
+		       d.iqchecker fhr
+		from invoice_sale_head a
+		left join shop b on b.ENTID = a.entid and b.SHOPID = a.shopid
+		left join taxinfo c on c.ENTID = a.entid and c.TAXNO = b.TAXNO
+		left join invque d on d.iqentid = a.entid and d.iqseqno = a.iqseqno
+		where a.entid = #{entid} and a.sheettype = #{sheettype} and a.sheetid = #{sheetid}
+	</select>
+
+	<select id="getSheetHeadReturn" resultType="com.invoice.port.nbbanji.invoice.bean.InvoiceInvqueReturn" parameterType="NewHashMap">
+		select *
+		from invoice_invque_head_return
+		where entid = #{entid} and sheettype = #{sheettype} and sheetid = #{sheetid}
+	</select>
+	
+	<select id="getInvqueBJ" resultType="com.invoice.bean.db.Invque"  parameterType="NewHashMap">
+		select * from invque where 1=1
+		<if test="status != null">
+			and iqstatus = #{status}
+		</if>
+		<if test="entid != null">
+			and iqentid = #{entid}
+		</if>
+		<if test="channel != null">
+			and iqchannel = #{channel}
+		</if>
+		<if test="iqdate != null">
+			and iqdate = #{iqdate}
+		</if>
+		<if test="taxzdh != null">
+			and iqtaxzdh = #{taxzdh}
+		</if>
+		<if test="taxno != null">
+			and iqtaxno = #{taxno}
+		</if>
+		<if test="userid != null">
+			and iqperson = #{userid}
+		</if>
+		<if test="iqseqno != null">
+			and iqseqno = #{iqseqno}
+		</if>
+		<if test="rtfpdm != null">
+			and rtfpdm = #{rtfpdm}
+		</if>
+		<if test="rtfphm != null">
+			and rtfphm = #{rtfphm}
+		</if>
+		
+		order by iqseqno desc
+	</select>
+	
+	<insert id="insertInvoiceInvqueReturn" parameterType="com.invoice.port.nbbanji.invoice.bean.InvoiceInvqueReturn">
+		insert into invoice_invque_head_return(entid,sheetid,sheettype,invoicelx,status,shopid,syjid,billno,sdate,iqgmftax,iqgmfname,iqgmfadd,iqgmfbank,iqfplxdm,iqtype,iqstatus,zsfs,refsheetid,refshopid,refsyjid,refbillno,refinvoicecode,refinvoiceno,refinvoicedate,createtime)
+		values(#{entid},#{sheetid},#{sheettype},#{invoicelx},#{status},#{shopid},#{syjid},#{billno},#{sdate},#{iqgmftax},#{iqgmfname},#{iqgmfadd},#{iqgmfbank},#{iqfplxdm},#{iqtype},#{iqstatus},#{zsfs},#{refsheetid},#{refshopid},#{refsyjid},#{refbillno},#{refinvoicecode},#{refinvoiceno},#{refinvoicedate},now())
+	</insert>
+	
+	<!-- 阪急开具回写 -->
+	<update id="updateForOpenBanJI" parameterType="NewHashMap">
+		update invque a,invque_list b
+		set a.rtfpdm = #{rtfpdm},
+		    a.rtfphm = #{rtfphm},
+		    a.rtkprq = #{rtkprq},
+		    a.iqgmftax = #{iqgmftax},
+		    a.iqgmfname = #{iqgmfname},
+		    a.iqgmfadd = #{iqgmfadd},
+		    a.iqgmfbank = #{iqgmfbank},
+		    a.iqfplxdm = #{iqfplxdm},
+		    a.iqtype = #{iqtype},
+		    a.iqstatus = #{iqstatus},
+		    a.iqmsg = #{iqmsg},
+		    a.zsfs = #{zsfs}
+		where a.iqseqno = a.iqseqno
+		  and a.iqentid = #{entid}
+		  and b.sheetid = #{sheetid}
+		  and b.sheettype = #{sheettype}
+		  and b.shopid = #{shopid}
+	</update>
+	
+	<!-- 阪急红冲回写 -->
+	<update id="updateForCancelBanJI" parameterType="NewHashMap">
+		update invoice_invque_head_return a
+		set a.rtfpdm = #{rtfpdm},
+		    a.rtfphm = #{rtfphm},
+		    a.rtkprq = #{rtkprq},
+		    a.iqgmftax = #{iqgmftax},
+		    a.iqgmfname = #{iqgmfname},
+		    a.iqgmfadd = #{iqgmfadd},
+		    a.iqgmfbank = #{iqgmfbank},
+		    a.iqfplxdm = #{iqfplxdm},
+		    a.iqtype = #{iqtype},
+		    a.iqstatus = #{iqstatus},
+		    a.iqmsg = #{iqmsg},
+		    a.zsfs = #{zsfs}
+		where a.entid = #{entid}
+		  and a.sheetid = #{sheetid}
+		  and a.sheettype = #{sheettype}
+		  and a.shopid = #{shopid}
+	</update>
+	
+	<update id="updateInvoiceHeadIqseqno" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		update invoice_sale_head 
+		set iqseqno=#{iqseqno}
+		where entid=#{entid}
+		  and sheetid = #{sheetid}
+		  and sheettype = #{sheettype}
+	</update>
+	
+	<update id="updateInvoiceDetailIqseqno" parameterType="com.invoice.bean.db.InvoiceSaleHead">
+		update invoice_sale_detail
+		set iqseqno=#{iqseqno}
+		where entid=#{entid}
+		  and sheetid = #{sheetid}
+		  and sheettype = #{sheettype}
+	</update>
+</mapper>

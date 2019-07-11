@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 一定要对应包的dao -->
+<!--  -->
+<mapper namespace="com.invoice.uiservice.dao.BillTaxDao">	
+
+ <select id="queryBillTax" parameterType="NewHashMap" resultType="com.invoice.bean.db.BillTax">
+	select a.entid,a.taxitemid,a.taxitemname,a.taxRate,b.goodsName
+	 from billtax a join billtaxgoodsname b  on a.taxitemid = b.taxitemid where a.entid = #{entid} 
+		<if test="taxitemid != null and taxitemid !=''">
+			and a.taxitemid = #{taxitemid}
+		</if>
+		<if test="goodsName != null and goodsName !=''">
+			and b.goodsName like CONCAT('%',#{goodsName},'%') 
+		</if> 
+		order by taxitemid desc 
+		<if test="pagestart != null">
+			limit ${pagestart},${pagesize}
+	    </if> 
+  </select>
+	
+	<select id="getBillTaxCount" resultType="int" parameterType="NewHashMap">
+		select count(*)  
+	 from billtax a join billtaxgoodsname b  on a.taxitemid = b.taxitemid where a.entid = #{entid} 
+		<if test="taxitemid != null and taxitemid !=''">
+			and a.taxitemid = #{taxitemid}
+		</if>
+		<if test="goodsName != null and goodsName !=''">
+			and b.goodsName like CONCAT('%',#{goodsName},'%') 
+		</if> 
+
+    </select>
+	
+  <select id="getBillTaxById" parameterType="com.invoice.bean.db.BillTax" resultType="com.invoice.bean.db.BillTax">
+        select a.entid,a.taxitemid,a.taxitemname,a.taxRate,b.goodsName
+	 from billtax a join billtaxgoodsname b  on a.taxitemid = b.taxitemid where a.entid = #{entid} 
+	  and b.goodsName = #{goodsName} and a.taxitemid = #{taxitemid}
+	</select>
+	
+	<insert id="insertBillTax" parameterType="com.invoice.bean.db.BillTax">
+		insert into billtax(entid,taxitemid,taxitemname,taxRate)
+		values(#{entid},#{taxitemid},#{taxitemname},#{taxRate})
+	</insert>
+
+	<insert id="insertBillTaxGoodsName" parameterType="com.invoice.bean.db.BillTax">
+		insert into billtaxgoodsname(entid,taxitemid,taxRate,goodsName)
+		values(#{entid},#{taxitemid},#{taxRate},#{goodsName})
+	</insert>
+	
+	<delete id="deleteBillTax" parameterType="com.invoice.bean.db.BillTax" >	
+		delete from billtax where entid= #{entid} and taxitemid = #{taxitemid}
+	</delete>	
+
+	<delete id="deleteBillTaxGoodsName" parameterType="com.invoice.bean.db.BillTax" >	
+		delete from billtaxgoodsname where entid= #{entid} and taxitemid = #{taxitemid}
+		and goodsName = #{goodsName} and taxRate = #{taxRate}
+	</delete>	
+	
+	<update id="updateBillTax" parameterType="com.invoice.bean.db.BillTax">
+		update billtax set  entid =#{entid}, taxitemid =#{taxitemid},  taxitemname =#{taxitemname},  taxRate =#{taxRate} where entid =#{entid} and taxitemid =#{taxitemid}
+	</update>
+
+ 	<update id="updateBillTaxGoodsName" parameterType="com.invoice.bean.db.BillTax">
+		update billtaxgoodsname set  entid =#{entid}, taxitemid =#{taxitemid},  taxRate =#{taxRate},  goodsName =#{goodsName}
+		 where entid =#{entid} and taxitemid =#{taxitemid} and taxRate =#{taxRate} and  goodsName =#{goodsName}
+	</update>
+</mapper>

@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="js/zbfplog.js"></script>
+        <script src="../assets/js/qrcode.lib.min.js"></script>
+        <script src="../assets/js/qrcode.js"></script>
+        <script src="../js/time.js"></script>
+	</head>
+	<body>
+		<div class="am-g">
+            <ol class="am-breadcrumb">
+                <li><a href="#" class="am-icon-home">首页</a></li>
+                <li><a href="#">主档数据</a></li>
+                <li class="am-active">中百发票日志</li>
+            </ol>
+            <div class="am-portlet-components">
+                <div class="am-portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-list"></span> 中百发票日志
+                    </div>
+                </div>
+                <div class="am-app-block">
+                    <div class="am-g">
+                        <div class="am-u-sm-2">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-u-sm-10 am-fr">
+	                        <ul class="am-avg-sm-1 am-avg-md-3 am-avg-lg-4">
+	                        	<li>
+                                    <div class="am-u-sm-6">
+                                        <input type="text" id="startdate" class="am-form-field" placeholder="开始日期" readonly>
+                                    </div>
+                                    <div class="am-u-sm-6">
+                                        <input type="text" id="enddate" class="am-form-field" placeholder="结束日期" readonly>
+                                    </div>
+	                        	</li>
+	                        	<li>
+	                        		<label class="am-u-sm-6  am-u-lg-3 am-app-form-lable">小票号</label>
+	                        		<div class="am-u-sm-6 am-u-lg-9"><input type="text" id="sheetid" class="am-form-field"></div>
+	                        	</li>
+                                <li>
+                                    <label class="am-u-sm-6  am-u-lg-4 am-app-form-lable">票种</label>
+                                    <div class="am-u-sm-6 am-u-lg-8">
+                                        <select id="invoicetype" class="am-form-field">
+                                            <option value="" class="am-app-form-lable">请选择票种</option>
+                                            <option value="0" class="am-app-form-lable">蓝票</option>
+                                            <option value="1" class="am-app-form-lable">红票</option>
+                                        </select>
+                                    </div>
+                                </li>
+
+	                        	<li><span class="am-input-group-btn"><button class="am-btn  am-btn-default am-btn-success  am-icon-search" type="button" id="btnSearch"></button></span></li>
+
+	                        </ul>
+
+                        </div>
+                    </div>
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                            <form class="am-form">
+                                <table class="am-table am-table-striped am-table-hover table-main">
+                                    <thead>
+                                        <tr>
+                                            <th>日期</th>
+                                            <th>票种</th>
+                                            <th>店号</th>
+                                            <th>收银机号</th>
+                                            <th>小票流水号</th>
+                                            <th>总金额</th>
+                                            <th>账号</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rowTraget">
+                                    	
+                                    </tbody>
+                                </table>
+                                <div class="am-cf">
+                                    <div class="am-fr">
+                                    	<div id="page"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table  style="display:none;">
+        	<tbody id="rowSample">
+        	<tr>
+                <td>||iqdate||</td>
+                <td>||invoiceType||</td>
+                <td>||shopid||</td>
+                <td>||syjid||</td>
+                <td>||sheetid||</td>
+                <td>||totalAmount||</td>
+                <td>||iqadmin||</td>
+            </tr>
+            </tbody>
+        </table>
+
+	</body>
+</html>

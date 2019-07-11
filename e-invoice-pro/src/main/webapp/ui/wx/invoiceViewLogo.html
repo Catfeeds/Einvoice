@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+	<head style="background-color: white">
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>	
+		<link rel="stylesheet" href="../assets/css/core.css" />
+		<link rel="stylesheet" href="../assets/css/menu.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.switch.css" />
+		<link rel="stylesheet" href="../assets/css/amazeui.page.css" />
+		<link rel="stylesheet" href="../assets/css/app.css" />
+		
+		<script src="../assets/js/jquery.min.2.2.2.js"></script>
+		<script src="../assets/js/amazeui.min.js"></script>
+		<script src="../assets/js/amazeui.switch.js"></script>
+		<script src="../assets/js/amazeui.page.js"></script>
+		
+		<script src="../js/myJq.js"></script>
+		<script src="../js/route.js"></script>
+		<script src="../js/time.js"></script>
+		<script src="js/invoiceViewLogo.js"></script>
+		
+		
+		<style type="text/css">
+		#accordion{
+			border-color: #F0F6FF;
+			background-color: #F0F6FF;
+		}
+		#bmg{
+			width: 100%;
+			height: 200px;
+			border: none;
+			background-image: url("bgimg.png");
+			background-size:100% 100%;
+			background-repeat:no-repeat;
+			padding-top: 20%;
+		}
+		#fpimg{
+			width: 90px;
+			height: 90px;
+			border: 1px solid white;
+			border-radius: 50px;
+			background-color: white;
+			margin: auto;
+			text-align: center;
+			box-shadow: 0px 0px 0.5px 0.5px lightgrey;
+		}
+		.companyName{
+			text-align: center;
+			font-family: "Microsoft YaHei";
+			font-size: 14px;
+			font-weight: bold;
+			margin-top: 10px;
+		}
+		#titlebmg{
+			width: 80px;
+			height:80px;
+			margin-top: 1vh;
+		}
+		.header-area{
+			width: 100%;
+		}
+		</style>
+	</head>
+	<body style="background-color: white">
+
+		  <div id="bmg">
+			  <div id="shengming">
+				  <div class="header-area">
+					  <div id="fpimg">
+						  <img src="title.png" id="titlebmg"/>
+					  </div>
+				  </div>
+				  <div class="companyName" id="companyName"></div>
+			  </div>
+		  </div>
+
+		<div class="am-panel am-panel-success" id="accordion">
+		  <h3 class="am-panel-hd am-margin-0" style="color: #4A96FF;background-color: #C1DBFD">发票信息</h3>
+		  <div class="am-panel-bd">
+		  <table>
+		  <tbody>
+		    <tr>
+		      <td width="48%">发票代码：</td><td id="rtfpdm"></td>
+		    </tr>
+		     <tr>
+		      <td>发票号码：</td><td id="rtfphm"></td>
+		    </tr>
+		     <tr>
+		      <td>开票日期：</td><td id="iqdate"></td>
+		    </tr>
+		    <tr>
+		      <td>发票金额：</td><td id="iqtotje"></td>
+		    </tr>
+		    <tr>
+		      <td>发票税额：</td><td id="iqtotse"></td>
+		    </tr>
+		    <tr>
+		      <td>发票状态：</td><td id="iqstatus"></td>
+		    </tr>
+		  </tbody>
+		  </table> 
+		  </div>
+		  <div class="am-panel-default am-panel-hd " style="background-color: #C1DBFD">
+		      <div class="am-panel-title" data-am-collapse="{parent: '#accordion', target: '#ticketList'}" style="color: #4A96FF;">
+		        单据信息
+		      </div>
+		  </div>
+		  <div id="ticketList" class="am-panel-collapse am-collapse">
+		      <div class="am-panel-bd" id="quelist">
+			  </div>
+		  </div>
+		</div>
+		
+		<div class="am-g am-text-center">
+			<a class="am-btn am-btn-primary am-btn-lg" style="display:none; background-color: #4A96FF;border-color: #4A96FF" id="downpdf" href="#" target="_blank"></a>
+			<br/>
+			<button class="am-btn am-btn-secondary am-btn-lg am-btn-block" style="display:none;" id="sendpdf" onclick="sendPdf()"><i class="am-icon-mail-forward"></i>发送到邮箱</button>
+			
+		</div>
+		
+		<div class="am-g am-text-center am-margin-top-sm">
+			<a class="am-btn am-btn-success am-btn-lg" href="javascript:history.back(-1)" target="_self" style="background-color: #4A96FF;border-color: #4A96FF">
+				返回
+			</a>
+		</div>
+		
+		<div class="am-g am-margin-top">
+			<div>注意：下载后请使用PDF Reader阅读工具打开。</div>
+		    <div>　　　电子发票具有纸质发票同等法律效力。</div>
+		</div>
+		
+	</body>
+</html>
