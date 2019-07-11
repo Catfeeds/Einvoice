@@ -446,7 +446,7 @@ public class BanJiSheetService {
 							return null;
 						}
 						
-						syncSell.setEntid(myres.getEntid());
+						syncSell.setEntid(bill.getEntId());
 						
 						// 查到小票后，对小票进行运算
 						InvoiceSaleHead syncHead = calculateSheet(syncSell, serialId, returnMap.get("sheettype"));
@@ -461,6 +461,8 @@ public class BanJiSheetService {
 
 						myOrig = sheetInvqueBJDao.getSheetHeadOriginal(returnMap);
 					}
+					
+					if (myOrig == null) continue;
 
 					//先查退货表中有没有数据，如没有则进行保存
 					returnMap.put("sheetid",myres.getSheetid());
@@ -499,6 +501,10 @@ public class BanJiSheetService {
 					
 						sheetInvqueBJDao.insertInvoiceInvqueReturn(myReturn);	
 					}
+					else
+					{
+						if (myReturn.getStatus().equals("1")) continue;
+					}
 
 					myres.setTaxno(myOrig.getTaxno());
 					myres.setTaxadd(myOrig.getTaxadd());
@@ -520,17 +526,18 @@ public class BanJiSheetService {
 					myres.setTotalamount(-1*myOrig.getTotalamount());
 					myres.setInvoiceamount(-1*myOrig.getInvoiceamount());
 					myres.setTotaltaxfee(-1*myOrig.getTotaltaxfee());
+					myres.setTradedate(stampToDate(myres.getTradedate()));
 					
-					RequestBillInfo myReqZP = new RequestBillInfo();
-					myReqZP.setSyjid(myOrig.getSyjid());
-					myReqZP.setEntid(myOrig.getEntid());
-					myReqZP.setSheetid(myOrig.getSheetid());
-					myReqZP.setSheettype(myOrig.getSheettype());
-					myReqZP.setShopid(myOrig.getShopid());
-					myReqZP.setBillno(myOrig.getSheetid());
-					myReqZP.setGmfno(bill.getTaxNo());
+					RequestBillInfo myReqFP = new RequestBillInfo();
+					myReqFP.setSyjid(myOrig.getSyjid());
+					myReqFP.setEntid(myOrig.getEntid());
+					myReqFP.setSheetid(myOrig.getSheetid());
+					myReqFP.setSheettype(myOrig.getSheettype());
+					myReqFP.setShopid(myOrig.getShopid());
+					myReqFP.setBillno(myOrig.getSheetid());
+					myReqFP.setGmfno(bill.getTaxNo());
 					
-					List<InvoiceSaleDetail> detail = invoiceSaleDao.getInvoiceSaleDetail(myReqZP);
+					List<InvoiceSaleDetail> detail = invoiceSaleDao.getInvoiceSaleDetail(myReqFP);
 					
 					for (InvoiceSaleDetail myDetl : detail)
 					{
@@ -1050,7 +1057,7 @@ public class BanJiSheetService {
 		if (!s.startsWith("15")) return s;
 		
         String res;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         long lt = new Long(s);
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);

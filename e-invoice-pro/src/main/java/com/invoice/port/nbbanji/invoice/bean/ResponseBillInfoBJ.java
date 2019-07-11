@@ -99,30 +99,39 @@ public class ResponseBillInfoBJ {
 	public String getGmfno() {
 		return gmfno;
 	}
+	
 	public void setGmfno(String gmfno) {
 		this.gmfno = gmfno;
 	}
+	
 	public String getRtfpdm() {
 		return rtfpdm;
 	}
+	
 	public void setRtfpdm(String rtfpdm) {
 		this.rtfpdm = rtfpdm;
 	}
+	
 	public String getRtfphm() {
 		return rtfphm;
 	}
+	
 	public void setRtfphm(String rtfphm) {
 		this.rtfphm = rtfphm;
 	}
+	
 	public String getRtkprq() {
 		return rtkprq;
 	}
+	
 	public void setRtkprq(String rtkprq) {
 		this.rtkprq = rtkprq;
 	}
+	
 	public String getRefsheetid() {
 		return refsheetid;
 	}
+	
 	public void setRefsheetid(String refsheetid) {
 		this.refsheetid = refsheetid;
 	}

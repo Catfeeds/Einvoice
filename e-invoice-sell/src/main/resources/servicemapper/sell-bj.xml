@@ -26,7 +26,7 @@
 		  	<![CDATA[and tradedate >= to_date(#{begdate},'yyyyMMdd')]]>
 		  </if>
 		  <if test="enddate!=null and enddate!=''">
-		  	<![CDATA[and tradedate <= to_date(#{enddate},'yyyyMMdd')]]>
+		  	<![CDATA[and tradedate < to_date(#{enddate},'yyyyMMdd')+1]]>
 		  </if>
 	</select>
 	
@@ -53,7 +53,7 @@
 		  	<![CDATA[and tradedate >= to_date(#{begdate},'yyyyMMdd')]]>
 		  </if>
 		  <if test="enddate!=null and enddate!=''">
-		  	<![CDATA[and tradedate <= to_date(#{enddate},'yyyyMMdd')]]>
+		  	<![CDATA[and tradedate < to_date(#{enddate},'yyyyMMdd')+1]]>
 		  </if>
 	</select>
 	
@@ -87,7 +87,7 @@
 		  	<![CDATA[and sdate >= to_date(#{begdate},'yyyyMMdd')]]>
 		  </if>
 		  <if test="enddate!=null and enddate!=''">
-		  	<![CDATA[and sdate <= to_date(#{enddate},'yyyyMMdd')]]>
+		  	<![CDATA[and sdate < to_date(#{enddate},'yyyyMMdd')+1]]>
 		  </if>
 	</select>
 	
