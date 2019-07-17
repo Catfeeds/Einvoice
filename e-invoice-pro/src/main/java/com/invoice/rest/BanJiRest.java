@@ -219,6 +219,7 @@ public class BanJiRest {
 			         .append("<DDLX>"+(myReqDetail.getRetFlag()==null?"":myReqDetail.getRetFlag())+"</DDLX>") //订单类型
 			         .append("<THBZ>"+(myReqDetail.getRetFlag()==null?"":myReqDetail.getRetFlag())+"</THBZ>") //退货标志
 					 .append("<Y_FPQQLSH>"+(myBill.getRefsheetid()==null?"":myBill.getRefsheetid())+"</Y_FPQQLSH>") //原小票流水号
+					 .append("<Y_XSDJBH>"+(myBill.getYxsdjbh()==null?"":myBill.getYxsdjbh())+"</Y_XSDJBH>") //原销售单号
 					 .append("<Y_SKT>"+(myBill.getYskt()==null?"":myBill.getYskt())+"</Y_SKT>") //原收款台
 					 .append("<Y_MDBH>"+(myBill.getYmdbh()==null?"":myBill.getYmdbh())+"</Y_MDBH>") //原门店编号
 					 .append("<Y_FPDM>"+(myBill.getYfpdm()==null?"":myBill.getYfpdm())+"</Y_FPDM>") //原发票代码

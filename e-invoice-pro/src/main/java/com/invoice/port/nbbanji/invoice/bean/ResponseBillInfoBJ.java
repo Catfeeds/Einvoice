@@ -85,16 +85,25 @@ public class ResponseBillInfoBJ {
 	private String kpr;//开票人
 	private String skr;//收款人
 	private String fhr;//复核人
+	private String yxsdjbh;//原销售单号
 	private String yskt;//原收款台
 	private String ymdbh;//原门店编号
 	private String yfpdm;//原发票代码
 	private String yfphm;//原发票号码
-	private String refsheetid; //原小票号
+	private String refsheetid; //原小票流水号
 	private String status; //状态
 	private String rtfpdm; //发票代码 
 	private String rtfphm; //发票号码 
 	private String rtkprq; //发票日期
 	private String gmfno; //红字信息表编号
+	
+	public String getYxsdjbh() {
+		return yxsdjbh;
+	}
+
+	public void setYxsdjbh(String yxsdjbh) {
+		this.yxsdjbh = yxsdjbh;
+	}
 	
 	public String getGmfno() {
 		return gmfno;

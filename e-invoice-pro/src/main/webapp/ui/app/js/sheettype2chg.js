@@ -17,9 +17,6 @@ function getuser(){
 				return;
 			}
 			user = dataJson.data;
-			if (user.shoplist.length == 1) {
-				$("#requestbillno").val(user.shoplist[0].shopid+"-");
-		    }
 			shop=user.shoplist;
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
@@ -38,7 +35,7 @@ function search(){
 	var shopid = $("#requestShopid").val();
 	var billno = $("#requestbillno").val();
 	data.channel = channel;
-	data.sheettype = 1;
+	data.sheettype = 2;
 	if(billno=='' ){
 		return;
 	}
@@ -124,6 +121,7 @@ function search(){
 function yikai(){
 	var params = {};
 	params.isLock=1;
+	params.sheettype="2";
 	
 	var weilist = $("#weilist input[type=checkbox]");
 	if(weilist.length == 0){
@@ -157,6 +155,7 @@ function yikai(){
 function weikai(){
 	var params = {};
 	params.isLock=0;
+	params.sheettype="2";
 	
 	var weilist = $("#weilist input[type=checkbox]");
 	if(weilist.length == 0){
@@ -192,6 +191,7 @@ function weikai(){
 function ykpupiao(){
     var params = {};
     params.isLock=1;
+    params.sheettype="2";
     params.invoiceType="007";
 
     var weilist = $("#weilist input[type=checkbox]");
@@ -226,6 +226,7 @@ function ykpupiao(){
 function ewmzuofei(){
     var params = {};
     params.isLock=1;
+    params.sheettype="2";
     params.invoiceType="100";
 
     var weilist = $("#weilist input[type=checkbox]");

@@ -88,8 +88,8 @@
 	</select>
 	
 	<insert id="insertInvoiceInvqueReturn" parameterType="com.invoice.port.nbbanji.invoice.bean.InvoiceInvqueReturn">
-		insert into invoice_invque_head_return(entid,sheetid,sheettype,invoicelx,status,shopid,syjid,billno,sdate,iqgmftax,iqgmfname,iqgmfadd,iqgmfbank,iqfplxdm,iqtype,iqstatus,zsfs,refsheetid,refshopid,refsyjid,refbillno,refinvoicecode,refinvoiceno,refinvoicedate,createtime)
-		values(#{entid},#{sheetid},#{sheettype},#{invoicelx},#{status},#{shopid},#{syjid},#{billno},#{sdate},#{iqgmftax},#{iqgmfname},#{iqgmfadd},#{iqgmfbank},#{iqfplxdm},#{iqtype},#{iqstatus},#{zsfs},#{refsheetid},#{refshopid},#{refsyjid},#{refbillno},#{refinvoicecode},#{refinvoiceno},#{refinvoicedate},now())
+		insert into invoice_invque_head_return(entid,sheetid,sheettype,invoicelx,status,shopid,syjid,billno,sdate,iqgmftax,iqgmfname,iqgmfadd,iqgmfbank,iqfplxdm,iqtype,iqstatus,zsfs,refsheetid,refshopid,refsyjid,refbillno,refinvoicecode,refinvoiceno,refinvoicedate,hzfpxxbbh,createtime)
+		values(#{entid},#{sheetid},#{sheettype},#{invoicelx},#{status},#{shopid},#{syjid},#{billno},#{sdate},#{iqgmftax},#{iqgmfname},#{iqgmfadd},#{iqgmfbank},#{iqfplxdm},#{iqtype},#{iqstatus},#{zsfs},#{refsheetid},#{refshopid},#{refsyjid},#{refbillno},#{refinvoicecode},#{refinvoiceno},#{refinvoicedate},#{hzfpxxbbh},now())
 	</insert>
 	
 	<!-- 阪急开具回写(invoice_sale_head) -->

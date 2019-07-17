@@ -247,7 +247,6 @@ public class BanJiSheetService {
 					myReqZP.setSheettype(myres.getSheettype());
 					myReqZP.setShopid(myres.getShopid());
 					myReqZP.setBillno(myres.getSheetid());
-					myReqZP.setGmfno(bill.getTaxNo());
 					
 					ResponseBillInfoBJ head = sheetInvqueBJDao.getSheetSaleHeadBJ(myReqZP);
 
@@ -477,7 +476,7 @@ public class BanJiSheetService {
 						myReturn.setEntid(myOrig.getEntid());
 						myReturn.setSheetid(myres.getSheetid());
 						myReturn.setSheettype(myOrig.getSheettype());
-						myReturn.setHzfpxxbbh(myres.getHzfpxxbbh());
+						myReturn.setHzfpxxbbh(myres.getGmfno());
 						myReturn.setInvoicelx(myOrig.getInvoicelx());
 						myReturn.setIqfplxdm(myOrig.getInvoicelx());
 						myReturn.setIqgmfadd(myOrig.getGmfadd() );
@@ -514,14 +513,15 @@ public class BanJiSheetService {
 					myres.setGmfbank(myOrig.getGmfbank());
 					myres.setGmfname(myOrig.getGmfname());
 					myres.setGmftax(myOrig.getGmftax());
-					myres.setGmfno(myres.getHzfpxxbbh());
 					myres.setKpr(myOrig.getKpr());
 					myres.setFhr(myOrig.getFhr());
 					myres.setSkr(myOrig.getSkr());
+					myres.setHzfpxxbbh(myres.getGmfno());
 					myres.setYskt(myOrig.getSyjid());
 					myres.setYmdbh(myOrig.getShopid());
 					myres.setYfpdm(myOrig.getRtfpdm());
 					myres.setYfphm(myOrig.getRtfphm());
+					myres.setYxsdjbh(myOrig.getBillno());
 					myres.setRefsheetid(myOrig.getSheetid());
 					myres.setTotalamount(-1*myOrig.getTotalamount());
 					myres.setInvoiceamount(-1*myOrig.getInvoiceamount());
@@ -535,7 +535,6 @@ public class BanJiSheetService {
 					myReqFP.setSheettype(myOrig.getSheettype());
 					myReqFP.setShopid(myOrig.getShopid());
 					myReqFP.setBillno(myOrig.getSheetid());
-					myReqFP.setGmfno(bill.getTaxNo());
 					
 					List<InvoiceSaleDetail> detail = invoiceSaleDao.getInvoiceSaleDetail(myReqFP);
 					

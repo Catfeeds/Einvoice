@@ -39,10 +39,10 @@ public class BanJiInvoiceService {
 		map.put("iqgmfname",bill.getGFMC()); //购方名称
 		map.put("iqgmfadd",bill.getGFDZDH()); //购方地址、电话
 		map.put("iqgmfbank",bill.getGFYHZH()); //购方银行、账号
-		map.put("iqfplxdm",bill.getFPZL()); //发票种类
-		map.put("iqtype",bill.getKPLX()); //开票类型
+		map.put("iqfplxdm",bill.getFPZL()); //发票种类 01 ：增值税专用发票  04 ：增值税普通发票  10 ：增值税电子普通发票
+		map.put("iqtype",bill.getKPLX()); //发票类型 0 ：蓝票  1 ：红票
 		map.put("iqmsg",bill.getKPJG()); //开票结果
-		map.put("zsfs",bill.getFPZT()); // 发票状态;
+		map.put("zsfs",bill.getFPZT()); // 发票状态  0：正常  1：作废  2：红冲
 		map.put("entid",bill.getQYH()); //企业号
 		map.put("sheetid",bill.getFPQQLSH()); //小票流水号
 		map.put("shopid", bill.getMDBH()); //门店
@@ -70,7 +70,12 @@ public class BanJiInvoiceService {
 			else
 			{
 				//保存到退货表(invoice_invque_head_return)
-				map.put("status","1");
+				if (bill.getFPZT().equals("1"))
+					map.put("status","200");
+				else if (bill.getFPZT().equals("2"))
+					map.put("status","300");
+				else
+					map.put("status","100");
 				inqueDao.updateForReturnBanJI(map);
 			}
 			
@@ -98,7 +103,14 @@ public class BanJiInvoiceService {
 				headMap.put("invoicecode",bill.getFPDM());
 				headMap.put("invoiceno",bill.getFPHM());
 				headMap.put("invoicedate",bill.getKPRQ());
-				headMap.put("status","100");
+				
+				if (bill.getFPZT().equals("1"))
+					headMap.put("status","200");
+				else if (bill.getFPZT().equals("2"))
+					headMap.put("status","300");
+				else
+					headMap.put("status","100");
+				
 				headMap.put("sheetname", "NBBJ");
 				
 				client.setHeadMap(headMap);
@@ -122,7 +134,14 @@ public class BanJiInvoiceService {
 				headMap.put("invoicecode",bill.getFPDM());
 				headMap.put("invoiceno",bill.getFPHM());
 				headMap.put("invoicedate",bill.getKPRQ());
-				headMap.put("flag","100");
+				
+				if (bill.getFPZT().equals("1"))
+					headMap.put("flag","200");
+				else if (bill.getFPZT().equals("2"))
+					headMap.put("flag","300");
+				else
+					headMap.put("flag","100");
+
 				headMap.put("sheetname", "NBBJ");
 				
 				client.setHeadMap(headMap);
