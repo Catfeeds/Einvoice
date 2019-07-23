@@ -474,9 +474,16 @@
 	</select>
 	
 	<select id="getbillreportCount" resultType="int"  parameterType="NewHashMap">
-		select count(*) from invque a,invque_list b,invoice_head c where a.iqseqno=b.iqseqno and a.iqseqno=c.iqseqno
-		and a.iqentid=#{entid} 
-		and a.iqsource='1' 
+		select count(*) 
+		from invque a,
+		     invque_list b,
+		     invoice_head c 
+		where a.iqseqno=b.iqseqno 
+		  and a.iqseqno=c.iqseqno
+		  and a.iqentid=#{entid}
+		<if test="iqsource != null and iqsource !=''">
+			and a.iqsource=#{iqsource} 
+		</if>
 		<if test="shopid != null and shopid !=''">
 			and b.shopid=#{shopid} 
 		</if>
@@ -496,9 +503,18 @@
 	</select>
 	
 	<select id="getbillreport" resultType="NewHashMap"  parameterType="NewHashMap">
-		select b.sheetid,a.*,c.* from invque a,invque_list b,invoice_head c where a.iqseqno=b.iqseqno and a.iqseqno=c.iqseqno
-		and a.iqentid=#{entid} 
-		and a.iqsource='1' 
+		select b.sheetid,
+			   a.*,
+			   c.* 
+		from invque a,
+		     invque_list b,
+		     invoice_head c 
+		where a.iqseqno=b.iqseqno
+		  and a.iqseqno=c.iqseqno
+		  and a.iqentid=#{entid}
+		<if test="iqsource != null and iqsource !=''">
+			and a.iqsource=#{iqsource} 
+		</if>
 		<if test="shopid != null and shopid !=''">
 			and b.shopid=#{shopid} 
 		</if>
@@ -521,9 +537,16 @@
 	</select>
 	
 	<select id="getbillreportForsum" resultType="NewHashMap"  parameterType="NewHashMap">
-		select SUM(totalamt) as zamt from invque a,invque_list b,invoice_head c where a.iqseqno=b.iqseqno and a.iqseqno=c.iqseqno
-		and a.iqentid=#{entid} 
-		and a.iqsource='1' 
+		select SUM(totalamt) as zamt 
+		from invque a,
+		     invque_list b,
+		     invoice_head c 
+		where a.iqseqno=b.iqseqno 
+		  and a.iqseqno=c.iqseqno
+		  and a.iqentid=#{entid} 
+		<if test="iqsource != null and iqsource !=''">
+			and a.iqsource=#{iqsource} 
+		</if> 
 		<if test="shopid != null and shopid !=''">
 			and b.shopid=#{shopid} 
 		</if>

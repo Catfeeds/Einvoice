@@ -783,28 +783,40 @@ public class BanJiSheetService {
 				invoiceSalePayment.add(pay);
 			}
 
-			//如果没有指定 合计金额，则从明细汇总
+			//如果没有指定合计金额，则从明细汇总
 			if(invoiceSaleHead.getTotalamount()== null){
 				invoiceSaleHead.setTotalamount(totalGooodsAmount);
 			}
 			
-			double totalTaxFee = 0.00; 			// 合计可开票税额
-			double totalInvoiceAmount = 0.00; 	// 可开票总金额(含税)
-			double fentanAmt = 0.00;			// 分摊金额
+			double totalTaxFee = 0.00; // 合计可开票税额
+			double totalInvoiceAmount = 0.00; // 可开票总金额(含税)
+			double fentanAmt = 0.00;
 			
-			//如果合计商品金额大于合计支付金额.可开票商品金额减去差额
+			//如果合计商品金额大于合计支付金额，说明存在舍分.可开票商品金额减去差额
 			if(totalGooodsAmount > totalPayAmount) {
-				double cha = MathCal.sub(totalGooodsAmount,totalPayAmount,2);
-				invoiceGoodsAmount = MathCal.sub(invoiceGoodsAmount,cha,2);
-				totalGooodsAmount = MathCal.sub(totalGooodsAmount,cha,2);
-				unInvoiceGoodsAmount = MathCal.add(unInvoiceGoodsAmount,cha,2);
+				double cha = MathCal.sub(totalGooodsAmount, totalPayAmount, 2);
+				invoiceGoodsAmount = MathCal.sub(invoiceGoodsAmount, cha, 2);
+				totalGooodsAmount = MathCal.sub(totalGooodsAmount, cha, 2);
+				unInvoiceGoodsAmount = MathCal.add(unInvoiceGoodsAmount, cha, 2);
 				fentanAmt = cha;
 			}
 			
-			//如果商品可开票金额大于付款方式可开票金额，则可开票金额为付款方式可开票金额
-			if (invoiceGoodsAmount > invoicePayAmount) {
-				fentanAmt = MathCal.add(fentanAmt,MathCal.sub(invoiceGoodsAmount,invoicePayAmount,2),2);
-				invoiceGoodsAmount = invoicePayAmount;
+			//算法：对比不可开票商品和不可开票支付，取较大值作为需剔除的金额
+			if (unInvoiceGoodsAmount != 0 || unInvoicePayAmount !=0) {
+				//如果不可开票商品金额大于不可开票支付金额，则可开票金额=可开票商品金额
+				if (unInvoiceGoodsAmount > unInvoicePayAmount) {
+					totalInvoiceAmount = invoiceGoodsAmount;
+				} else {
+					//存在找零
+					//不可开票支付金额大时，还需要将不可开票支付金额 - 不可开票商品金额 的差额作为需要剔除数据
+					// 差额作为需剔除的金额
+					fentanAmt = MathCal.sub(unInvoicePayAmount, unInvoiceGoodsAmount, 2);
+					//可开票金额=商品金额 - 不可开票支付金额
+					totalInvoiceAmount = MathCal.sub(totalGooodsAmount, unInvoicePayAmount, 2);
+				}
+			} 
+			else {
+				totalInvoiceAmount = invoiceGoodsAmount;
 			}
 
 			// 计算分摊或剔除商品

@@ -316,8 +316,13 @@ public class InvoiceRest {
 			Token token = Token.getToken();
 			jo.put("entid", token.getEntid());
 			jo.put("loginid", token.getLoginid());
+			
 			if (token.getEntid().equals("SDYZ")) {
 				jo.put("iqsource", "3");
+			}
+			
+			if (token.getEntid().equals("SZ002")) {
+				jo.put("iqsource", "2");
 			}
 
 			Page.cookPageInfo(jo);
@@ -351,7 +356,14 @@ public class InvoiceRest {
 			JSONObject jo = JSONObject.parseObject(data);
 			Token token = Token.getToken();
 			jo.put("entid", token.getEntid());
+			
+			if (token.getEntid().equals("SZ002"))
+				jo.put("iqsource", "2");
+			else
+				jo.put("iqsource", "1");
+			
 			Page.cookPageInfo(jo);
+			
 			int count = invoiceAnddetailService.getbillreportCount(jo);
 			List<HashMap<String, String>> tm = invoiceAnddetailService.getbillreport(jo);
 			HashMap<String, String> billreport = invoiceAnddetailService.getbillreportForsum(jo);
@@ -472,8 +484,13 @@ public class InvoiceRest {
 			Token token = Token.getToken();
 			jo.put("entid", token.getEntid());
 			jo.put("loginid", token.getLoginid());
+			
 			if (token.getEntid().equals("SDYZ")) {
 				jo.put("iqsource", "3");
+			}
+			
+			if (token.getEntid().equals("SZ002")) {
+				jo.put("iqsource", "2");
 			}
 
 			List<HashMap<String, String>> tm = invoiceAnddetailService.getInvoiceDetailForSum(jo);
@@ -495,6 +512,12 @@ public class InvoiceRest {
 			JSONObject jo = JSONObject.parseObject(data);
 			Token token = Token.getToken();
 			jo.put("entid", token.getEntid());
+			
+			if (token.getEntid().equals("SZ002"))
+				jo.put("iqsource", "2");
+			else
+				jo.put("iqsource", "1");
+			
 			List<HashMap<String, String>> tm = invoiceAnddetailService.getbillreport(jo);
 			String excelName = "已开发票小票报表.xls";
 			String[] heads = { "小票提取码", "发票号码", "发票种类", "开票金额", "开票日期", "开票类型" };
