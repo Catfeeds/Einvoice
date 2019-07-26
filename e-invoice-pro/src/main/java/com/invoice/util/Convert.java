@@ -1879,21 +1879,24 @@ public class Convert {
 	
 	public static String changeToBig(double value){
 		if(value==0) return "零圆";
-    	char[] hunit={'拾','佰','仟'};                                    //段内位置表示
-    	char[] vunit={'万','亿'};                                         //段名表示
-    	char[] digit={'零','壹','贰','叁','肆','伍','陆','柒','捌','玖'}; //数字表示
-    	long midVal = (long)(value*100);                                  //转化成整形
-        String valStr=String.valueOf(midVal);                             //转化成字符串
-        String head=valStr.substring(0,valStr.length()-2);                //取整数部分
-        String rail=valStr.substring(valStr.length()-2);                  //取小数部分
+    	char[] hunit={'拾','佰','仟'};                                    			//段内位置表示
+    	char[] vunit={'万','亿'};                                         			//段名表示
+    	char[] digit={'零','壹','贰','叁','肆','伍','陆','柒','捌','玖'}; 				//数字表示
+    	long midVal = (long)(value*100);                                  			//转化成整形
+        String valStr=String.valueOf(midVal);                             			//转化成字符串
+        String head=(valStr.length()<2?"0":valStr.substring(0,valStr.length()-2));	//取整数部分
+        String rail=(valStr.length()<2?valStr:valStr.substring(valStr.length()-2));	//取小数部分
 
-        String prefix="";                                                 //整数部分转化的结果
-        String suffix="";                                                 //小数部分转化的结果
+        String prefix="";                                                 			//整数部分转化的结果
+        String suffix="";                                                 			//小数部分转化的结果
         //处理小数点后面的数
-        if(rail.equals("00")){                                           //如果小数部分为0
+        if(rail.equals("00")){                                           			//如果小数部分为0
           suffix="整";
         } else{
-          suffix=digit[rail.charAt(0)-'0']+"角"+digit[rail.charAt(1)-'0']+"分"; //否则把角分转化出来
+        	if (rail.length()<2)
+        		suffix=digit[rail.charAt(0)-'0']+"分";
+        	else
+        		suffix=digit[rail.charAt(0)-'0']+"角"+digit[rail.charAt(1)-'0']+"分"; //否则把角分转化出来
         }
         //处理小数点前面的数
         char[] chDig=head.toCharArray();                   //把整数部分转化成字符数组

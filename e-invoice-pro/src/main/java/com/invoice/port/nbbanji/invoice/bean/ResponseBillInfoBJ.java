@@ -96,7 +96,16 @@ public class ResponseBillInfoBJ {
 	private String rtfphm; //发票号码 
 	private String rtkprq; //发票日期
 	private String gmfno; //红字信息表编号
+	private String sdate; //小票日期
 	
+	public String getSdate() {
+		return sdate;
+	}
+
+	public void setSdate(String sdate) {
+		this.sdate = sdate;
+	}
+
 	public String getYxsdjbh() {
 		return yxsdjbh;
 	}

@@ -116,7 +116,7 @@ public class BanJiSheetService {
 					saleHead.setSheetid(head.getSheetid());
 					saleHead.setEntid(head.getEntid());
 					saleHead.setSerialid(head.getSerialid());
-					saleInvoice2Delete(saleHead);
+					saveInvoice2Delete(saleHead);
 					head = null;
 				}
 				
@@ -169,7 +169,7 @@ public class BanJiSheetService {
 					saleHead.setIqseqno(Serial.getInvqueSerial());
 					
 					// 写入小票表
-					saleInvoice2Insert(saleHead);
+					saveInvoice2Insert(saleHead);
 					// 写入发票队列表
 					insertInvque(saleHead,bill.getTaxNo());
 
@@ -257,7 +257,7 @@ public class BanJiSheetService {
 						saleHead.setSheetid(head.getSheetid());
 						saleHead.setEntid(head.getEntid());
 						saleHead.setSerialid(head.getSerialid());
-						saleInvoice2Delete(saleHead);
+						saveInvoice2Delete(saleHead);
 						head = null;
 					}
 					
@@ -285,7 +285,7 @@ public class BanJiSheetService {
 						}
 						
 						SheetHead provSell = JSONObject.parseObject(provJO.getString("data"), SheetHead.class);
-						
+
 						if(provSell== null){
 							logInfo = "阪急－远程数据未找到:" + myReqZP.getSheetid();
 							log.info(logInfo);
@@ -300,6 +300,7 @@ public class BanJiSheetService {
 						}
 						
 						provSell.setEntid(myReqZP.getEntid());
+						provSell.setSdate(provSell.getTradedate());
 						
 						// 查到小票后，对小票进行运算
 						InvoiceSaleHead provHead = calculateSheet(provSell, serialId, myReqZP.getSheettype());
@@ -311,11 +312,9 @@ public class BanJiSheetService {
 						provHead.setBillno(provSell.getSheetid());
 						provHead.setInvoicelx(myres.getInvoicelx());
 						provHead.setIqseqno(Serial.getInvqueSerial());
-						SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd");
-						provHead.setTradedate(f.format(provSell.getTradedate()));
 
 						// 写入小票表
-						saleInvoice2Insert(provHead);
+						saveInvoice2Insert(provHead);
 						// 写入发票队列表
 						insertInvque(provHead,bill.getTaxNo());
 
@@ -392,16 +391,25 @@ public class BanJiSheetService {
 				List<ResponseBillInfoBJ> sellRes = new ArrayList<ResponseBillInfoBJ>();
 				
 				// 根据退货清单，如果已提取，则会生成退货数据给到航信
-				for(ResponseBillInfoBJ myres : retSell)
+				for(ResponseBillInfoBJ myret : retSell)
 				{
 					Map<String,String> returnMap = new HashMap<String,String>();
 					returnMap.put("entid", bill.getEntId());
-					returnMap.put("sheetid",myres.getRefsheetid());
+					returnMap.put("sheetid",myret.getRefsheetid());
 					
 					if (bill.getDpType().equals("纸票"))
+					{
 						returnMap.put("sheettype", "7");
+						myret.setSdate(stampToDate(myret.getTradedate()));
+						myret.setTradedate(stampToDate(myret.getTradedate()));
+					}
 					else
+					{
 						returnMap.put("sheettype", "1");
+						myret.setSdate(stampToDate(myret.getSdate()));
+						myret.setTradedate(stampToDate(myret.getSdate()));
+					}
+					
 					
 					// 先找一下原小票是否已经同步过来
 					ResponseBillInfoBJ myOrig = sheetInvqueBJDao.getSheetHeadOriginal(returnMap);
@@ -410,8 +418,8 @@ public class BanJiSheetService {
 					if (myOrig == null) {
 						//先根据条件从ERP获取退货清单
 						Map<String, String> syMap = client.getHeadMap();
-						syMap.put("shopid", myres.getShopid());
-						syMap.put("sheetid", myres.getRefsheetid());
+						syMap.put("shopid", myret.getShopid());
+						syMap.put("sheetid", myret.getRefsheetid());
 						syMap.put("sheetname", "NBBJ");
 
 						if (bill.getDpType().equals("电票"))
@@ -433,30 +441,31 @@ public class BanJiSheetService {
 						SheetHead syncSell = JSONObject.parseObject(syncJO.getString("data"), SheetHead.class);
 						
 						if(syncSell == null){
-							logInfo = "阪急－远程原小票数据未找到:" + myres.getRefsheetid();
+							logInfo = "阪急－远程原小票数据未找到:" + myret.getRefsheetid();
 							log.info(logInfo);
 							return null;
 						}
 						
 						// 远端门店必须和请求的门店信息一致
-						if(!syncSell.getShopid().equals(myres.getShopid())){
-							logInfo = "阪急－数据门店信息异常 ，要求门店" + syncSell.getShopid()+"与返回门店" + myres.getShopid() + "不一样";
+						if(!syncSell.getShopid().equals(myret.getShopid())){
+							logInfo = "阪急－数据门店信息异常 ，要求门店" + syncSell.getShopid()+"与返回门店" + myret.getShopid() + "不一样";
 							log.info(logInfo);
 							return null;
 						}
 						
 						syncSell.setEntid(bill.getEntId());
+						syncSell.setSdate(returnMap.get("sheettype").equals("1")?syncSell.getSdate():syncSell.getTradedate());
 						
 						// 查到小票后，对小票进行运算
 						InvoiceSaleHead syncHead = calculateSheet(syncSell, serialId, returnMap.get("sheettype"));
 						syncHead.setCreatetime(new Date());
 						syncHead.setFlag(0);
 						syncHead.setIsauto(0);
-						syncHead.setInvoicelx("10");
+						syncHead.setInvoicelx(returnMap.get("sheettype").equals("1")?"10":syncSell.getInvoicelx());
 						syncHead.setIqseqno("");
 						
 						// 写入小票表
-						saleInvoice2Insert(syncHead);
+						saveInvoice2Insert(syncHead);
 
 						myOrig = sheetInvqueBJDao.getSheetHeadOriginal(returnMap);
 					}
@@ -464,7 +473,7 @@ public class BanJiSheetService {
 					if (myOrig == null) continue;
 
 					//先查退货表中有没有数据，如没有则进行保存
-					returnMap.put("sheetid",myres.getSheetid());
+					returnMap.put("sheetid",myret.getSheetid());
 					
 					InvoiceInvqueReturn myReturn = sheetInvqueBJDao.getSheetHeadReturn(returnMap);
 
@@ -472,11 +481,11 @@ public class BanJiSheetService {
 					{
 						myReturn = new InvoiceInvqueReturn();
 						
-						myReturn.setBillno(myres.getBillno());
+						myReturn.setBillno(myret.getBillno());
 						myReturn.setEntid(myOrig.getEntid());
-						myReturn.setSheetid(myres.getSheetid());
+						myReturn.setSheetid(myret.getSheetid());
 						myReturn.setSheettype(myOrig.getSheettype());
-						myReturn.setHzfpxxbbh(myres.getGmfno());
+						myReturn.setHzfpxxbbh(myret.getGmfno());
 						myReturn.setInvoicelx(myOrig.getInvoicelx());
 						myReturn.setIqfplxdm(myOrig.getInvoicelx());
 						myReturn.setIqgmfadd(myOrig.getGmfadd() );
@@ -492,10 +501,10 @@ public class BanJiSheetService {
 						myReturn.setRefsheetid(myOrig.getSheetid());
 						myReturn.setRefshopid(myOrig.getShopid());
 						myReturn.setRefsyjid(myOrig.getSyjid());
-						myReturn.setSdate(myres.getTradedate()== null?stampToDate(myOrig.getTradedate()):stampToDate(myres.getTradedate()));
-						myReturn.setShopid(myres.getShopid());
+						myReturn.setSdate(myret.getSdate());
+						myReturn.setShopid(myret.getShopid());
 						myReturn.setStatus("0");
-						myReturn.setSyjid(myres.getSyjid());
+						myReturn.setSyjid(myret.getSyjid());
 						myReturn.setZsfs("0");
 					
 						sheetInvqueBJDao.insertInvoiceInvqueReturn(myReturn);	
@@ -505,29 +514,28 @@ public class BanJiSheetService {
 						if (myReturn.getStatus().equals("1")) continue;
 					}
 
-					myres.setTaxno(myOrig.getTaxno());
-					myres.setTaxadd(myOrig.getTaxadd());
-					myres.setTaxbank(myOrig.getTaxbank());
-					myres.setTaxname(myOrig.getTaxname());
-					myres.setGmfadd(myOrig.getGmfadd());
-					myres.setGmfbank(myOrig.getGmfbank());
-					myres.setGmfname(myOrig.getGmfname());
-					myres.setGmftax(myOrig.getGmftax());
-					myres.setKpr(myOrig.getKpr());
-					myres.setFhr(myOrig.getFhr());
-					myres.setSkr(myOrig.getSkr());
-					myres.setHzfpxxbbh(myres.getGmfno());
-					myres.setYskt(myOrig.getSyjid());
-					myres.setYmdbh(myOrig.getShopid());
-					myres.setYfpdm(myOrig.getRtfpdm());
-					myres.setYfphm(myOrig.getRtfphm());
-					myres.setYxsdjbh(myOrig.getBillno());
-					myres.setRefsheetid(myOrig.getSheetid());
-					myres.setTotalamount(-1*myOrig.getTotalamount());
-					myres.setInvoiceamount(-1*myOrig.getInvoiceamount());
-					myres.setTotaltaxfee(-1*myOrig.getTotaltaxfee());
-					myres.setTradedate(stampToDate(myres.getTradedate()));
-					
+					myret.setTaxno(myOrig.getTaxno());
+					myret.setTaxadd(myOrig.getTaxadd());
+					myret.setTaxbank(myOrig.getTaxbank());
+					myret.setTaxname(myOrig.getTaxname());
+					myret.setGmfadd(myOrig.getGmfadd());
+					myret.setGmfbank(myOrig.getGmfbank());
+					myret.setGmfname(myOrig.getGmfname());
+					myret.setGmftax(myOrig.getGmftax());
+					myret.setKpr(myOrig.getKpr());
+					myret.setFhr(myOrig.getFhr());
+					myret.setSkr(myOrig.getSkr());
+					myret.setHzfpxxbbh(myret.getGmfno());
+					myret.setYskt(myOrig.getSyjid());
+					myret.setYmdbh(myOrig.getShopid());
+					myret.setYfpdm(myOrig.getRtfpdm());
+					myret.setYfphm(myOrig.getRtfphm());
+					myret.setYxsdjbh(myOrig.getBillno());
+					myret.setRefsheetid(myOrig.getSheetid());
+					myret.setTotalamount(-1*myOrig.getTotalamount());
+					myret.setInvoiceamount(-1*myOrig.getInvoiceamount());
+					myret.setTotaltaxfee(-1*myOrig.getTotaltaxfee());
+
 					RequestBillInfo myReqFP = new RequestBillInfo();
 					myReqFP.setSyjid(myOrig.getSyjid());
 					myReqFP.setEntid(myOrig.getEntid());
@@ -547,9 +555,9 @@ public class BanJiSheetService {
 						myDetl.setTaxfee(-1*(myDetl.getTaxfee()==null?0.00:myDetl.getTaxfee()));
 					}
 					
-					myres.setInvoiceSaleDetail(detail);
+					myret.setInvoiceSaleDetail(detail);
 					
-					sellRes.add(myres);
+					sellRes.add(myret);
 				}
 
 				return sellRes;
@@ -1153,14 +1161,14 @@ public class BanJiSheetService {
 	}
 	
 	@Transactional
-	public void saleInvoice2Delete(InvoiceSaleHead saleHead){
+	public void saveInvoice2Delete(InvoiceSaleHead saleHead){
 		invoiceSaleDao.deleteSaleDetail(saleHead);
 		invoiceSaleDao.deleteSalePay(saleHead);
 		invoiceSaleDao.deleteSaleHead(saleHead);
 	}
 	
 	@Transactional
-	public void saleInvoice2Insert(InvoiceSaleHead saleHead) {
+	public void saveInvoice2Insert(InvoiceSaleHead saleHead) {
 		invoiceSaleDao.insertSaleHead(saleHead);
 		sheetInvqueBJDao.updateInvoiceHeadIqseqno(saleHead);
 		List<InvoiceSaleDetail> detail = saleHead.getInvoiceSaleDetail();
